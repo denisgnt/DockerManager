@@ -8,8 +8,7 @@ services:
     container_name: docker-manager
     restart: unless-stopped
     ports:
-      - "${VITE_PORT:-3011}:3011"
-      - "${VITE_BACKEND_PORT:-5005}:5005"
+      - "3011:5005"
     volumes:
       # Mount scripts directory
       - ${SCRIPTS_DIR}:/app/scripts:ro
@@ -17,13 +16,14 @@ services:
       # Docker API Configuration
       - VITE_DOCKER_API_HOST=${VITE_DOCKER_API_HOST:-10.174.18.242}
       - VITE_DOCKER_API_PORT=${VITE_DOCKER_API_PORT:-2375}
-      # Server Ports
-      - VITE_PORT=${VITE_PORT:-3011}
-      - VITE_BACKEND_PORT=${VITE_BACKEND_PORT:-5005}
+      # Server Port (в production только backend на 5005)
+      - VITE_BACKEND_PORT=5005
       # Scripts Directory (internal path)
       - SCRIPTS_DIR=/app/scripts
       # Application Name
       - VITE_APP_NAME=${VITE_APP_NAME:-Docker Manager DEVELOP}
+      # Force production mode
+      - NODE_ENV=production
     networks:
       - docker-manager-network
     healthcheck:

@@ -39,8 +39,8 @@ RUN mkdir -p /app/scripts
 # Set environment to production
 ENV NODE_ENV=production
 
-# Expose ports
-EXPOSE 3011 5005
+# Expose port (только backend в production)
+EXPOSE 5005
 
 # Start the application
 CMD ["yarn", "start"]

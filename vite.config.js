@@ -3,12 +3,13 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const port = parseInt(env.VITE_PORT || '3001')
-  const backendPort = parseInt(env.VITE_BACKEND_PORT || '5001')
+  const port = parseInt(env.VITE_PORT || '3011')
+  const backendPort = parseInt(env.VITE_BACKEND_PORT || '5005')
 
   return {
     plugins: [react()],
     server: {
+      host: '0.0.0.0', // Слушать на всех интерфейсах (важно для Docker)
       port,
       proxy: {
         '/api': {
