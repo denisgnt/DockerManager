@@ -30,10 +30,16 @@ const ContainerLogs = ({ container, onClose }) => {
   }
 
   useEffect(() => {
-    const backendPort = import.meta.env.VITE_BACKEND_PORT || '5001'
+    // В production используем текущий хост (т.к. всё на одном сервере)
+    // В development используем переменные окружения
+    const backendUrl = import.meta.env.PROD 
+      ? window.location.origin  // В production используем текущий URL
+      : `http://localhost:${import.meta.env.VITE_BACKEND_PORT || '5005'}`
+    
+    console.log('Connecting to Socket.IO:', backendUrl)
     
     // Connect to Socket.IO server
-    socketRef.current = io(`http://localhost:${backendPort}`, {
+    socketRef.current = io(backendUrl, {
       transports: ['websocket'],
     })
 
