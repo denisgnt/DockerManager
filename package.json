@@ -3,6 +3,7 @@
   "version": "1.4.0",
   "type": "module",
   "description": "Docker Manager with Web Interface - Scripts execution support",
+  "license": "MIT",
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "client": "vite",
