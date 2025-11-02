@@ -15,15 +15,15 @@ services:
       - ${SCRIPTS_DIR}:/app/scripts:ro
     environment:
       # Docker API Configuration
-      - VITE_DOCKER_API_HOST=${VITE_DOCKER_API_HOST}
-      - VITE_DOCKER_API_PORT=${VITE_DOCKER_API_PORT}
+      - VITE_DOCKER_API_HOST=${VITE_DOCKER_API_HOST:-10.174.18.242}
+      - VITE_DOCKER_API_PORT=${VITE_DOCKER_API_PORT:-2375}
       # Server Ports
-      - VITE_PORT=${VITE_PORT:-3001}
-      - VITE_BACKEND_PORT=${VITE_BACKEND_PORT:-5001}
+      - VITE_PORT=${VITE_PORT:-3011}
+      - VITE_BACKEND_PORT=${VITE_BACKEND_PORT:-5005}
       # Scripts Directory (internal path)
       - SCRIPTS_DIR=/app/scripts
       # Application Name
-      - VITE_APP_NAME=${VITE_APP_NAME:-Docker Manager}
+      - VITE_APP_NAME=${VITE_APP_NAME:-Docker Manager DEVELOP}
     networks:
       - docker-manager-network
     healthcheck:
