@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  docker-manager:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: docker-manager
+    restart: unless-stopped
+    ports:
+      - "${VITE_PORT:-3011}:3011"
+      - "${VITE_BACKEND_PORT:-5005}:5005"
+    volumes:
+      # Mount scripts directory
+      - ${SCRIPTS_DIR}:/app/scripts:ro
+    environment:
+      # Docker API Configuration
+      - VITE_DOCKER_API_HOST=${VITE_DOCKER_API_HOST}
+      - VITE_DOCKER_API_PORT=${VITE_DOCKER_API_PORT}
+      # Server Ports
+      - VITE_PORT=${VITE_PORT:-3001}
+      - VITE_BACKEND_PORT=${VITE_BACKEND_PORT:-5001}
+      # Scripts Directory (internal path)
+      - SCRIPTS_DIR=/app/scripts
+      # Application Name
+      - VITE_APP_NAME=${VITE_APP_NAME:-Docker Manager}
+    networks:
+      - docker-manager-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5005/api/containers"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  docker-manager-network:
+    driver: bridge
