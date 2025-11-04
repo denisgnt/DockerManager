@@ -9,7 +9,8 @@ import {
   Alert,
   CircularProgress,
   ToggleButtonGroup,
-  ToggleButton
+  ToggleButton,
+  Snackbar
 } from '@mui/material'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import ViewListIcon from '@mui/icons-material/ViewList'
@@ -26,6 +27,8 @@ function App() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [availableScripts, setAvailableScripts] = useState({})
+  const [rebuildingContainers, setRebuildingContainers] = useState(new Set())
+  const [snackbar, setSnackbar] = useState({ open: false, message: '' })
   const [viewMode, setViewMode] = useState(() => {
     return localStorage.getItem('dockerManagerViewMode') || 'list'
   })
@@ -115,17 +118,25 @@ function App() {
   }
 
   const handleExecuteScript = async (container, scriptName) => {
+    const containerId = container.Id
+    const containerName = container.Names[0].replace(/^\//, '')
+    
     try {
       setError(null)
-      const containerName = container.Names[0].replace(/^\//, '')
+      // Add to rebuilding set
+      setRebuildingContainers(prev => new Set(prev).add(containerId))
+      
       const response = await axios.post('/api/scripts/execute', {
         scriptName,
         containerName
       })
       
       if (response.data.success) {
-        // Show success message
-        alert(`Скрипт успешно выполнен для ${containerName}`)
+        // Show success snackbar
+        setSnackbar({ 
+          open: true, 
+          message: `Скрипт успешно выполнен для ${containerName}` 
+        })
         // Refresh containers after script execution
         setTimeout(fetchContainers, 1000)
       }
@@ -133,7 +144,20 @@ function App() {
       const errorMsg = err.response?.data?.error || err.message
       setError(`Ошибка выполнения скрипта: ${errorMsg}`)
       console.error('Error executing script:', err)
+    } finally {
+      // Remove from rebuilding set after a delay
+      setTimeout(() => {
+        setRebuildingContainers(prev => {
+          const newSet = new Set(prev)
+          newSet.delete(containerId)
+          return newSet
+        })
+      }, 2000)
     }
+  }
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ open: false, message: '' })
   }
 
   const handleViewModeChange = (event, newMode) => {
@@ -207,6 +231,7 @@ function App() {
               onViewInfo={handleViewInfo}
               onExecuteScript={handleExecuteScript}
               availableScripts={availableScripts}
+              rebuildingContainers={rebuildingContainers}
               viewMode={viewMode}
             />
             
@@ -226,6 +251,14 @@ function App() {
           </>
         )}
       </Container>
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+        message={snackbar.message}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      />
     </>
   )
 }

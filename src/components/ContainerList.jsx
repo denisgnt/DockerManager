@@ -36,14 +36,13 @@ import ViewColumnIcon from '@mui/icons-material/ViewColumn'
 import InfoIcon from '@mui/icons-material/Info'
 import PlayCircleIcon from '@mui/icons-material/PlayCircle'
 
-const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecuteScript, availableScripts = {}, viewMode = 'list' }) => {
+const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecuteScript, availableScripts = {}, rebuildingContainers = new Set(), viewMode = 'list' }) => {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(30)
   const [orderBy, setOrderBy] = useState('name')
   const [order, setOrder] = useState('asc')
   const [searchQuery, setSearchQuery] = useState('')
   const [columnMenuAnchor, setColumnMenuAnchor] = useState(null)
-  const [rebuildingContainers, setRebuildingContainers] = useState(new Set())
   
   // Column visibility state with localStorage
   const [visibleColumns, setVisibleColumns] = useState(() => {
@@ -78,7 +77,12 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
     localStorage.setItem('dockerManagerVisibleColumns', JSON.stringify(newVisibleColumns))
   }
 
-  const getStatusColor = (state) => {
+  const getStatusColor = (state, containerId) => {
+    // If container is rebuilding, show grey
+    if (rebuildingContainers.has(containerId)) {
+      return 'default'
+    }
+    
     switch (state.toLowerCase()) {
       case 'running':
         return 'success'
@@ -89,6 +93,14 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
       default:
         return 'default'
     }
+  }
+
+  const getStatusLabel = (state, containerId) => {
+    // If container is rebuilding, show "Rebuilding"
+    if (rebuildingContainers.has(containerId)) {
+      return 'Rebuilding'
+    }
+    return state
   }
 
   const formatDate = (timestamp) => {
@@ -145,23 +157,6 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value)
     setPage(0)
-  }
-
-  // Handle rebuild with state tracking
-  const handleRebuild = async (container, scriptName) => {
-    setRebuildingContainers(prev => new Set(prev).add(container.Id))
-    try {
-      await onExecuteScript(container, scriptName)
-    } finally {
-      // Keep the rebuilding state for a short time to prevent rapid clicks
-      setTimeout(() => {
-        setRebuildingContainers(prev => {
-          const newSet = new Set(prev)
-          newSet.delete(container.Id)
-          return newSet
-        })
-      }, 1000)
-    }
   }
 
   // Filter and sort containers
@@ -302,7 +297,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
           <IconButton
             size="small"
             color="warning"
-            onClick={() => handleRebuild(container, scriptName)}
+            onClick={() => onExecuteScript(container, scriptName)}
             disabled={isRebuilding}
           >
             <PlayCircleIcon fontSize="small" />
@@ -440,8 +435,8 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
               {visibleColumns.status && (
                 <TableCell>
                   <Chip
-                    label={container.State}
-                    color={getStatusColor(container.State)}
+                    label={getStatusLabel(container.State, container.Id)}
+                    color={getStatusColor(container.State, container.Id)}
                     size="small"
                   />
                 </TableCell>
@@ -554,8 +549,8 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
                   {getContainerName(container.Names)}
                 </Typography>
                 <Chip
-                  label={container.State}
-                  color={getStatusColor(container.State)}
+                  label={getStatusLabel(container.State, container.Id)}
+                  color={getStatusColor(container.State, container.Id)}
                   size="small"
                   sx={{ flexShrink: 0 }}
                 />
@@ -658,7 +653,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
                       <IconButton
                         size="small"
                         color="warning"
-                        onClick={() => handleRebuild(container, scriptName)}
+                        onClick={() => onExecuteScript(container, scriptName)}
                         disabled={isRebuilding}
                       >
                         <PlayCircleIcon fontSize="small" />
