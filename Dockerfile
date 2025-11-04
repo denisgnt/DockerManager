@@ -20,8 +20,8 @@ FROM node:24-alpine
 
 WORKDIR /app
 
-# Install wget for healthcheck
-RUN apk add --no-cache wget
+# Install system dependencies (wget for healthcheck, bash for script execution)
+RUN apk add --no-cache wget bash
 
 # Copy package files for production dependencies
 COPY package.json yarn.lock ./
