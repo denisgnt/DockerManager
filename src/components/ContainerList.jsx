@@ -43,6 +43,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
   const [order, setOrder] = useState('asc')
   const [searchQuery, setSearchQuery] = useState('')
   const [columnMenuAnchor, setColumnMenuAnchor] = useState(null)
+  const [rebuildingContainers, setRebuildingContainers] = useState(new Set())
   
   // Column visibility state with localStorage
   const [visibleColumns, setVisibleColumns] = useState(() => {
@@ -50,10 +51,13 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
     return saved ? JSON.parse(saved) : {
       name: true,
       status: true,
-      image: true,
+      image: false,
       id: true,
       ports: true,
-      created: true
+      created: true,
+      actions: false,
+      rebuild: true,
+      view: true
     }
   })
 
@@ -143,6 +147,23 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
     setPage(0)
   }
 
+  // Handle rebuild with state tracking
+  const handleRebuild = async (container, scriptName) => {
+    setRebuildingContainers(prev => new Set(prev).add(container.Id))
+    try {
+      await onExecuteScript(container, scriptName)
+    } finally {
+      // Keep the rebuilding state for a short time to prevent rapid clicks
+      setTimeout(() => {
+        setRebuildingContainers(prev => {
+          const newSet = new Set(prev)
+          newSet.delete(container.Id)
+          return newSet
+        })
+      }, 1000)
+    }
+  }
+
   // Filter and sort containers
   const processedContainers = useMemo(() => {
     // Filter by search query
@@ -202,96 +223,124 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
 
   const renderActionButtons = (container) => {
     const scriptName = findScriptForContainer(container)
+    const isRebuilding = rebuildingContainers.has(container.Id)
     
     return (
       <Box display="flex" gap={0.5}>
         {container.State.toLowerCase() === 'running' ? (
           <>
-            <Tooltip title="Информация">
-              <IconButton
-                size="small"
-                color="info"
-                onClick={() => onViewInfo(container)}
-              >
-                <InfoIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
-            {scriptName && (
-              <Tooltip title="Rebuild">
+            <Tooltip title="Остановить">
+              <span>
                 <IconButton
                   size="small"
-                  color="secondary"
-                  onClick={() => onExecuteScript(container, scriptName)}
+                  color="error"
+                  onClick={() => onAction(container.Id, 'stop')}
+                  disabled={isRebuilding}
                 >
-                  <PlayCircleIcon fontSize="small" />
+                  <StopIcon fontSize="small" />
                 </IconButton>
-              </Tooltip>
-            )}
-            <Tooltip title="Остановить">
-              <IconButton
-                size="small"
-                color="error"
-                onClick={() => onAction(container.Id, 'stop')}
-              >
-                <StopIcon fontSize="small" />
-              </IconButton>
+              </span>
             </Tooltip>
             <Tooltip title="Перезапустить">
-              <IconButton
-                size="small"
-                color="warning"
-                onClick={() => onAction(container.Id, 'restart')}
-              >
-                <RestartAltIcon fontSize="small" />
-              </IconButton>
+              <span>
+                <IconButton
+                  size="small"
+                  color="warning"
+                  onClick={() => onAction(container.Id, 'restart')}
+                  disabled={isRebuilding}
+                >
+                  <RestartAltIcon fontSize="small" />
+                </IconButton>
+              </span>
             </Tooltip>
           </>
         ) : (
           <>
             <Tooltip title="Запустить">
-              <IconButton
-                size="small"
-                color="success"
-                onClick={() => onAction(container.Id, 'start')}
-              >
-                <PlayArrowIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
-            {scriptName && (
-              <Tooltip title="Rebuild">
+              <span>
                 <IconButton
                   size="small"
-                  color="secondary"
-                  onClick={() => onExecuteScript(container, scriptName)}
+                  color="success"
+                  onClick={() => onAction(container.Id, 'start')}
+                  disabled={isRebuilding}
                 >
-                  <PlayCircleIcon fontSize="small" />
+                  <PlayArrowIcon fontSize="small" />
                 </IconButton>
-              </Tooltip>
-            )}
+              </span>
+            </Tooltip>
           </>
         )}
         <Tooltip title="Удалить">
+          <span>
+            <IconButton
+              size="small"
+              color="error"
+              onClick={() => {
+                if (window.confirm(`Удалить контейнер ${getContainerName(container.Names)}?`)) {
+                  onAction(container.Id, 'remove')
+                }
+              }}
+              disabled={isRebuilding}
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </span>
+        </Tooltip>
+      </Box>
+    )
+  }
+
+  const renderRebuildButton = (container) => {
+    const scriptName = findScriptForContainer(container)
+    const isRebuilding = rebuildingContainers.has(container.Id)
+    
+    if (!scriptName) return <Box sx={{ width: 40 }} />
+    
+    return (
+      <Tooltip title={isRebuilding ? "Rebuilding..." : "Rebuild"}>
+        <span>
           <IconButton
             size="small"
-            color="error"
-            onClick={() => {
-              if (window.confirm(`Удалить контейнер ${getContainerName(container.Names)}?`)) {
-                onAction(container.Id, 'remove')
-              }
-            }}
+            color="warning"
+            onClick={() => handleRebuild(container, scriptName)}
+            disabled={isRebuilding}
           >
-            <DeleteIcon fontSize="small" />
+            <PlayCircleIcon fontSize="small" />
           </IconButton>
+        </span>
+      </Tooltip>
+    )
+  }
+
+  const renderViewButtons = (container) => {
+    const isRebuilding = rebuildingContainers.has(container.Id)
+    
+    return (
+      <Box display="flex" gap={0.5}>
+        <Tooltip title="Информация">
+          <span>
+            <IconButton
+              size="small"
+              color="info"
+              onClick={() => onViewInfo(container)}
+              disabled={isRebuilding}
+            >
+              <InfoIcon fontSize="small" />
+            </IconButton>
+          </span>
         </Tooltip>
         <Tooltip title="Просмотр логов">
-          <IconButton
-            size="small"
-            color="primary"
-            onClick={() => onViewLogs(container)}
-          >
-            <VisibilityIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>    
+          <span>
+            <IconButton
+              size="small"
+              color="primary"
+              onClick={() => onViewLogs(container)}
+              disabled={isRebuilding}
+            >
+              <VisibilityIcon fontSize="small" />
+            </IconButton>
+          </span>
+        </Tooltip>
       </Box>
     )
   }
@@ -360,7 +409,15 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
                 </TableSortLabel>
               </TableCell>
             )}
-            <TableCell align="right">Actions</TableCell>
+            {visibleColumns.actions && (
+              <TableCell align="right">Actions</TableCell>
+            )}
+            {visibleColumns.rebuild && (
+              <TableCell align="center">Rebuild</TableCell>
+            )}
+            {visibleColumns.view && (
+              <TableCell align="center">View</TableCell>
+            )}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -417,9 +474,21 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
                   </Typography>
                 </TableCell>
               )}
-              <TableCell align="right">
-                {renderActionButtons(container)}
-              </TableCell>
+              {visibleColumns.actions && (
+                <TableCell align="right">
+                  {renderActionButtons(container)}
+                </TableCell>
+              )}
+              {visibleColumns.rebuild && (
+                <TableCell align="center">
+                  {renderRebuildButton(container)}
+                </TableCell>
+              )}
+              {visibleColumns.view && (
+                <TableCell align="center">
+                  {renderViewButtons(container)}
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>
@@ -443,6 +512,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
     <Grid container spacing={2}>
       {processedContainers.map((container) => {
         const scriptName = findScriptForContainer(container)
+        const isRebuilding = rebuildingContainers.has(container.Id)
         
         return (
           <Grid item key={container.Id}>
@@ -525,79 +595,100 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
                 {container.State.toLowerCase() === 'running' ? (
                   <>
                     <Tooltip title="Остановить">
-                      <IconButton
-                        size="small"
-                        color="error"
-                        onClick={() => onAction(container.Id, 'stop')}
-                      >
-                        <StopIcon fontSize="small" />
-                      </IconButton>
+                      <span>
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={() => onAction(container.Id, 'stop')}
+                          disabled={isRebuilding}
+                        >
+                          <StopIcon fontSize="small" />
+                        </IconButton>
+                      </span>
                     </Tooltip>
                     <Tooltip title="Перезапустить">
-                      <IconButton
-                        size="small"
-                        color="warning"
-                        onClick={() => onAction(container.Id, 'restart')}
-                      >
-                        <RestartAltIcon fontSize="small" />
-                      </IconButton>
+                      <span>
+                        <IconButton
+                          size="small"
+                          color="warning"
+                          onClick={() => onAction(container.Id, 'restart')}
+                          disabled={isRebuilding}
+                        >
+                          <RestartAltIcon fontSize="small" />
+                        </IconButton>
+                      </span>
                     </Tooltip>
                   </>
                 ) : (
                   <Tooltip title="Запустить">
-                    <IconButton
-                      size="small"
-                      color="success"
-                      onClick={() => onAction(container.Id, 'start')}
-                    >
-                      <PlayArrowIcon fontSize="small" />
-                    </IconButton>
+                    <span>
+                      <IconButton
+                        size="small"
+                        color="success"
+                        onClick={() => onAction(container.Id, 'start')}
+                        disabled={isRebuilding}
+                      >
+                        <PlayArrowIcon fontSize="small" />
+                      </IconButton>
+                    </span>
                   </Tooltip>
                 )}
                 <Tooltip title="Удалить">
-                  <IconButton
-                    size="small"
-                    color="error"
-                    onClick={() => {
-                      if (window.confirm(`Удалить контейнер ${getContainerName(container.Names)}?`)) {
-                        onAction(container.Id, 'remove')
-                      }
-                    }}
-                  >
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
+                  <span>
+                    <IconButton
+                      size="small"
+                      color="error"
+                      onClick={() => {
+                        if (window.confirm(`Удалить контейнер ${getContainerName(container.Names)}?`)) {
+                          onAction(container.Id, 'remove')
+                        }
+                      }}
+                      disabled={isRebuilding}
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </IconButton>
+                  </span>
                 </Tooltip>
               </Box>
               
               <Box sx={{ display: 'flex', gap: 0.5 }}>
                 {scriptName && (
-                  <Tooltip title="Rebuild">
-                    <IconButton
-                      size="small"
-                      color="secondary"
-                      onClick={() => onExecuteScript(container, scriptName)}
-                    >
-                      <PlayCircleIcon fontSize="small" />
-                    </IconButton>
+                  <Tooltip title={isRebuilding ? "Rebuilding..." : "Rebuild"}>
+                    <span>
+                      <IconButton
+                        size="small"
+                        color="warning"
+                        onClick={() => handleRebuild(container, scriptName)}
+                        disabled={isRebuilding}
+                      >
+                        <PlayCircleIcon fontSize="small" />
+                      </IconButton>
+                    </span>
                   </Tooltip>
                 )}
                 <Tooltip title="Информация">
-                  <IconButton
-                    size="small"
-                    color="info"
-                    onClick={() => onViewInfo(container)}
-                  >
-                    <InfoIcon fontSize="small" />
-                  </IconButton>
+                  <span>
+                    <IconButton
+                      size="small"
+                      color="info"
+                      onClick={() => onViewInfo(container)}
+                      disabled={isRebuilding}
+                    >
+                      <InfoIcon fontSize="small" />
+                    </IconButton>
+                  </span>
                 </Tooltip>
                 <Tooltip title="Просмотр логов">
-                  <IconButton
-                    size="small"
-                    color="primary"
-                    onClick={() => onViewLogs(container)}
-                  >
-                    <VisibilityIcon fontSize="small" />
-                  </IconButton>
+                  <span>
+                    <IconButton
+                      size="small"
+                      color="primary"
+                      onClick={() => onViewLogs(container)}
+                      disabled={isRebuilding}
+                    >
+                      <VisibilityIcon fontSize="small" />
+                    </IconButton>
+                  </span>
                 </Tooltip>
               </Box>
             </CardActions>
@@ -722,6 +813,39 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
               />
             }
             label="Created"
+          />
+        </MenuItem>
+        <MenuItem>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={visibleColumns.actions}
+                onChange={() => handleColumnToggle('actions')}
+              />
+            }
+            label="Actions"
+          />
+        </MenuItem>
+        <MenuItem>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={visibleColumns.rebuild}
+                onChange={() => handleColumnToggle('rebuild')}
+              />
+            }
+            label="Rebuild"
+          />
+        </MenuItem>
+        <MenuItem>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={visibleColumns.view}
+                onChange={() => handleColumnToggle('view')}
+              />
+            }
+            label="View"
           />
         </MenuItem>
       </Menu>
