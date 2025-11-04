@@ -20,8 +20,11 @@ FROM node:24-alpine
 
 WORKDIR /app
 
-# Install system dependencies (wget for healthcheck, bash for script execution)
-RUN apk add --no-cache wget bash
+# Install system dependencies
+RUN apk add --no-cache \
+    wget \
+    bash \
+    util-linux  # provides nsenter
 
 # Copy package files for production dependencies
 COPY package.json yarn.lock ./

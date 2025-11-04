@@ -190,22 +190,31 @@ app.post('/api/scripts/execute', async (req, res) => {
     
     const scriptPath = path.join(SCRIPTS_DIR, scriptName);
     
-    // Check if script exists and is executable
+    // Check if script exists and is accessible from container
     try {
-      await access(scriptPath, constants.F_OK | constants.X_OK);
+      await access(scriptPath, constants.F_OK);
     } catch (err) {
-      return res.status(404).json({ error: 'Script not found or not executable' });
+      return res.status(404).json({ error: 'Script not found' });
     }
     
-    // Execute script
-    console.log(`Executing script: ${scriptPath}`);
-    const { stdout, stderr } = await execAsync(`bash "${scriptPath}"`);
+    // Execute script on HOST using nsenter to enter host's PID namespace
+    // This allows running commands directly on the host without temporary containers
+    console.log(`Executing script on host: ${scriptPath}`);
+    
+    const hostScriptPath = scriptPath.replace('/app/scripts', process.env.HOST_SCRIPTS_DIR || '/home/axitech/BPM2');
+    
+    // Use nsenter to run command in host's namespaces
+    // PID 1 is always the init process on the host
+    const command = `nsenter --target 1 --mount --uts --ipc --net --pid -- bash "${hostScriptPath}"`;
+    
+    console.log(`Executing command: ${command}`);
+    const { stdout, stderr } = await execAsync(command, { maxBuffer: 1024 * 1024 * 10 }); // 10MB buffer
     
     res.json({
       success: true,
       stdout: stdout || '',
       stderr: stderr || '',
-      message: `Script executed successfully for ${containerName}`
+      message: `Script executed successfully on host for ${containerName}`
     });
   } catch (error) {
     console.error('Error executing script:', error.message);
