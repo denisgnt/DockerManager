@@ -197,9 +197,9 @@ app.post('/api/scripts/execute', async (req, res) => {
       return res.status(404).json({ error: 'Script not found or not executable' });
     }
     
-    // Execute script
+    // Execute script (use sh instead of bash for Alpine Linux compatibility)
     console.log(`Executing script: ${scriptPath}`);
-    const { stdout, stderr } = await execAsync(`bash "${scriptPath}"`);
+    const { stdout, stderr } = await execAsync(`sh "${scriptPath}"`);
     
     res.json({
       success: true,
