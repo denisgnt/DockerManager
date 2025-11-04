@@ -13,13 +13,6 @@ if [ ! -f .env ]; then
     echo "📝 Creating .env file from .env.docker..."
     cp .env.docker .env
     echo "✅ .env file created"
-    echo ""
-    echo "⚠️  Please edit .env file and configure:"
-    echo "   - VITE_DOCKER_API_HOST (Docker API host)"
-    echo "   - VITE_DOCKER_API_PORT (Docker API port)"
-    echo "   - SCRIPTS_DIR (path to your scripts directory)"
-    echo ""
-    read -p "Press Enter to continue after editing .env file..."
 fi
 
 # Check if Docker is running
