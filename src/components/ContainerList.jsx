@@ -39,8 +39,8 @@ import PlayCircleIcon from '@mui/icons-material/PlayCircle'
 const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecuteScript, availableScripts = {}, rebuildingContainers = new Set(), viewMode = 'list' }) => {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(30)
-  const [orderBy, setOrderBy] = useState('name')
-  const [order, setOrder] = useState('asc')
+  const [orderBy, setOrderBy] = useState('created')
+  const [order, setOrder] = useState('desc')
   const [searchQuery, setSearchQuery] = useState('')
   const [columnMenuAnchor, setColumnMenuAnchor] = useState(null)
   

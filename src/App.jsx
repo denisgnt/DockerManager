@@ -18,6 +18,7 @@ import ViewModuleIcon from '@mui/icons-material/ViewModule'
 import ContainerList from './components/ContainerList'
 import ContainerLogs from './components/ContainerLogs'
 import ContainerInfo from './components/ContainerInfo'
+import ScriptOutput from './components/ScriptOutput'
 import axios from 'axios'
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
   const [availableScripts, setAvailableScripts] = useState({})
   const [rebuildingContainers, setRebuildingContainers] = useState(new Set())
   const [snackbar, setSnackbar] = useState({ open: false, message: '' })
+  const [scriptOutput, setScriptOutput] = useState({ open: false, data: null })
   const [viewMode, setViewMode] = useState(() => {
     return localStorage.getItem('dockerManagerViewMode') || 'list'
   })
@@ -137,12 +139,38 @@ function App() {
           open: true, 
           message: `Скрипт успешно выполнен для ${containerName}` 
         })
+        
+        // Show script output dialog
+        setScriptOutput({
+          open: true,
+          data: {
+            containerName,
+            output: response.data.output || '',
+            exitCode: response.data.exitCode
+          }
+        })
+        
         // Refresh containers after script execution
         setTimeout(fetchContainers, 1000)
       }
     } catch (err) {
       const errorMsg = err.response?.data?.error || err.message
+      const output = err.response?.data?.output || ''
+      
       setError(`Ошибка выполнения скрипта: ${errorMsg}`)
+      
+      // Show error output if available
+      if (output) {
+        setScriptOutput({
+          open: true,
+          data: {
+            containerName,
+            output,
+            exitCode: err.response?.data?.exitCode
+          }
+        })
+      }
+      
       console.error('Error executing script:', err)
     } finally {
       // Remove from rebuilding set after a delay
@@ -158,6 +186,10 @@ function App() {
 
   const handleCloseSnackbar = () => {
     setSnackbar({ open: false, message: '' })
+  }
+
+  const handleCloseScriptOutput = () => {
+    setScriptOutput({ open: false, data: null })
   }
 
   const handleViewModeChange = (event, newMode) => {
@@ -248,6 +280,12 @@ function App() {
                 onClose={handleCloseInfo}
               />
             )}
+
+            <ScriptOutput
+              open={scriptOutput.open}
+              onClose={handleCloseScriptOutput}
+              scriptData={scriptOutput.data}
+            />
           </>
         )}
       </Container>
@@ -258,6 +296,16 @@ function App() {
         onClose={handleCloseSnackbar}
         message={snackbar.message}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        ContentProps={{
+          sx: {
+            bgcolor: '#323232',
+            color: '#fff',
+            '& .MuiSnackbarContent-message': {
+              fontSize: '0.95rem',
+              fontWeight: 500
+            }
+          }
+        }}
       />
     </>
   )

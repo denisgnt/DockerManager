@@ -208,21 +208,43 @@ app.post('/api/scripts/execute', async (req, res) => {
     const command = `nsenter --target 1 --mount --uts --ipc --net --pid -- bash "${hostScriptPath}"`;
     
     console.log(`Executing command: ${command}`);
-    const { stdout, stderr } = await execAsync(command, { maxBuffer: 1024 * 1024 * 10 }); // 10MB buffer
     
-    res.json({
-      success: true,
-      stdout: stdout || '',
-      stderr: stderr || '',
-      message: `Script executed successfully on host for ${containerName}`
-    });
+    try {
+      const { stdout, stderr } = await execAsync(command, { maxBuffer: 1024 * 1024 * 10 }); // 10MB buffer
+      
+      console.log('Script executed successfully');
+      if (stderr) {
+        console.error('Script stderr:', stderr);
+      }
+
+      const output = stdout + (stderr ? `\n${stderr}` : '');
+
+      res.json({
+        success: true,
+        output: output,
+        exitCode: 0,
+        message: `Script executed successfully on host for ${containerName}`
+      });
+    } catch (execError) {
+      // Command failed but we have output
+      const output = (execError.stdout || '') + (execError.stderr ? `\n${execError.stderr}` : '');
+      
+      console.error('Script execution failed:', execError.message);
+      
+      res.status(500).json({
+        success: false,
+        error: execError.message,
+        output: output,
+        exitCode: execError.code || 1
+      });
+    }
   } catch (error) {
     console.error('Error executing script:', error.message);
     res.status(500).json({
       success: false,
       error: error.message,
-      stdout: error.stdout || '',
-      stderr: error.stderr || ''
+      output: error.stdout || error.stderr || '',
+      exitCode: error.code || 1
     });
   }
 });

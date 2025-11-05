@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import {
   Dialog,
   DialogTitle,
@@ -9,11 +9,15 @@ import {
   Typography,
   IconButton,
   Paper,
-  Tooltip
+  Tooltip,
+  TextField,
+  InputAdornment
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import FullscreenIcon from '@mui/icons-material/Fullscreen'
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit'
+import SearchIcon from '@mui/icons-material/Search'
+import ClearIcon from '@mui/icons-material/Clear'
 import { io } from 'socket.io-client'
 import Ansi from 'ansi-to-react'
 
@@ -21,6 +25,7 @@ const ContainerLogs = ({ container, onClose }) => {
   const [logs, setLogs] = useState([])
   const [connected, setConnected] = useState(false)
   const [fullscreen, setFullscreen] = useState(false)
+  const [filterText, setFilterText] = useState('')
   const logsEndRef = useRef(null)
   const socketRef = useRef(null)
 
@@ -88,6 +93,141 @@ const ContainerLogs = ({ container, onClose }) => {
     setFullscreen(!fullscreen)
   }
 
+  // Filter logs based on search text
+  const filteredLogs = useMemo(() => {
+    if (!filterText.trim()) {
+      return logs.map((log, index) => ({ log, index }))
+    }
+    
+    const filter = filterText.toLowerCase()
+    return logs
+      .map((log, index) => ({ log, index }))
+      .filter(({ log }) => {
+        // Remove ANSI codes for filtering
+        const cleanLog = log.replace(/\x1b\[[0-9;]*m/g, '')
+        return cleanLog.toLowerCase().includes(filter)
+      })
+  }, [logs, filterText])
+
+  // Highlight matching text in log with yellow background
+  const highlightMatch = (text) => {
+    if (!filterText.trim()) {
+      return <Ansi>{text}</Ansi>
+    }
+
+    const filter = filterText.toLowerCase()
+    const parts = []
+    let remaining = text
+    let result = []
+    
+    // Process text character by character, handling ANSI codes
+    let i = 0
+    let plainText = ''
+    let plainTextLower = ''
+    
+    while (i < remaining.length) {
+      // Check for ANSI escape sequence
+      if (remaining[i] === '\x1b' && remaining[i + 1] === '[') {
+        let j = i + 2
+        while (j < remaining.length && remaining[j] !== 'm') {
+          j++
+        }
+        // Found complete ANSI code
+        if (j < remaining.length) {
+          plainText += remaining.substring(i, j + 1)
+          i = j + 1
+          continue
+        }
+      }
+      
+      // Regular character
+      plainText += remaining[i]
+      plainTextLower += remaining[i].toLowerCase()
+      i++
+    }
+    
+    // Find all occurrences of the filter in the plain text
+    const matchIndex = plainTextLower.indexOf(filter)
+    
+    if (matchIndex === -1) {
+      return <Ansi>{text}</Ansi>
+    }
+    
+    // Split text into parts: before, match, after
+    let beforeMatch = ''
+    let match = ''
+    let afterMatch = ''
+    
+    let charCount = 0
+    let inMatch = false
+    let matchChars = 0
+    
+    for (let i = 0; i < text.length; i++) {
+      // Check for ANSI sequence
+      if (text[i] === '\x1b' && text[i + 1] === '[') {
+        let j = i + 2
+        while (j < text.length && text[j] !== 'm') {
+          j++
+        }
+        if (j < text.length) {
+          const ansiCode = text.substring(i, j + 1)
+          if (charCount < matchIndex) {
+            beforeMatch += ansiCode
+          } else if (inMatch) {
+            match += ansiCode
+          } else {
+            afterMatch += ansiCode
+          }
+          i = j
+          continue
+        }
+      }
+      
+      // Regular character
+      if (charCount === matchIndex) {
+        inMatch = true
+      }
+      
+      if (inMatch && matchChars >= filterText.length) {
+        inMatch = false
+      }
+      
+      if (charCount < matchIndex) {
+        beforeMatch += text[i]
+      } else if (inMatch) {
+        match += text[i]
+        matchChars++
+      } else {
+        afterMatch += text[i]
+      }
+      
+      charCount++
+    }
+    
+    return (
+      <>
+        <Ansi>{beforeMatch}</Ansi>
+        <Box
+          component="span"
+          sx={{
+            backgroundColor: '#ffd700',
+            color: '#000',
+            fontWeight: 'bold',
+            padding: '0 2px',
+            borderRadius: '2px'
+          }}
+        >
+          <Ansi>{match}</Ansi>
+        </Box>
+        <Ansi>{afterMatch}</Ansi>
+      </>
+    )
+  }
+
+  const handleClearFilter = () => {
+    setFilterText('')
+  }
+
   return (
     <Dialog
       open={true}
@@ -149,6 +289,44 @@ const ContainerLogs = ({ container, onClose }) => {
         </Box>
       </DialogTitle>
 
+      <Box sx={{ px: 3, pt: 2, pb: 1 }}>
+        <TextField
+          fullWidth
+          size="small"
+          placeholder="Фильтр логов..."
+          value={filterText}
+          onChange={(e) => setFilterText(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon fontSize="small" />
+              </InputAdornment>
+            ),
+            endAdornment: filterText && (
+              <InputAdornment position="end">
+                <IconButton
+                  size="small"
+                  onClick={handleClearFilter}
+                  edge="end"
+                >
+                  <ClearIcon fontSize="small" />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              backgroundColor: 'background.paper'
+            }
+          }}
+        />
+        {filterText && (
+          <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
+            Найдено строк: {filteredLogs.length} из {logs.length}
+          </Typography>
+        )}
+      </Box>
+
       <DialogContent dividers>
         <Paper
           elevation={0}
@@ -179,11 +357,23 @@ const ContainerLogs = ({ container, onClose }) => {
             >
               <Typography>Ожидание логов...</Typography>
             </Box>
+          ) : filteredLogs.length === 0 ? (
+            <Box 
+              sx={{ 
+                display: 'flex', 
+                justifyContent: 'center', 
+                alignItems: 'center', 
+                height: '100%',
+                color: 'text.secondary'
+              }}
+            >
+              <Typography>Нет логов, соответствующих фильтру</Typography>
+            </Box>
           ) : (
             <>
-              {logs.map((log, index) => (
+              {filteredLogs.map(({ log, index }) => (
                 <Box key={index} component="div" sx={{ mb: 0.25 }}>
-                  <Ansi>{log}</Ansi>
+                  {highlightMatch(log)}
                 </Box>
               ))}
               <div ref={logsEndRef} />

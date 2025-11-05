@@ -1,0 +1,283 @@
+import { useState, useMemo } from 'react'
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Box,
+  Typography,
+  IconButton,
+  TextField,
+  InputAdornment
+} from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
+import SearchIcon from '@mui/icons-material/Search'
+import ClearIcon from '@mui/icons-material/Clear'
+import Ansi from 'ansi-to-react'
+
+const ScriptOutput = ({ open, onClose, scriptData }) => {
+  const [filterText, setFilterText] = useState('')
+  
+  if (!scriptData) return null
+
+  const { containerName, output, exitCode } = scriptData
+
+  // Split output into lines for filtering
+  const lines = useMemo(() => {
+    if (!output) return []
+    return output.split('\n')
+  }, [output])
+
+  // Filter lines based on search text
+  const filteredLines = useMemo(() => {
+    if (!filterText.trim()) {
+      return lines.map((line, index) => ({ line, index }))
+    }
+    
+    const filter = filterText.toLowerCase()
+    return lines
+      .map((line, index) => ({ line, index }))
+      .filter(({ line }) => {
+        // Remove ANSI codes for filtering
+        const cleanLine = line.replace(/\x1b\[[0-9;]*m/g, '')
+        return cleanLine.toLowerCase().includes(filter)
+      })
+  }, [lines, filterText])
+
+  // Highlight matching text with yellow background
+  const highlightMatch = (text) => {
+    if (!filterText.trim()) {
+      return <Ansi>{text}</Ansi>
+    }
+
+    const filter = filterText.toLowerCase()
+    let plainText = ''
+    let plainTextLower = ''
+    
+    // Extract plain text without ANSI codes
+    let i = 0
+    while (i < text.length) {
+      if (text[i] === '\x1b' && text[i + 1] === '[') {
+        let j = i + 2
+        while (j < text.length && text[j] !== 'm') {
+          j++
+        }
+        if (j < text.length) {
+          i = j + 1
+          continue
+        }
+      }
+      plainText += text[i]
+      plainTextLower += text[i].toLowerCase()
+      i++
+    }
+    
+    const matchIndex = plainTextLower.indexOf(filter)
+    
+    if (matchIndex === -1) {
+      return <Ansi>{text}</Ansi>
+    }
+    
+    // Split text into parts: before, match, after
+    let beforeMatch = ''
+    let match = ''
+    let afterMatch = ''
+    let charCount = 0
+    let inMatch = false
+    let matchChars = 0
+    
+    for (let i = 0; i < text.length; i++) {
+      if (text[i] === '\x1b' && text[i + 1] === '[') {
+        let j = i + 2
+        while (j < text.length && text[j] !== 'm') {
+          j++
+        }
+        if (j < text.length) {
+          const ansiCode = text.substring(i, j + 1)
+          if (charCount < matchIndex) {
+            beforeMatch += ansiCode
+          } else if (inMatch) {
+            match += ansiCode
+          } else {
+            afterMatch += ansiCode
+          }
+          i = j
+          continue
+        }
+      }
+      
+      if (charCount === matchIndex) {
+        inMatch = true
+      }
+      
+      if (inMatch && matchChars >= filterText.length) {
+        inMatch = false
+      }
+      
+      if (charCount < matchIndex) {
+        beforeMatch += text[i]
+      } else if (inMatch) {
+        match += text[i]
+        matchChars++
+      } else {
+        afterMatch += text[i]
+      }
+      
+      charCount++
+    }
+    
+    return (
+      <>
+        <Ansi>{beforeMatch}</Ansi>
+        <Box
+          component="span"
+          sx={{
+            backgroundColor: '#ffd700',
+            color: '#000',
+            fontWeight: 'bold',
+            padding: '0 2px',
+            borderRadius: '2px'
+          }}
+        >
+          <Ansi>{match}</Ansi>
+        </Box>
+        <Ansi>{afterMatch}</Ansi>
+      </>
+    )
+  }
+
+  const handleClearFilter = () => {
+    setFilterText('')
+  }
+
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="lg"
+      fullWidth
+      PaperProps={{
+        sx: {
+          minHeight: '60vh',
+          maxHeight: '80vh'
+        }
+      }}
+    >
+      <DialogTitle
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          pb: 1
+        }}
+      >
+        <Box>
+          <Typography variant="h6" component="span">
+            Результат выполнения скрипта
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+            Контейнер: {containerName}
+          </Typography>
+        </Box>
+        <IconButton
+          edge="end"
+          color="inherit"
+          onClick={onClose}
+          aria-label="close"
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+
+      <Box sx={{ px: 3, pt: 2, pb: 1 }}>
+        <TextField
+          fullWidth
+          size="small"
+          placeholder="Фильтр вывода..."
+          value={filterText}
+          onChange={(e) => setFilterText(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon fontSize="small" />
+              </InputAdornment>
+            ),
+            endAdornment: filterText && (
+              <InputAdornment position="end">
+                <IconButton
+                  size="small"
+                  onClick={handleClearFilter}
+                  edge="end"
+                >
+                  <ClearIcon fontSize="small" />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              backgroundColor: 'background.paper'
+            }
+          }}
+        />
+        {filterText && (
+          <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
+            Найдено строк: {filteredLines.length} из {lines.length}
+          </Typography>
+        )}
+      </Box>
+
+      <DialogContent dividers>
+        <Box
+          sx={{
+            bgcolor: '#1e1e1e',
+            color: '#d4d4d4',
+            p: 2,
+            borderRadius: 1,
+            fontFamily: 'monospace',
+            fontSize: '0.875rem',
+            overflow: 'auto',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word'
+          }}
+        >
+          {!output ? (
+            <Typography color="text.secondary">Нет вывода</Typography>
+          ) : filteredLines.length === 0 ? (
+            <Typography color="text.secondary">Нет строк, соответствующих фильтру</Typography>
+          ) : (
+            filteredLines.map(({ line, index }) => (
+              <Box key={index} component="div" sx={{ mb: 0.25 }}>
+                {highlightMatch(line)}
+              </Box>
+            ))
+          )}
+        </Box>
+        
+        {exitCode !== undefined && (
+          <Box sx={{ mt: 2 }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: exitCode === 0 ? 'success.main' : 'error.main',
+                fontWeight: 'medium'
+              }}
+            >
+              Exit Code: {exitCode}
+              {exitCode === 0 ? ' (Успешно)' : ' (Ошибка)'}
+            </Typography>
+          </Box>
+        )}
+      </DialogContent>
+
+      <DialogActions>
+        <Button onClick={onClose} variant="contained">
+          Закрыть
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
+}
+
+export default ScriptOutput
