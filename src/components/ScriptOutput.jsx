@@ -19,9 +19,7 @@ import Ansi from 'ansi-to-react'
 const ScriptOutput = ({ open, onClose, scriptData }) => {
   const [filterText, setFilterText] = useState('')
   
-  if (!scriptData) return null
-
-  const { containerName, output, exitCode } = scriptData
+  const { containerName, output, exitCode } = scriptData || {}
 
   // Split output into lines for filtering
   const lines = useMemo(() => {
@@ -150,6 +148,8 @@ const ScriptOutput = ({ open, onClose, scriptData }) => {
   const handleClearFilter = () => {
     setFilterText('')
   }
+  
+  if (!scriptData) return null
 
   return (
     <Dialog
