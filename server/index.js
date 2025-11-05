@@ -202,10 +202,12 @@ app.post('/api/scripts/execute', async (req, res) => {
     console.log(`Executing script on host: ${scriptPath}`);
     
     const hostScriptPath = scriptPath.replace('/app/scripts', process.env.HOST_SCRIPTS_DIR || '/home/axitech/BPM2');
+    //const hostBaseDir = process.env.HOST_SCRIPTS_DIR || '/home/axitech/BPM2';
     
     // Use nsenter to run command in host's namespaces
     // PID 1 is always the init process on the host
-    const command = `nsenter --target 1 --mount --uts --ipc --net --pid -- bash "${hostScriptPath}"`;
+    // Add git safe.directory configuration before running the script
+    const command = `nsenter --target 1 --mount --uts --ipc --net --pid -- bash -c "git config --global --add safe.directory '*' && bash '${hostScriptPath}'"`;
     
     console.log(`Executing command: ${command}`);
     
