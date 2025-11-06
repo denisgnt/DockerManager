@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import {
   Container,
   Box,
@@ -19,48 +19,33 @@ import ContainerList from './components/ContainerList'
 import ContainerLogs from './components/ContainerLogs'
 import ContainerInfo from './components/ContainerInfo'
 import ScriptOutput from './components/ScriptOutput'
-import axios from 'axios'
+import useDockerStore from './store/useDockerStore'
 
 function App() {
-  const [containers, setContainers] = useState([])
-  const [selectedContainer, setSelectedContainer] = useState(null)
-  const [selectedContainerInfo, setSelectedContainerInfo] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [availableScripts, setAvailableScripts] = useState({})
-  const [rebuildingContainers, setRebuildingContainers] = useState(new Set())
-  const [snackbar, setSnackbar] = useState({ open: false, message: '' })
-  const [scriptOutput, setScriptOutput] = useState({ open: false, data: null })
-  const [viewMode, setViewMode] = useState(() => {
-    return localStorage.getItem('dockerManagerViewMode') || 'list'
-  })
-
-  const dockerApiHost = import.meta.env.VITE_DOCKER_API_HOST || '10.174.18.242'
-  const dockerApiPort = import.meta.env.VITE_DOCKER_API_PORT || '2375'
-  const dockerApiUrl = `${dockerApiHost}:${dockerApiPort}`
-
-  const fetchContainers = async () => {
-    try {
-      setLoading(true)
-      setError(null)
-      const response = await axios.get('/api/containers')
-      setContainers(response.data)
-    } catch (err) {
-      setError(`Ошибка подключения к Docker API: ${err.message}`)
-      console.error('Error fetching containers:', err)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const fetchScripts = async () => {
-    try {
-      const response = await axios.get('/api/scripts')
-      setAvailableScripts(response.data)
-    } catch (err) {
-      console.error('Error fetching scripts:', err)
-    }
-  }
+  // Получение состояния и действий из store
+  const {
+    containers,
+    selectedContainer,
+    selectedContainerInfo,
+    loading,
+    error,
+    availableScripts,
+    rebuildingContainers,
+    snackbar,
+    scriptOutput,
+    viewMode,
+    dockerApiUrl,
+    fetchContainers,
+    fetchScripts,
+    handleContainerAction,
+    executeScript,
+    setSelectedContainer,
+    setSelectedContainerInfo,
+    setError,
+    closeSnackbar,
+    closeScriptOutput,
+    setViewMode,
+  } = useDockerStore()
 
   useEffect(() => {
     fetchContainers()
@@ -68,134 +53,11 @@ function App() {
     // Auto-refresh every 5 seconds
     const interval = setInterval(fetchContainers, 5000)
     return () => clearInterval(interval)
-  }, [])
-
-  const handleContainerAction = async (containerId, action) => {
-    try {
-      setError(null)
-      let response
-      
-      switch (action) {
-        case 'start':
-          response = await axios.post(`/api/containers/${containerId}/start`)
-          break
-        case 'stop':
-          response = await axios.post(`/api/containers/${containerId}/stop`)
-          break
-        case 'restart':
-          response = await axios.post(`/api/containers/${containerId}/restart`)
-          break
-        case 'remove':
-          response = await axios.delete(`/api/containers/${containerId}`)
-          if (selectedContainer?.Id === containerId) {
-            setSelectedContainer(null)
-          }
-          break
-        default:
-          break
-      }
-      
-      // Refresh containers list after action
-      setTimeout(fetchContainers, 1000)
-    } catch (err) {
-      setError(`Ошибка при выполнении операции: ${err.message}`)
-      console.error('Error performing container action:', err)
-    }
-  }
-
-  const handleViewLogs = (container) => {
-    setSelectedContainer(container)
-  }
-
-  const handleCloseLogs = () => {
-    setSelectedContainer(null)
-  }
-
-  const handleViewInfo = (container) => {
-    setSelectedContainerInfo(container)
-  }
-
-  const handleCloseInfo = () => {
-    setSelectedContainerInfo(null)
-  }
-
-  const handleExecuteScript = async (container, scriptName) => {
-    const containerId = container.Id
-    const containerName = container.Names[0].replace(/^\//, '')
-    
-    try {
-      setError(null)
-      // Add to rebuilding set
-      setRebuildingContainers(prev => new Set(prev).add(containerId))
-      
-      const response = await axios.post('/api/scripts/execute', {
-        scriptName,
-        containerName
-      })
-      
-      if (response.data.success) {
-        // Show success snackbar
-        setSnackbar({ 
-          open: true, 
-          message: `Скрипт успешно выполнен для ${containerName}` 
-        })
-        
-        // Show script output dialog
-        setScriptOutput({
-          open: true,
-          data: {
-            containerName,
-            output: response.data.output || '',
-            exitCode: response.data.exitCode
-          }
-        })
-        
-        // Refresh containers after script execution
-        setTimeout(fetchContainers, 1000)
-      }
-    } catch (err) {
-      const errorMsg = err.response?.data?.error || err.message
-      const output = err.response?.data?.output || ''
-      
-      setError(`Ошибка выполнения скрипта: ${errorMsg}`)
-      
-      // Show error output if available
-      if (output) {
-        setScriptOutput({
-          open: true,
-          data: {
-            containerName,
-            output,
-            exitCode: err.response?.data?.exitCode
-          }
-        })
-      }
-      
-      console.error('Error executing script:', err)
-    } finally {
-      // Remove from rebuilding set after a delay
-      setTimeout(() => {
-        setRebuildingContainers(prev => {
-          const newSet = new Set(prev)
-          newSet.delete(containerId)
-          return newSet
-        })
-      }, 2000)
-    }
-  }
-
-  const handleCloseSnackbar = () => {
-    setSnackbar({ open: false, message: '' })
-  }
-
-  const handleCloseScriptOutput = () => {
-    setScriptOutput({ open: false, data: null })
-  }
+  }, [fetchContainers, fetchScripts])
 
   const handleViewModeChange = (event, newMode) => {
     if (newMode !== null) {
       setViewMode(newMode)
-      localStorage.setItem('dockerManagerViewMode', newMode)
     }
   }
 
@@ -259,9 +121,9 @@ function App() {
             <ContainerList
               containers={containers}
               onAction={handleContainerAction}
-              onViewLogs={handleViewLogs}
-              onViewInfo={handleViewInfo}
-              onExecuteScript={handleExecuteScript}
+              onViewLogs={setSelectedContainer}
+              onViewInfo={setSelectedContainerInfo}
+              onExecuteScript={executeScript}
               availableScripts={availableScripts}
               rebuildingContainers={rebuildingContainers}
               viewMode={viewMode}
@@ -270,20 +132,20 @@ function App() {
             {selectedContainer && (
               <ContainerLogs
                 container={selectedContainer}
-                onClose={handleCloseLogs}
+                onClose={() => setSelectedContainer(null)}
               />
             )}
 
             {selectedContainerInfo && (
               <ContainerInfo
                 container={selectedContainerInfo}
-                onClose={handleCloseInfo}
+                onClose={() => setSelectedContainerInfo(null)}
               />
             )}
 
             <ScriptOutput
               open={scriptOutput.open}
-              onClose={handleCloseScriptOutput}
+              onClose={closeScriptOutput}
               scriptData={scriptOutput.data}
             />
           </>
@@ -293,7 +155,7 @@ function App() {
       <Snackbar
         open={snackbar.open}
         autoHideDuration={4000}
-        onClose={handleCloseSnackbar}
+        onClose={closeSnackbar}
         message={snackbar.message}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         ContentProps={{

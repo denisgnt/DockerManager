@@ -20,6 +20,8 @@
 
 ### Frontend
 - **React 19.2** - библиотека для создания пользовательских интерфейсов
+- **React Compiler** - автоматическая оптимизация компонентов
+- **Zustand** - управление глобальным состоянием приложения
 - **Vite 7.1** - современный сборщик проектов
 - **Material UI 7.3** - библиотека компонентов
 - **Socket.IO Client 4.8** - для WebSocket соединений
@@ -286,7 +288,17 @@ MIT
 
 Предложения и улучшения приветствуются! Создавайте Issues и Pull Requests.
 
-## 📞 Поддержка
+## � Документация
+
+- [ARCHITECTURE.md](./ARCHITECTURE.md) - Архитектура приложения
+- [ZUSTAND_STORE.md](./ZUSTAND_STORE.md) - Управление состоянием с Zustand
+- [ZUSTAND_QUICK_START.md](./ZUSTAND_QUICK_START.md) - Быстрый старт с Zustand
+- [REACT_COMPILER.md](./REACT_COMPILER.md) - React Compiler и оптимизация
+- [DOCKER_DEPLOYMENT.md](./DOCKER_DEPLOYMENT.md) - Развертывание в Docker
+- [ENV_VARIABLES.md](./ENV_VARIABLES.md) - Переменные окружения
+- [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) - Структура проекта
+
+## �📞 Поддержка
 
 При возникновении проблем:
 1. Проверьте раздел "Решение проблем"
