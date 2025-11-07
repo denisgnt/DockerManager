@@ -18,6 +18,7 @@ import ViewModuleIcon from '@mui/icons-material/ViewModule'
 import ContainerList from './components/ContainerList'
 import ContainerLogs from './components/ContainerLogs'
 import ContainerInfo from './components/ContainerInfo'
+import ContainerStats from './components/ContainerStats'
 import ScriptOutput from './components/ScriptOutput'
 import useDockerStore from './store/useDockerStore'
 
@@ -27,6 +28,7 @@ function App() {
     containers,
     selectedContainer,
     selectedContainerInfo,
+    selectedContainerStats,
     loading,
     error,
     availableScripts,
@@ -41,6 +43,7 @@ function App() {
     executeScript,
     setSelectedContainer,
     setSelectedContainerInfo,
+    setSelectedContainerStats,
     setError,
     closeSnackbar,
     closeScriptOutput,
@@ -123,6 +126,7 @@ function App() {
               onAction={handleContainerAction}
               onViewLogs={setSelectedContainer}
               onViewInfo={setSelectedContainerInfo}
+              onViewStats={setSelectedContainerStats}
               onExecuteScript={executeScript}
               availableScripts={availableScripts}
               rebuildingContainers={rebuildingContainers}
@@ -140,6 +144,13 @@ function App() {
               <ContainerInfo
                 container={selectedContainerInfo}
                 onClose={() => setSelectedContainerInfo(null)}
+              />
+            )}
+
+            {selectedContainerStats && (
+              <ContainerStats
+                container={selectedContainerStats}
+                onClose={() => setSelectedContainerStats(null)}
               />
             )}
 

@@ -35,8 +35,10 @@ import SearchIcon from '@mui/icons-material/Search'
 import ViewColumnIcon from '@mui/icons-material/ViewColumn'
 import InfoIcon from '@mui/icons-material/Info'
 import PlayCircleIcon from '@mui/icons-material/PlayCircle'
+import OpenInNewIcon from '@mui/icons-material/OpenInNew'
+import ShowChartIcon from '@mui/icons-material/ShowChart'
 
-const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecuteScript, availableScripts = {}, rebuildingContainers = new Set(), viewMode = 'list' }) => {
+const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewStats, onExecuteScript, availableScripts = {}, rebuildingContainers = new Set(), viewMode = 'list' }) => {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(30)
   const [orderBy, setOrderBy] = useState('created')
@@ -53,6 +55,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
       image: false,
       id: true,
       ports: true,
+      serviceLink: false,
       created: true,
       actions: false,
       rebuild: true,
@@ -127,9 +130,44 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
 
   const formatPorts = (ports) => {
     if (!ports || ports.length === 0) return '-'
-    return ports.map(port => 
-      port.PublicPort ? `${port.PublicPort}:${port.PrivatePort}` : port.PrivatePort
-    ).join(', ')
+    
+    // Remove duplicates - if public and private ports are the same, show only one
+    const uniquePorts = new Set()
+    ports.forEach(port => {
+      if (port.PublicPort && port.PublicPort !== port.PrivatePort) {
+        uniquePorts.add(`${port.PublicPort}:${port.PrivatePort}`)
+      } else if (port.PublicPort) {
+        uniquePorts.add(port.PublicPort.toString())
+      } else {
+        uniquePorts.add(port.PrivatePort.toString())
+      }
+    })
+    
+    return Array.from(uniquePorts).join(', ')
+  }
+
+  const getServiceLink = (ports) => {
+    if (!ports || ports.length === 0) return null
+    
+    // Find first port with public mapping
+    const publicPort = ports.find(port => port.PublicPort)
+    if (publicPort) {
+      // Use custom host from env or current page hostname
+      const host = import.meta.env.VITE_SERVICE_HOST || window.location.hostname
+      return `http://${host}:${publicPort.PublicPort}`
+    }
+    
+    return null
+  }
+
+  const getPortsForSearch = (ports) => {
+    if (!ports || ports.length === 0) return ''
+    return ports.map(port => {
+      if (port.PublicPort) {
+        return `${port.PublicPort} ${port.PrivatePort}`
+      }
+      return port.PrivatePort.toString()
+    }).join(' ')
   }
 
   // Sorting
@@ -166,9 +204,10 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
       const name = getContainerName(container.Names).toLowerCase()
       const image = container.Image.toLowerCase()
       const id = container.Id.toLowerCase()
+      const ports = getPortsForSearch(container.Ports).toLowerCase()
       const query = searchQuery.toLowerCase()
       
-      return name.includes(query) || image.includes(query) || id.includes(query)
+      return name.includes(query) || image.includes(query) || id.includes(query) || ports.includes(query)
     })
 
     // Sort
@@ -191,6 +230,10 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
         case 'id':
           aValue = a.Id
           bValue = b.Id
+          break
+        case 'ports':
+          aValue = formatPorts(a.Ports)
+          bValue = formatPorts(b.Ports)
           break
         case 'created':
           aValue = a.Created
@@ -324,6 +367,18 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
             </IconButton>
           </span>
         </Tooltip>
+        <Tooltip title="Телеметрия">
+          <span>
+            <IconButton
+              size="small"
+              color="secondary"
+              onClick={() => onViewStats(container)}
+              disabled={isRebuilding || container.State.toLowerCase() !== 'running'}
+            >
+              <ShowChartIcon fontSize="small" />
+            </IconButton>
+          </span>
+        </Tooltip>
         <Tooltip title="Просмотр логов">
           <span>
             <IconButton
@@ -391,7 +446,18 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
               </TableCell>
             )}
             {visibleColumns.ports && (
-              <TableCell>Ports</TableCell>
+              <TableCell>
+                <TableSortLabel
+                  active={orderBy === 'ports'}
+                  direction={orderBy === 'ports' ? order : 'asc'}
+                  onClick={createSortHandler('ports')}
+                >
+                  Ports
+                </TableSortLabel>
+              </TableCell>
+            )}
+            {visibleColumns.serviceLink && (
+              <TableCell>Service Link</TableCell>
             )}
             {visibleColumns.created && (
               <TableCell>
@@ -460,6 +526,33 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
                   <Typography variant="body2" color="text.secondary">
                     {formatPorts(container.Ports)}
                   </Typography>
+                </TableCell>
+              )}
+              {visibleColumns.serviceLink && (
+                <TableCell>
+                  {getServiceLink(container.Ports) ? (
+                    <Box display="flex" alignItems="center" gap={0.5}>
+                      <Typography 
+                        component="a" 
+                        href={getServiceLink(container.Ports)} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        variant="body2"
+                        sx={{
+                          color: 'primary.main',
+                          textDecoration: 'none',
+                          '&:hover': {
+                            textDecoration: 'underline'
+                          }
+                        }}
+                      >
+                        {getServiceLink(container.Ports)}
+                      </Typography>
+                      <OpenInNewIcon sx={{ fontSize: 14, color: 'primary.main' }} />
+                    </Box>
+                  ) : (
+                    <Typography variant="body2" color="text.secondary">-</Typography>
+                  )}
                 </TableCell>
               )}
               {visibleColumns.created && (
@@ -571,6 +664,31 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
                   </Typography>
                 )}
 
+                {getServiceLink(container.Ports) && (
+                  <Box display="flex" alignItems="center" gap={0.5}>
+                    <Typography variant="body2" color="text.secondary">
+                      <strong>Service:</strong>
+                    </Typography>
+                    <Typography 
+                      component="a" 
+                      href={getServiceLink(container.Ports)} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      variant="body2"
+                      sx={{
+                        color: 'primary.main',
+                        textDecoration: 'none',
+                        '&:hover': {
+                          textDecoration: 'underline'
+                        }
+                      }}
+                    >
+                      {getServiceLink(container.Ports)}
+                    </Typography>
+                    <OpenInNewIcon sx={{ fontSize: 14, color: 'primary.main' }} />
+                  </Box>
+                )}
+
                 <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 1 }}>
                   <strong>Создан:</strong> {formatDate(container.Created)}
                 </Typography>
@@ -673,6 +791,18 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
                     </IconButton>
                   </span>
                 </Tooltip>
+                <Tooltip title="Телеметрия">
+                  <span>
+                    <IconButton
+                      size="small"
+                      color="secondary"
+                      onClick={() => onViewStats(container)}
+                      disabled={isRebuilding || container.State.toLowerCase() !== 'running'}
+                    >
+                      <ShowChartIcon fontSize="small" />
+                    </IconButton>
+                  </span>
+                </Tooltip>
                 <Tooltip title="Просмотр логов">
                   <span>
                     <IconButton
@@ -724,7 +854,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
       <TextField
         fullWidth
         variant="outlined"
-        placeholder="Поиск по имени, образу или ID..."
+        placeholder="Поиск по имени, образу, ID или порту..."
         value={searchQuery}
         onChange={handleSearchChange}
         slotProps={{
@@ -797,6 +927,17 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onExecute
               />
             }
             label="Ports"
+          />
+        </MenuItem>
+        <MenuItem>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={visibleColumns.serviceLink}
+                onChange={() => handleColumnToggle('serviceLink')}
+              />
+            }
+            label="Service Link"
           />
         </MenuItem>
         <MenuItem>

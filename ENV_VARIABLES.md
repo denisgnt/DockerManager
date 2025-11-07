@@ -9,6 +9,9 @@
 VITE_DOCKER_API_HOST=10.174.18.242
 VITE_DOCKER_API_PORT=2375
 
+# Service Links Configuration
+# VITE_SERVICE_HOST=10.174.18.242
+
 # Vite Development Server
 VITE_PORT=3001
 
@@ -19,10 +22,16 @@ VITE_BACKEND_PORT=5001
 ## Описание переменных
 
 ### Docker API
+
 - **VITE_DOCKER_API_HOST** - IP адрес или hostname Docker API сервера
 - **VITE_DOCKER_API_PORT** - Порт Docker API (по умолчанию 2375)
 
+### Service Links
+
+- **VITE_SERVICE_HOST** - (Опционально) IP адрес или hostname для ссылок на сервисы контейнеров. Если не указан, используется hostname текущей страницы (window.location.hostname)
+
 ### Порты приложения
+
 - **VITE_PORT** - Порт для фронтенд dev-сервера Vite (по умолчанию 3001)
 - **VITE_BACKEND_PORT** - Порт для backend Express сервера (по умолчанию 5001)
 

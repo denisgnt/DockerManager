@@ -24,6 +24,9 @@ const useDockerStore = create(
       /** @type {Object|null} Выбранный контейнер для просмотра информации */
       selectedContainerInfo: null,
       
+      /** @type {Object|null} Выбранный контейнер для просмотра телеметрии */
+      selectedContainerStats: null,
+      
       /** @type {boolean} Индикатор загрузки списка контейнеров */
       loading: true,
       
@@ -206,6 +209,14 @@ const useDockerStore = create(
        */
       setSelectedContainerInfo: (container) => {
         set({ selectedContainerInfo: container })
+      },
+
+      /**
+       * Установить выбранный контейнер для просмотра телеметрии
+       * @param {Object|null} container - Объект контейнера или null
+       */
+      setSelectedContainerStats: (container) => {
+        set({ selectedContainerStats: container })
       },
 
       /**

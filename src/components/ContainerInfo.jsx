@@ -66,8 +66,8 @@ const ContainerInfo = ({ container, onClose }) => {
 
   const renderKeyValue = (key, value) => (
     <TableRow>
-      <TableCell sx={{ fontWeight: 'bold', width: '30%' }}>{key}</TableCell>
-      <TableCell sx={{ wordBreak: 'break-word' }}>{value || '-'}</TableCell>
+      <TableCell sx={{ fontWeight: 'bold', width: '30%', wordBreak: 'break-word' }}>{key}</TableCell>
+      <TableCell sx={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>{value || '-'}</TableCell>
     </TableRow>
   )
 
@@ -76,7 +76,7 @@ const ContainerInfo = ({ container, onClose }) => {
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <Typography variant="h6">{title}</Typography>
       </AccordionSummary>
-      <AccordionDetails>
+      <AccordionDetails sx={{ overflowY: 'auto', overflowX: 'hidden' }}>
         {content}
       </AccordionDetails>
     </Accordion>
@@ -148,11 +148,11 @@ const ContainerInfo = ({ container, onClose }) => {
         </Box>
       </DialogTitle>
 
-      <DialogContent dividers>
+      <DialogContent dividers sx={{ overflowX: 'hidden' }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {/* Основная информация */}
           {renderSection('Основная информация', (
-            <Table size="small">
+            <Table size="small" sx={{ tableLayout: 'fixed', width: '100%' }}>
               <TableBody>
                 {renderKeyValue('Имя', containerInfo.Name)}
                 {renderKeyValue('Image', containerInfo.Config.Image)}
@@ -166,7 +166,7 @@ const ContainerInfo = ({ container, onClose }) => {
 
           {/* Состояние */}
           {renderSection('Состояние', (
-            <Table size="small">
+            <Table size="small" sx={{ tableLayout: 'fixed', width: '100%' }}>
               <TableBody>
                 {renderKeyValue('Status', containerInfo.State.Status)}
                 {renderKeyValue('Running', containerInfo.State.Running ? 'Да' : 'Нет')}
@@ -184,7 +184,7 @@ const ContainerInfo = ({ container, onClose }) => {
 
           {/* Сеть */}
           {containerInfo.NetworkSettings && renderSection('Сеть', (
-            <Table size="small">
+            <Table size="small" sx={{ tableLayout: 'fixed', width: '100%' }}>
               <TableBody>
                 {renderKeyValue('IP Address', containerInfo.NetworkSettings.IPAddress)}
                 {renderKeyValue('Gateway', containerInfo.NetworkSettings.Gateway)}
@@ -192,11 +192,11 @@ const ContainerInfo = ({ container, onClose }) => {
                 {renderKeyValue('MAC Address', containerInfo.NetworkSettings.MacAddress)}
                 {containerInfo.NetworkSettings.Ports && Object.keys(containerInfo.NetworkSettings.Ports).length > 0 && (
                   <TableRow>
-                    <TableCell sx={{ fontWeight: 'bold', width: '30%' }}>Ports</TableCell>
-                    <TableCell>
+                    <TableCell sx={{ fontWeight: 'bold', width: '30%', wordBreak: 'break-word' }}>Ports</TableCell>
+                    <TableCell sx={{ overflowWrap: 'anywhere' }}>
                       {Object.entries(containerInfo.NetworkSettings.Ports).map(([port, bindings]) => (
                         <Box key={port} sx={{ mb: 0.5 }}>
-                          <Typography variant="body2">
+                          <Typography variant="body2" sx={{ wordBreak: 'break-word' }}>
                             {port} → {bindings ? bindings.map(b => `${b.HostIp}:${b.HostPort}`).join(', ') : 'not bound'}
                           </Typography>
                         </Box>
@@ -210,7 +210,7 @@ const ContainerInfo = ({ container, onClose }) => {
 
           {/* Ресурсы */}
           {containerInfo.HostConfig && renderSection('Ресурсы', (
-            <Table size="small">
+            <Table size="small" sx={{ tableLayout: 'fixed', width: '100%' }}>
               <TableBody>
                 {renderKeyValue('CPU Shares', containerInfo.HostConfig.CpuShares)}
                 {renderKeyValue('Memory', formatBytes(containerInfo.HostConfig.Memory))}
@@ -224,9 +224,9 @@ const ContainerInfo = ({ container, onClose }) => {
 
           {/* Переменные окружения */}
           {containerInfo.Config.Env && containerInfo.Config.Env.length > 0 && renderSection('Переменные окружения', (
-            <Box>
+            <Box sx={{ overflowX: 'auto' }}>
               {containerInfo.Config.Env.map((env, index) => (
-                <Typography key={index} variant="body2" sx={{ fontFamily: 'monospace', mb: 0.5 }}>
+                <Typography key={index} variant="body2" sx={{ fontFamily: 'monospace', mb: 0.5, wordBreak: 'break-word' }}>
                   {env}
                 </Typography>
               ))}
@@ -235,12 +235,12 @@ const ContainerInfo = ({ container, onClose }) => {
 
           {/* Volumes */}
           {containerInfo.Mounts && containerInfo.Mounts.length > 0 && renderSection('Volumes', (
-            <Table size="small">
+            <Table size="small" sx={{ tableLayout: 'fixed', width: '100%' }}>
               <TableBody>
                 {containerInfo.Mounts.map((mount, index) => (
                   <TableRow key={index}>
-                    <TableCell sx={{ fontWeight: 'bold', width: '30%' }}>{mount.Type}</TableCell>
-                    <TableCell sx={{ wordBreak: 'break-word' }}>
+                    <TableCell sx={{ fontWeight: 'bold', width: '30%', wordBreak: 'break-word' }}>{mount.Type}</TableCell>
+                    <TableCell sx={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
                       <Typography variant="body2">
                         {mount.Source} → {mount.Destination}
                       </Typography>
@@ -256,7 +256,7 @@ const ContainerInfo = ({ container, onClose }) => {
 
           {/* Labels */}
           {containerInfo.Config.Labels && Object.keys(containerInfo.Config.Labels).length > 0 && renderSection('Labels', (
-            <Table size="small">
+            <Table size="small" sx={{ tableLayout: 'fixed', width: '100%' }}>
               <TableBody>
                 {Object.entries(containerInfo.Config.Labels).map(([key, value]) => (
                   renderKeyValue(key, value)

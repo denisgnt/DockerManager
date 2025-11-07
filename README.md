@@ -288,12 +288,22 @@ MIT
 
 Предложения и улучшения приветствуются! Создавайте Issues и Pull Requests.
 
-## � Документация
+## 📚 Документация
 
-- [ARCHITECTURE.md](./ARCHITECTURE.md) - Архитектура приложения
-- [ZUSTAND_STORE.md](./ZUSTAND_STORE.md) - Управление состоянием с Zustand
+### Управление состоянием
+- [ZUSTAND_STORE.md](./ZUSTAND_STORE.md) - Полное руководство по Zustand Store
 - [ZUSTAND_QUICK_START.md](./ZUSTAND_QUICK_START.md) - Быстрый старт с Zustand
+- [STORE_BEST_PRACTICES.md](./STORE_BEST_PRACTICES.md) - Лучшие практики Store vs useState
+- [STORE_CHEATSHEET.md](./STORE_CHEATSHEET.md) - Шпаргалка по использованию Store
+- [ZUSTAND_MIGRATION.md](./ZUSTAND_MIGRATION.md) - История миграции на Zustand
+- [ZUSTAND_SUMMARY.md](./ZUSTAND_SUMMARY.md) - Итоги внедрения Zustand
+- [ZUSTAND_VISUAL_GUIDE.md](./ZUSTAND_VISUAL_GUIDE.md) - Визуальное руководство
+
+### React и производительность
 - [REACT_COMPILER.md](./REACT_COMPILER.md) - React Compiler и оптимизация
+
+### Архитектура и развертывание
+- [ARCHITECTURE.md](./ARCHITECTURE.md) - Архитектура приложения
 - [DOCKER_DEPLOYMENT.md](./DOCKER_DEPLOYMENT.md) - Развертывание в Docker
 - [ENV_VARIABLES.md](./ENV_VARIABLES.md) - Переменные окружения
 - [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) - Структура проекта
