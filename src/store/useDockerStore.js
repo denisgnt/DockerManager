@@ -233,6 +233,19 @@ const useDockerStore = create(
         set({ viewMode: mode })
         localStorage.setItem('dockerManagerViewMode', mode)
       },
+
+      /**
+       * Обновить статус rebuilding для контейнера
+       * @param {string} containerId - ID контейнера
+       * @param {boolean} rebuilding - Статус rebuilding
+       */
+      updateContainerRebuildStatus: (containerId, rebuilding) => {
+        set(state => ({
+          containers: state.containers.map(c => 
+            c.Id === containerId ? { ...c, Rebuilding: rebuilding } : c
+          )
+        }))
+      },
     }),
     {
       name: 'docker-store', // Имя для Redux DevTools

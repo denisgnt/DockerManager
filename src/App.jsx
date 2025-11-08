@@ -21,6 +21,7 @@ import ContainerInfo from './components/ContainerInfo'
 import ContainerStats from './components/ContainerStats'
 import ScriptOutput from './components/ScriptOutput'
 import useDockerStore from './store/useDockerStore'
+import { io } from 'socket.io-client'
 
 function App() {
   // Получение состояния и действий из store
@@ -47,6 +48,7 @@ function App() {
     closeSnackbar,
     closeScriptOutput,
     setViewMode,
+    updateContainerRebuildStatus,
   } = useDockerStore()
 
   useEffect(() => {
@@ -56,6 +58,20 @@ function App() {
     const interval = setInterval(fetchContainers, 5000)
     return () => clearInterval(interval)
   }, [fetchContainers, fetchScripts])
+
+  // Socket.IO для real-time обновлений rebuild статуса
+  useEffect(() => {
+    const socket = io()
+    
+    socket.on('rebuild-status-changed', ({ containerId, rebuilding }) => {
+      console.log(`Rebuild status changed for ${containerId}: ${rebuilding}`)
+      updateContainerRebuildStatus(containerId, rebuilding)
+    })
+
+    return () => {
+      socket.disconnect()
+    }
+  }, [updateContainerRebuildStatus])
 
   const handleViewModeChange = (event, newMode) => {
     if (newMode !== null) {

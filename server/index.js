@@ -214,6 +214,12 @@ app.post('/api/scripts/execute', async (req, res) => {
     // Mark container as rebuilding
     rebuildingContainers.set(containerId, { containerName, startTime: Date.now() });
     
+    // Notify all clients about rebuild start
+    io.emit('rebuild-status-changed', { 
+      containerId, 
+      rebuilding: true,
+      containerName 
+    });
       
     console.log(`Container ${containerId} (${containerName}) marked as rebuilding`);
     
@@ -242,6 +248,14 @@ app.post('/api/scripts/execute', async (req, res) => {
       
       // Clear rebuilding status
       rebuildingContainers.delete(containerId);
+      
+      // Notify all clients about rebuild completion
+      io.emit('rebuild-status-changed', { 
+        containerId, 
+        rebuilding: false,
+        containerName,
+        success: true
+      });
             
       console.log(`Container ${containerId} (${containerName}) rebuild completed successfully`);
 
@@ -260,6 +274,14 @@ app.post('/api/scripts/execute', async (req, res) => {
       // Clear rebuilding status even on error
       rebuildingContainers.delete(containerId);
       
+      // Notify all clients about rebuild failure
+      io.emit('rebuild-status-changed', { 
+        containerId, 
+        rebuilding: false,
+        containerName,
+        success: false,
+        error: execError.message
+      });
 
       console.log(`Container ${containerId} (${containerName}) rebuild failed`);
       
@@ -276,6 +298,15 @@ app.post('/api/scripts/execute', async (req, res) => {
     // Clear rebuilding status on any error
     if (req.body.containerId) {
       rebuildingContainers.delete(req.body.containerId);
+      
+      // Notify all clients about rebuild failure
+      io.emit('rebuild-status-changed', { 
+        containerId: req.body.containerId, 
+        rebuilding: false,
+        containerName: req.body.containerName,
+        success: false,
+        error: error.message
+      });
     }
     
     res.status(500).json({
