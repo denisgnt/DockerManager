@@ -18,6 +18,9 @@ const __dirname = path.dirname(__filename);
 
 const execAsync = promisify(exec);
 
+// Map to track containers currently being rebuilt
+const rebuildingContainers = new Map();
+
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
@@ -65,7 +68,14 @@ const dockerRequest = async (endpoint, method = 'GET', data = null) => {
 app.get('/api/containers', async (req, res) => {
   try {
     const containers = await dockerRequest('/containers/json?all=true');
-    res.json(containers);
+    
+    // Add rebuilding status to each container
+    const containersWithStatus = containers.map(container => ({
+      ...container,
+      Rebuilding: rebuildingContainers.has(container.Id)
+    }));
+    
+    res.json(containersWithStatus);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -182,10 +192,14 @@ app.get('/api/scripts', async (req, res) => {
 // Execute script for container
 app.post('/api/scripts/execute', async (req, res) => {
   try {
-    const { scriptName, containerName } = req.body;
+    const { scriptName, containerName, containerId } = req.body;
     
     if (!scriptName) {
       return res.status(400).json({ error: 'Script name is required' });
+    }
+    
+    if (!containerId) {
+      return res.status(400).json({ error: 'Container ID is required' });
     }
     
     const scriptPath = path.join(SCRIPTS_DIR, scriptName);
@@ -196,6 +210,12 @@ app.post('/api/scripts/execute', async (req, res) => {
     } catch (err) {
       return res.status(404).json({ error: 'Script not found' });
     }
+    
+    // Mark container as rebuilding
+    rebuildingContainers.set(containerId, { containerName, startTime: Date.now() });
+    
+      
+    console.log(`Container ${containerId} (${containerName}) marked as rebuilding`);
     
     // Execute script on HOST using nsenter to enter host's PID namespace
     // This allows running commands directly on the host without temporary containers
@@ -219,6 +239,11 @@ app.post('/api/scripts/execute', async (req, res) => {
       }
 
       const output = stdout + (stderr ? `\n${stderr}` : '');
+      
+      // Clear rebuilding status
+      rebuildingContainers.delete(containerId);
+            
+      console.log(`Container ${containerId} (${containerName}) rebuild completed successfully`);
 
       res.json({
         success: true,
@@ -232,6 +257,12 @@ app.post('/api/scripts/execute', async (req, res) => {
       
       console.error('Script execution failed:', execError.message);
       
+      // Clear rebuilding status even on error
+      rebuildingContainers.delete(containerId);
+      
+
+      console.log(`Container ${containerId} (${containerName}) rebuild failed`);
+      
       res.status(500).json({
         success: false,
         error: execError.message,
@@ -241,6 +272,12 @@ app.post('/api/scripts/execute', async (req, res) => {
     }
   } catch (error) {
     console.error('Error executing script:', error.message);
+    
+    // Clear rebuilding status on any error
+    if (req.body.containerId) {
+      rebuildingContainers.delete(req.body.containerId);
+    }
+    
     res.status(500).json({
       success: false,
       error: error.message,

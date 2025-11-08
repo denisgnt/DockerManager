@@ -36,9 +36,6 @@ const useDockerStore = create(
       /** @type {Object} Доступные скрипты для контейнеров */
       availableScripts: {},
       
-      /** @type {Set} Набор ID контейнеров, для которых выполняется rebuild */
-      rebuildingContainers: new Set(),
-      
       /** @type {Object} Состояние snackbar уведомлений */
       snackbar: { open: false, message: '' },
       
@@ -132,15 +129,11 @@ const useDockerStore = create(
 
         try {
           set({ error: null })
-          
-          // Добавить контейнер в список rebuilding
-          set(state => ({
-            rebuildingContainers: new Set(state.rebuildingContainers).add(containerId)
-          }))
 
           const response = await axios.post('/api/scripts/execute', {
             scriptName,
-            containerName
+            containerName,
+            containerId
           })
 
           if (response.data.success) {
@@ -183,15 +176,6 @@ const useDockerStore = create(
           }
 
           console.error('Error executing script:', err)
-        } finally {
-          // Убрать контейнер из списка rebuilding
-          setTimeout(() => {
-            set(state => {
-              const newSet = new Set(state.rebuildingContainers)
-              newSet.delete(containerId)
-              return { rebuildingContainers: newSet }
-            })
-          }, 2000)
         }
       },
 

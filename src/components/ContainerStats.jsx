@@ -173,8 +173,6 @@ const ContainerStats = ({ container, onClose }) => {
                 onChange={handleIntervalChange}
                 label="Интервал обновления"
               >
-                <MenuItem value={1000}>1 секунда</MenuItem>
-                <MenuItem value={2000}>2 секунды</MenuItem>
                 <MenuItem value={5000}>5 секунд</MenuItem>
                 <MenuItem value={10000}>10 секунд</MenuItem>
                 <MenuItem value={30000}>30 секунд</MenuItem>
@@ -231,26 +229,25 @@ const ContainerStats = ({ container, onClose }) => {
               <Typography variant="h6" sx={{ mb: 2 }}>
                 CPU Usage (%)
               </Typography>
-              <ResponsiveContainer width="100%" height={200}>
+              <ResponsiveContainer width="100%" height={120}>
                 <LineChart data={statsData} isAnimationActive={false}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis 
                     dataKey="time" 
                     tick={{ fontSize: 12 }}
-                    angle={-45}
+                    angle={0}
                     textAnchor="end"
-                    height={80}
+                    
                   />
                   <YAxis 
                     domain={[0, 100]}
                     tick={{ fontSize: 12 }}
                   />
                   <Tooltip content={<CustomTooltip />} />
-                  <Legend />
                   <Line 
                     type="monotone"
                     dataKey="cpu" 
-                    stroke="#d3d1feff" 
+                    stroke="#a4ff50ff" 
                     name="CPU %"
                     isAnimationActive={false}
                     strokeWidth={2}
@@ -265,27 +262,25 @@ const ContainerStats = ({ container, onClose }) => {
               <Typography variant="h6" sx={{ mb: 2 }}>
                 Memory Usage
               </Typography>
-              <ResponsiveContainer width="100%" height={200}>
+              <ResponsiveContainer width="100%" height={120}>
                 <LineChart data={statsData} isAnimationActive={false}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis 
                     dataKey="time" 
                     tick={{ fontSize: 12 }}
-                    angle={-45}
+                    angle={0}
                     textAnchor="end"
-                    height={80}
                   />
                   <YAxis 
                     tick={{ fontSize: 12 }}
+                    domain={[0, 1000]}
                     label={{ value: 'MB', angle: 90, position: 'insideLeft' }}
                   />
                   <Tooltip content={<CustomTooltip />} />
-                  <Legend />
                   <Line 
-                    yAxisId="right"
                     type="monotone"
                     dataKey="memoryMB" 
-                    stroke="#ffc658" 
+                    stroke="#ffb64aff" 
                     name="Memory MB"
                     isAnimationActive={false}
                     strokeWidth={2}

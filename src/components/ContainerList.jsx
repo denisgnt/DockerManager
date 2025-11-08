@@ -38,7 +38,7 @@ import PlayCircleIcon from '@mui/icons-material/PlayCircle'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import ShowChartIcon from '@mui/icons-material/ShowChart'
 
-const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewStats, onExecuteScript, availableScripts = {}, rebuildingContainers = new Set(), viewMode = 'list' }) => {
+const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewStats, onExecuteScript, availableScripts = {}, viewMode = 'list' }) => {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(30)
   const [orderBy, setOrderBy] = useState('created')
@@ -80,9 +80,9 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
     localStorage.setItem('dockerManagerVisibleColumns', JSON.stringify(newVisibleColumns))
   }
 
-  const getStatusColor = (state, containerId) => {
+  const getStatusColor = (state, container) => {
     // If container is rebuilding, show grey
-    if (rebuildingContainers.has(containerId)) {
+    if (container.Rebuilding) {
       return 'default'
     }
     
@@ -98,9 +98,9 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
     }
   }
 
-  const getStatusLabel = (state, containerId) => {
+  const getStatusLabel = (state, container) => {
     // If container is rebuilding, show "Rebuilding"
-    if (rebuildingContainers.has(containerId)) {
+    if (container.Rebuilding) {
       return 'Rebuilding'
     }
     return state
@@ -261,7 +261,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
 
   const renderActionButtons = (container) => {
     const scriptName = findScriptForContainer(container)
-    const isRebuilding = rebuildingContainers.has(container.Id)
+    const isRebuilding = container.Rebuilding
     
     return (
       <Box display="flex" gap={0.5}>
@@ -330,7 +330,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
 
   const renderRebuildButton = (container) => {
     const scriptName = findScriptForContainer(container)
-    const isRebuilding = rebuildingContainers.has(container.Id)
+    const isRebuilding = container.Rebuilding
     
     if (!scriptName) return <Box sx={{ width: 40 }} />
     
@@ -351,7 +351,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
   }
 
   const renderViewButtons = (container) => {
-    const isRebuilding = rebuildingContainers.has(container.Id)
+    const isRebuilding = container.Rebuilding
     
     return (
       <Box display="flex" gap={0.5}>
@@ -501,8 +501,8 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
               {visibleColumns.status && (
                 <TableCell>
                   <Chip
-                    label={getStatusLabel(container.State, container.Id)}
-                    color={getStatusColor(container.State, container.Id)}
+                    label={getStatusLabel(container.State, container)}
+                    color={getStatusColor(container.State, container)}
                     size="small"
                   />
                 </TableCell>
@@ -600,7 +600,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
     <Grid container spacing={2}>
       {processedContainers.map((container) => {
         const scriptName = findScriptForContainer(container)
-        const isRebuilding = rebuildingContainers.has(container.Id)
+        const isRebuilding = container.Rebuilding
         
         return (
           <Grid item key={container.Id}>
@@ -642,8 +642,8 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                   {getContainerName(container.Names)}
                 </Typography>
                 <Chip
-                  label={getStatusLabel(container.State, container.Id)}
-                  color={getStatusColor(container.State, container.Id)}
+                  label={getStatusLabel(container.State, container)}
+                  color={getStatusColor(container.State, container)}
                   size="small"
                   sx={{ flexShrink: 0 }}
                 />

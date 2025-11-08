@@ -32,7 +32,6 @@ function App() {
     loading,
     error,
     availableScripts,
-    rebuildingContainers,
     snackbar,
     scriptOutput,
     viewMode,
@@ -129,7 +128,6 @@ function App() {
               onViewStats={setSelectedContainerStats}
               onExecuteScript={executeScript}
               availableScripts={availableScripts}
-              rebuildingContainers={rebuildingContainers}
               viewMode={viewMode}
             />
             
