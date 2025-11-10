@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import {
   Dialog,
   DialogTitle,
@@ -9,7 +9,8 @@ import {
   Typography,
   IconButton,
   TextField,
-  InputAdornment
+  InputAdornment,
+  Chip
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import SearchIcon from '@mui/icons-material/Search'
@@ -18,8 +19,14 @@ import Ansi from 'ansi-to-react'
 
 const ScriptOutput = ({ open, onClose, scriptData }) => {
   const [filterText, setFilterText] = useState('')
+  const logsEndRef = useRef(null)
   
-  const { containerName, output, exitCode } = scriptData || {}
+  const { containerName, output, exitCode, streaming } = scriptData || {}
+
+  // Auto-scroll to bottom when new output arrives
+  useEffect(() => {
+    logsEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [output])
 
   // Split output into lines for filtering
   const lines = useMemo(() => {
@@ -160,7 +167,15 @@ const ScriptOutput = ({ open, onClose, scriptData }) => {
       PaperProps={{
         sx: {
           minHeight: '60vh',
-          maxHeight: '80vh'
+          maxHeight: '80vh',
+          '@keyframes pulse': {
+            '0%, 100%': {
+              opacity: 1,
+            },
+            '50%': {
+              opacity: 0.5,
+            },
+          },
         }
       }}
     >
@@ -172,13 +187,23 @@ const ScriptOutput = ({ open, onClose, scriptData }) => {
           pb: 1
         }}
       >
-        <Box>
-          <Typography variant="h6" component="span">
-            Результат выполнения скрипта
-          </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-            Контейнер: {containerName}
-          </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Box>
+            <Typography variant="h6" component="span">
+              Результат выполнения скрипта
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+              Контейнер: {containerName}
+            </Typography>
+          </Box>
+          {streaming && (
+            <Chip 
+              label="Выполняется..." 
+              color="primary" 
+              size="small"
+              sx={{ animation: 'pulse 2s ease-in-out infinite' }}
+            />
+          )}
         </Box>
         <IconButton
           edge="end"
@@ -239,11 +264,13 @@ const ScriptOutput = ({ open, onClose, scriptData }) => {
             fontSize: '0.875rem',
             overflow: 'auto',
             whiteSpace: 'pre-wrap',
-            wordBreak: 'break-word'
+            wordBreak: 'break-word',
+            minHeight: '400px',
+            maxHeight: '60vh'
           }}
         >
           {!output ? (
-            <Typography color="text.secondary">Нет вывода</Typography>
+            <Typography color="text.secondary">Ожидание вывода...</Typography>
           ) : filteredLines.length === 0 ? (
             <Typography color="text.secondary">Нет строк, соответствующих фильтру</Typography>
           ) : (
@@ -253,9 +280,10 @@ const ScriptOutput = ({ open, onClose, scriptData }) => {
               </Box>
             ))
           )}
+          <div ref={logsEndRef} />
         </Box>
         
-        {exitCode !== undefined && (
+        {exitCode !== undefined && exitCode !== null && !streaming && (
           <Box sx={{ mt: 2 }}>
             <Typography
               variant="body2"
