@@ -265,8 +265,7 @@ const ScriptOutput = ({ open, onClose, scriptData }) => {
             overflow: 'auto',
             whiteSpace: 'pre-wrap',
             wordBreak: 'break-word',
-            minHeight: '400px',
-            maxHeight: '60vh'
+            height: '400px'
           }}
         >
           {!output ? (
