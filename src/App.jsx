@@ -49,6 +49,8 @@ function App() {
     closeScriptOutput,
     setViewMode,
     updateContainerRebuildStatus,
+    appendScriptOutput,
+    completeScriptOutput,
   } = useDockerStore()
 
   useEffect(() => {
@@ -68,10 +70,20 @@ function App() {
       updateContainerRebuildStatus(containerId, rebuilding)
     })
 
+    socket.on('script-output', ({ containerId, data, type }) => {
+      console.log(`Script output (${type}):`, data)
+      appendScriptOutput(data)
+    })
+
+    socket.on('script-completed', ({ containerId, exitCode, success }) => {
+      console.log(`Script completed for ${containerId}: exit code ${exitCode}`)
+      completeScriptOutput(exitCode, success)
+    })
+
     return () => {
       socket.disconnect()
     }
-  }, [updateContainerRebuildStatus])
+  }, [updateContainerRebuildStatus, appendScriptOutput, completeScriptOutput])
 
   const handleViewModeChange = (event, newMode) => {
     if (newMode !== null) {

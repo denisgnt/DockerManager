@@ -130,50 +130,45 @@ const useDockerStore = create(
         try {
           set({ error: null })
 
+          // Сразу открыть окно ScriptOutput с пустым выводом
+          set({
+            scriptOutput: {
+              open: true,
+              data: {
+                containerName,
+                output: '',
+                exitCode: null,
+                streaming: true
+              }
+            }
+          })
+
           const response = await axios.post('/api/scripts/execute', {
             scriptName,
             containerName,
             containerId
           })
 
-          if (response.data.success) {
-            set({
-              snackbar: {
-                open: true,
-                message: `Скрипт успешно выполнен для ${containerName}`
-              },
-              scriptOutput: {
-                open: true,
-                data: {
-                  containerName,
-                  output: response.data.output || '',
-                  exitCode: response.data.exitCode
-                }
-              }
-            })
-
-            // Обновить список контейнеров
-            setTimeout(() => get().fetchContainers(), 1000)
+          // Скрипт запущен успешно (логи будут приходить через Socket.IO)
+          if (!response.data.success) {
+            set({ error: `Ошибка запуска скрипта: ${response.data.error}` })
           }
         } catch (err) {
           const errorMsg = err.response?.data?.error || err.message
-          const output = err.response?.data?.output || ''
-
           set({ error: `Ошибка выполнения скрипта: ${errorMsg}` })
-
-          // Показать вывод ошибки если доступен
-          if (output) {
-            set({
-              scriptOutput: {
-                open: true,
-                data: {
-                  containerName,
-                  output,
-                  exitCode: err.response?.data?.exitCode
-                }
+          
+          // Обновить ScriptOutput с ошибкой
+          set({
+            scriptOutput: {
+              open: true,
+              data: {
+                containerName,
+                output: `Error: ${errorMsg}`,
+                exitCode: 1,
+                streaming: false
               }
-            })
-          }
+            }
+          })
 
           console.error('Error executing script:', err)
         }
@@ -245,6 +240,49 @@ const useDockerStore = create(
             c.Id === containerId ? { ...c, Rebuilding: rebuilding } : c
           )
         }))
+      },
+
+      /**
+       * Добавить вывод скрипта (для streaming)
+       * @param {string} data - Данные для добавления
+       */
+      appendScriptOutput: (data) => {
+        set(state => ({
+          scriptOutput: {
+            ...state.scriptOutput,
+            data: {
+              ...state.scriptOutput.data,
+              output: (state.scriptOutput.data?.output || '') + data
+            }
+          }
+        }))
+      },
+
+      /**
+       * Завершить streaming скрипта
+       * @param {number} exitCode - Код завершения
+       * @param {boolean} success - Успешность выполнения
+       */
+      completeScriptOutput: (exitCode, success) => {
+        set(state => ({
+          scriptOutput: {
+            ...state.scriptOutput,
+            data: {
+              ...state.scriptOutput.data,
+              exitCode,
+              streaming: false
+            }
+          },
+          snackbar: {
+            open: true,
+            message: success 
+              ? `Скрипт успешно выполнен для ${state.scriptOutput.data?.containerName}` 
+              : `Скрипт завершился с ошибкой для ${state.scriptOutput.data?.containerName}`
+          }
+        }))
+
+        // Обновить список контейнеров
+        setTimeout(() => get().fetchContainers(), 1000)
       },
     }),
     {

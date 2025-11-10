@@ -3,7 +3,7 @@ import cors from 'cors';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import axios from 'axios';
-import { exec } from 'child_process';
+import { exec, spawn } from 'child_process';
 import { promisify } from 'util';
 import { readdir, access } from 'fs/promises';
 import { constants } from 'fs';
@@ -223,55 +223,86 @@ app.post('/api/scripts/execute', async (req, res) => {
       
     console.log(`Container ${containerId} (${containerName}) marked as rebuilding`);
     
+    // Send immediate response to client
+    res.json({
+      success: true,
+      message: 'Script execution started',
+      containerId,
+      containerName
+    });
+    
     // Execute script on HOST using nsenter to enter host's PID namespace
-    // This allows running commands directly on the host without temporary containers
     console.log(`Executing script on host: ${scriptPath}`);
     
     const hostScriptPath = scriptPath.replace('/app/scripts', process.env.HOST_SCRIPTS_DIR || '/home/axitech/BPM2');
     const hostUser = process.env.HOST_USER || 'axitech';
     
-    // Use nsenter to run command in host's namespaces as the host user
-    // This ensures SSH keys and git config are available
-    const command = `nsenter --target 1 --mount --uts --ipc --net --pid -- su - ${hostUser} -c "bash '${hostScriptPath}'"`;
+    // Use spawn for streaming output
+    const child = spawn('nsenter', [
+      '--target', '1',
+      '--mount', '--uts', '--ipc', '--net', '--pid',
+      '--', 'su', '-', hostUser, '-c',
+      `bash '${hostScriptPath}'`
+    ]);
     
-    console.log(`Executing command as user ${hostUser}: ${command}`);
+    let output = '';
     
-    try {
-      const { stdout, stderr } = await execAsync(command, { maxBuffer: 1024 * 1024 * 10 }); // 10MB buffer
-      
-      console.log('Script executed successfully');
-      if (stderr) {
-        console.error('Script stderr:', stderr);
-      }
-
-      const output = stdout + (stderr ? `\n${stderr}` : '');
-      
+    // Stream stdout
+    child.stdout.on('data', (data) => {
+      const text = data.toString();
+      output += text;
+      io.emit('script-output', { 
+        containerId, 
+        containerName,
+        data: text,
+        type: 'stdout'
+      });
+    });
+    
+    // Stream stderr
+    child.stderr.on('data', (data) => {
+      const text = data.toString();
+      output += text;
+      io.emit('script-output', { 
+        containerId, 
+        containerName,
+        data: text,
+        type: 'stderr'
+      });
+    });
+    
+    // Handle completion
+    child.on('close', (exitCode) => {
       // Clear rebuilding status
       rebuildingContainers.delete(containerId);
+      
+      const success = exitCode === 0;
       
       // Notify all clients about rebuild completion
       io.emit('rebuild-status-changed', { 
         containerId, 
         rebuilding: false,
         containerName,
-        success: true
+        success
       });
-            
-      console.log(`Container ${containerId} (${containerName}) rebuild completed successfully`);
-
-      res.json({
-        success: true,
-        output: output,
-        exitCode: 0,
-        message: `Script executed successfully on host for ${containerName}`
+      
+      // Send final output
+      io.emit('script-completed', {
+        containerId,
+        containerName,
+        output,
+        exitCode,
+        success
       });
-    } catch (execError) {
-      // Command failed but we have output
-      const output = (execError.stdout || '') + (execError.stderr ? `\n${execError.stderr}` : '');
       
-      console.error('Script execution failed:', execError.message);
+      console.log(`Container ${containerId} (${containerName}) rebuild ${success ? 'completed successfully' : 'failed'} with exit code ${exitCode}`);
+    });
+    
+    // Handle errors
+    child.on('error', (error) => {
+      console.error('Script execution error:', error.message);
       
-      // Clear rebuilding status even on error
+      // Clear rebuilding status
       rebuildingContainers.delete(containerId);
       
       // Notify all clients about rebuild failure
@@ -280,18 +311,18 @@ app.post('/api/scripts/execute', async (req, res) => {
         rebuilding: false,
         containerName,
         success: false,
-        error: execError.message
+        error: error.message
       });
-
-      console.log(`Container ${containerId} (${containerName}) rebuild failed`);
       
-      res.status(500).json({
+      io.emit('script-completed', {
+        containerId,
+        containerName,
+        output: output + `\nError: ${error.message}`,
+        exitCode: 1,
         success: false,
-        error: execError.message,
-        output: output,
-        exitCode: execError.code || 1
+        error: error.message
       });
-    }
+    });
   } catch (error) {
     console.error('Error executing script:', error.message);
     
@@ -311,9 +342,7 @@ app.post('/api/scripts/execute', async (req, res) => {
     
     res.status(500).json({
       success: false,
-      error: error.message,
-      output: error.stdout || error.stderr || '',
-      exitCode: error.code || 1
+      error: error.message
     });
   }
 });
