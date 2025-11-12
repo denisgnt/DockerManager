@@ -37,6 +37,8 @@ import InfoIcon from '@mui/icons-material/Info'
 import PlayCircleIcon from '@mui/icons-material/PlayCircle'
 import OpenInNewIcon from '@mui/icons-material/OpenInNew'
 import ShowChartIcon from '@mui/icons-material/ShowChart'
+import StarIcon from '@mui/icons-material/Star'
+import StarBorderIcon from '@mui/icons-material/StarBorder'
 
 const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewStats, onExecuteScript, availableScripts = {}, viewMode = 'list' }) => {
   const [page, setPage] = useState(0)
@@ -45,6 +47,12 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
   const [order, setOrder] = useState('desc')
   const [searchQuery, setSearchQuery] = useState('')
   const [columnMenuAnchor, setColumnMenuAnchor] = useState(null)
+  
+  // Favorite containers state with localStorage
+  const [favoriteContainers, setFavoriteContainers] = useState(() => {
+    const saved = localStorage.getItem('dockerManagerFavoriteContainers')
+    return saved ? JSON.parse(saved) : []
+  })
   
   // Column visibility state with localStorage
   const [visibleColumns, setVisibleColumns] = useState(() => {
@@ -78,6 +86,19 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
     }
     setVisibleColumns(newVisibleColumns)
     localStorage.setItem('dockerManagerVisibleColumns', JSON.stringify(newVisibleColumns))
+  }
+
+  const toggleFavorite = (containerId) => {
+    const newFavorites = favoriteContainers.includes(containerId)
+      ? favoriteContainers.filter(id => id !== containerId)
+      : [...favoriteContainers, containerId]
+    
+    setFavoriteContainers(newFavorites)
+    localStorage.setItem('dockerManagerFavoriteContainers', JSON.stringify(newFavorites))
+  }
+
+  const isFavorite = (containerId) => {
+    return favoriteContainers.includes(containerId)
   }
 
   const getStatusColor = (state, container) => {
@@ -210,8 +231,16 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
       return name.includes(query) || image.includes(query) || id.includes(query) || ports.includes(query)
     })
 
-    // Sort
+    // Sort by favorites first, then by selected criteria
     filtered.sort((a, b) => {
+      // Favorites always come first
+      const aIsFavorite = isFavorite(a.Id)
+      const bIsFavorite = isFavorite(b.Id)
+      
+      if (aIsFavorite && !bIsFavorite) return -1
+      if (!aIsFavorite && bIsFavorite) return 1
+      
+      // If both are favorites or both are not, sort by selected criteria
       let aValue, bValue
 
       switch (orderBy) {
@@ -249,7 +278,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
     })
 
     return filtered
-  }, [containers, searchQuery, order, orderBy])
+  }, [containers, searchQuery, order, orderBy, favoriteContainers])
 
   // Paginate
   const paginatedContainers = useMemo(() => {
@@ -401,6 +430,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
       <Table size="small">
         <TableHead>
           <TableRow>
+            <TableCell width={50} />
             {visibleColumns.name && (
               <TableCell>
                 <TableSortLabel
@@ -491,6 +521,20 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                 }
               }}
             >
+              <TableCell>
+                <IconButton
+                  size="small"
+                  onClick={() => toggleFavorite(container.Id)}
+                  sx={{ 
+                    color: isFavorite(container.Id) ? '#ffd700' : 'action.disabled',
+                    '&:hover': {
+                      color: '#ffd700'
+                    }
+                  }}
+                >
+                  {isFavorite(container.Id) ? <StarIcon fontSize="small" /> : <StarBorderIcon fontSize="small" />}
+                </IconButton>
+              </TableCell>
               {visibleColumns.name && (
                 <TableCell>
                   <Typography variant="body2" fontWeight="medium">
@@ -641,12 +685,25 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                 >
                   {getContainerName(container.Names)}
                 </Typography>
-                <Chip
-                  label={getStatusLabel(container.State, container)}
-                  color={getStatusColor(container.State, container)}
-                  size="small"
-                  sx={{ flexShrink: 0 }}
-                />
+                <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center', flexShrink: 0 }}>
+                  <IconButton
+                    size="small"
+                    onClick={() => toggleFavorite(container.Id)}
+                    sx={{ 
+                      color: isFavorite(container.Id) ? '#ffd700' : 'action.disabled',
+                      '&:hover': {
+                        color: '#ffd700'
+                      }
+                    }}
+                  >
+                    {isFavorite(container.Id) ? <StarIcon fontSize="small" /> : <StarBorderIcon fontSize="small" />}
+                  </IconButton>
+                  <Chip
+                    label={getStatusLabel(container.State, container)}
+                    color={getStatusColor(container.State, container)}
+                    size="small"
+                  />
+                </Box>
               </Box>
 
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
