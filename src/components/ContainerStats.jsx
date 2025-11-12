@@ -13,7 +13,8 @@ import {
   Select,
   MenuItem,
   InputLabel,
-  Alert
+  Alert,
+  useTheme
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 import {
@@ -29,6 +30,7 @@ import {
 import axios from 'axios'
 
 const ContainerStats = ({ container, onClose }) => {
+  const theme = useTheme()
   const [statsData, setStatsData] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -131,18 +133,33 @@ const ContainerStats = ({ container, onClose }) => {
       return (
         <Box
           sx={{
-            backgroundColor: '#424242',
-            border: '1px solid #666',
+            backgroundColor: theme.palette.mode === 'dark' ? '#424242' : '#fff',
+            border: `1px solid ${theme.palette.mode === 'dark' ? '#666' : '#ccc'}`,
             borderRadius: 1,
             p: 1.5,
             boxShadow: 2
           }}
         >
-          <Typography variant="caption" sx={{ fontWeight: 'bold', color: '#fff', display: 'block', mb: 0.5 }}>
+          <Typography 
+            variant="caption" 
+            sx={{ 
+              fontWeight: 'bold', 
+              color: theme.palette.text.primary, 
+              display: 'block', 
+              mb: 0.5 
+            }}
+          >
             {label}
           </Typography>
           {payload.map((entry, index) => (
-            <Typography key={index} variant="caption" sx={{ color: entry.stroke || entry.color, display: 'block' }}>
+            <Typography 
+              key={index} 
+              variant="caption" 
+              sx={{ 
+                color: entry.stroke || entry.color, 
+                display: 'block' 
+              }}
+            >
               {entry.name}: {entry.value}
               {entry.dataKey === 'cpu' ? '%' : entry.dataKey === 'memory' ? '%' : ' MB'}
             </Typography>

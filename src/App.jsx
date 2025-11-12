@@ -10,11 +10,14 @@ import {
   CircularProgress,
   ToggleButtonGroup,
   ToggleButton,
-  Snackbar
+  Snackbar,
+  Tooltip
 } from '@mui/material'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import ViewListIcon from '@mui/icons-material/ViewList'
 import ViewModuleIcon from '@mui/icons-material/ViewModule'
+import Brightness4Icon from '@mui/icons-material/Brightness4'
+import Brightness7Icon from '@mui/icons-material/Brightness7'
 import ContainerList from './components/ContainerList'
 import ContainerLogs from './components/ContainerLogs'
 import ContainerInfo from './components/ContainerInfo'
@@ -22,8 +25,11 @@ import ContainerStats from './components/ContainerStats'
 import ScriptOutput from './components/ScriptOutput'
 import useDockerStore from './store/useDockerStore'
 import { io } from 'socket.io-client'
+import { useThemeMode } from './ThemeContext'
 
 function App() {
+  const { mode, toggleTheme } = useThemeMode()
+  
   // Получение состояния и действий из store
   const {
     containers,
@@ -93,7 +99,20 @@ function App() {
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar 
+        position="fixed" 
+        elevation={0}
+        sx={{ 
+          backdropFilter: 'blur(20px)',
+          backgroundColor: mode === 'dark' 
+            ? 'rgba(80, 80, 80, 0.5)' 
+            : 'rgba(200,200, 200, 0.3)',
+          borderBottom: mode === 'dark'
+            ? '1px solid rgba(194, 224, 255, 0.08)'
+            : '1px solid rgba(0, 0, 0, 0.08)',
+          color: mode === 'dark' ? '#fff' : 'rgba(0, 0, 0, 0.87)'
+        }}
+      >
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Docker Manager
@@ -106,8 +125,23 @@ function App() {
             exclusive
             onChange={handleViewModeChange}
             size="small"
-            sx={{ mr: 2 }}
-            color="primary"
+            sx={{ 
+              mr: 2,
+              '& .MuiToggleButton-root': {
+                color: mode === 'dark' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.6)',
+                borderColor: mode === 'dark' ? 'rgba(255, 255, 255, 0.23)' : 'rgba(0, 0, 0, 0.23)',
+                '&.Mui-selected': {
+                  color: mode === 'dark' ? '#90caf9' : '#1976d2',
+                  backgroundColor: mode === 'dark' ? 'rgba(144, 202, 249, 0.16)' : 'rgba(25, 118, 210, 0.08)',
+                  '&:hover': {
+                    backgroundColor: mode === 'dark' ? 'rgba(144, 202, 249, 0.24)' : 'rgba(25, 118, 210, 0.12)',
+                  }
+                },
+                '&:hover': {
+                  backgroundColor: mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)',
+                }
+              }
+            }}
           >
             <ToggleButton value="list" aria-label="list view">
               <ViewListIcon sx={{ mr: { xs: 0, sm: 0.5 } }} fontSize="small" />
@@ -122,11 +156,19 @@ function App() {
               </Box>
             </ToggleButton>
           </ToggleButtonGroup>
+          <Tooltip title={mode === 'dark' ? 'Светлая тема' : 'Темная тема'}>
+            <IconButton color="inherit" onClick={toggleTheme} aria-label="toggle theme" sx={{ mr: 1 }}>
+              {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+            </IconButton>
+          </Tooltip>
           <IconButton color="inherit" onClick={fetchContainers} aria-label="refresh">
             <RefreshIcon />
           </IconButton>
         </Toolbar>
       </AppBar>
+
+      {/* Spacer для фиксированного AppBar */}
+      <Toolbar />
 
       <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
         {error && (
