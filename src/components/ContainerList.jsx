@@ -48,7 +48,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
   const [searchQuery, setSearchQuery] = useState('')
   const [columnMenuAnchor, setColumnMenuAnchor] = useState(null)
   
-  // Favorite containers state with localStorage
+  // Favorite containers state with localStorage (using container names)
   const [favoriteContainers, setFavoriteContainers] = useState(() => {
     const saved = localStorage.getItem('dockerManagerFavoriteContainers')
     return saved ? JSON.parse(saved) : []
@@ -88,17 +88,17 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
     localStorage.setItem('dockerManagerVisibleColumns', JSON.stringify(newVisibleColumns))
   }
 
-  const toggleFavorite = (containerId) => {
-    const newFavorites = favoriteContainers.includes(containerId)
-      ? favoriteContainers.filter(id => id !== containerId)
-      : [...favoriteContainers, containerId]
+  const toggleFavorite = (containerName) => {
+    const newFavorites = favoriteContainers.includes(containerName)
+      ? favoriteContainers.filter(name => name !== containerName)
+      : [...favoriteContainers, containerName]
     
     setFavoriteContainers(newFavorites)
     localStorage.setItem('dockerManagerFavoriteContainers', JSON.stringify(newFavorites))
   }
 
-  const isFavorite = (containerId) => {
-    return favoriteContainers.includes(containerId)
+  const isFavorite = (containerName) => {
+    return favoriteContainers.includes(containerName)
   }
 
   const getStatusColor = (state, container) => {
@@ -234,8 +234,8 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
     // Sort by favorites first, then by selected criteria
     filtered.sort((a, b) => {
       // Favorites always come first
-      const aIsFavorite = isFavorite(a.Id)
-      const bIsFavorite = isFavorite(b.Id)
+      const aIsFavorite = isFavorite(getContainerName(a.Names))
+      const bIsFavorite = isFavorite(getContainerName(b.Names))
       
       if (aIsFavorite && !bIsFavorite) return -1
       if (!aIsFavorite && bIsFavorite) return 1
@@ -524,15 +524,15 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
               <TableCell>
                 <IconButton
                   size="small"
-                  onClick={() => toggleFavorite(container.Id)}
+                  onClick={() => toggleFavorite(getContainerName(container.Names))}
                   sx={{ 
-                    color: isFavorite(container.Id) ? '#ffd700' : 'action.disabled',
+                    color: isFavorite(getContainerName(container.Names)) ? '#ffd700' : 'action.disabled',
                     '&:hover': {
                       color: '#ffd700'
                     }
                   }}
                 >
-                  {isFavorite(container.Id) ? <StarIcon fontSize="small" /> : <StarBorderIcon fontSize="small" />}
+                  {isFavorite(getContainerName(container.Names)) ? <StarIcon fontSize="small" /> : <StarBorderIcon fontSize="small" />}
                 </IconButton>
               </TableCell>
               {visibleColumns.name && (
@@ -688,15 +688,15 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                 <Box sx={{ display: 'flex', gap: 0.5, alignItems: 'center', flexShrink: 0 }}>
                   <IconButton
                     size="small"
-                    onClick={() => toggleFavorite(container.Id)}
+                    onClick={() => toggleFavorite(getContainerName(container.Names))}
                     sx={{ 
-                      color: isFavorite(container.Id) ? '#ffd700' : 'action.disabled',
+                      color: isFavorite(getContainerName(container.Names)) ? '#ffd700' : 'action.disabled',
                       '&:hover': {
                         color: '#ffd700'
                       }
                     }}
                   >
-                    {isFavorite(container.Id) ? <StarIcon fontSize="small" /> : <StarBorderIcon fontSize="small" />}
+                    {isFavorite(getContainerName(container.Names)) ? <StarIcon fontSize="small" /> : <StarBorderIcon fontSize="small" />}
                   </IconButton>
                   <Chip
                     label={getStatusLabel(container.State, container)}

@@ -161,7 +161,7 @@ const ScriptOutput = ({ open, onClose, scriptData }) => {
   return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onClose={streaming ? undefined : onClose}
       maxWidth="lg"
       fullWidth
       PaperProps={{
@@ -187,15 +187,15 @@ const ScriptOutput = ({ open, onClose, scriptData }) => {
           pb: 1
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <Box>
-            <Typography variant="h6" component="span">
-              Результат выполнения скрипта
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-              Контейнер: {containerName}
-            </Typography>
-          </Box>
+        <Box>
+          <Typography variant="h6" component="span">
+            Результат выполнения скрипта
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+            Контейнер: {containerName}
+          </Typography>
+        </Box>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           {streaming && (
             <Chip 
               label="Выполняется..." 
@@ -204,15 +204,16 @@ const ScriptOutput = ({ open, onClose, scriptData }) => {
               sx={{ animation: 'pulse 2s ease-in-out infinite' }}
             />
           )}
+          <IconButton
+            edge="end"
+            color="inherit"
+            onClick={onClose}
+            aria-label="close"
+            disabled={streaming}
+          >
+            <CloseIcon />
+          </IconButton>
         </Box>
-        <IconButton
-          edge="end"
-          color="inherit"
-          onClick={onClose}
-          aria-label="close"
-        >
-          <CloseIcon />
-        </IconButton>
       </DialogTitle>
 
       <Box sx={{ px: 3, pt: 2, pb: 1 }}>
@@ -299,7 +300,7 @@ const ScriptOutput = ({ open, onClose, scriptData }) => {
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose} variant="contained">
+        <Button onClick={onClose} variant="contained" disabled={streaming}>
           Закрыть
         </Button>
       </DialogActions>
