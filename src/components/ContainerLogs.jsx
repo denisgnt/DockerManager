@@ -234,12 +234,12 @@ const ContainerLogs = ({ container, onClose }) => {
       onClose={onClose}
       maxWidth={fullscreen ? false : "lg"}
       fullWidth={!fullscreen}
-      fullScreen={fullscreen}
+      fullScreen={fullscreen || window.innerWidth < 600}
       slotProps={{
         paper: {
           sx: {
-            height: fullscreen ? '100vh' : '80vh',
-            maxHeight: fullscreen ? '100vh' : '80vh'
+            height: fullscreen ? '100vh' : { xs: '100vh', sm: '80vh' },
+            maxHeight: fullscreen ? '100vh' : { xs: '100vh', sm: '80vh' }
           }
         }
       }}
@@ -333,9 +333,9 @@ const ContainerLogs = ({ container, onClose }) => {
           sx={{
             bgcolor: '#1e1e1e',
             color: '#d4d4d4',
-            p: 2,
+            p: { xs: 1, sm: 2 },
             fontFamily: 'monospace',
-            fontSize: '0.875rem',
+            fontSize: { xs: '0.7rem', sm: '0.875rem' },
             height: '100%',
             overflow: 'auto',
             whiteSpace: 'pre-wrap',

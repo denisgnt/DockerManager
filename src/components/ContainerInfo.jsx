@@ -124,7 +124,7 @@ const ContainerInfo = ({ container, onClose }) => {
   }
 
   return (
-    <Dialog open={true} onClose={onClose} maxWidth="lg" fullWidth>
+    <Dialog open={true} onClose={onClose} maxWidth="lg" fullWidth fullScreen={window.innerWidth < 600}>
       <DialogTitle>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box>

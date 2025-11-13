@@ -114,10 +114,10 @@ function App() {
         }}
       >
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontSize: { xs: '1.1rem', sm: '1.25rem' } }}>
             Docker Manager
           </Typography>
-          <Typography variant="body2" sx={{ mr: 2, display: { xs: 'none', sm: 'block' } }}>
+          <Typography variant="body2" sx={{ mr: 2, display: { xs: 'none', md: 'block' }, fontSize: { sm: '0.8rem', md: '0.875rem' } }}>
             API: {dockerApiUrl}
           </Typography>
           <ToggleButtonGroup
@@ -144,14 +144,14 @@ function App() {
             }}
           >
             <ToggleButton value="list" aria-label="list view">
-              <ViewListIcon sx={{ mr: { xs: 0, sm: 0.5 } }} fontSize="small" />
-              <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+              <ViewListIcon sx={{ mr: { xs: 0, md: 0.5 } }} fontSize="small" />
+              <Box component="span" sx={{ display: { xs: 'none', md: 'inline' } }}>
                 Список
               </Box>
             </ToggleButton>
             <ToggleButton value="grid" aria-label="grid view">
-              <ViewModuleIcon sx={{ mr: { xs: 0, sm: 0.5 } }} fontSize="small" />
-              <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+              <ViewModuleIcon sx={{ mr: { xs: 0, md: 0.5 } }} fontSize="small" />
+              <Box component="span" sx={{ display: { xs: 'none', md: 'inline' } }}>
                 Плитка
               </Box>
             </ToggleButton>
@@ -170,7 +170,7 @@ function App() {
       {/* Spacer для фиксированного AppBar */}
       <Toolbar />
 
-      <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
+      <Container maxWidth="xl" sx={{ mt: { xs: 2, sm: 4 }, mb: { xs: 2, sm: 4 }, px: { xs: 2, sm: 3 } }}>
         {error && (
           <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
             {error}

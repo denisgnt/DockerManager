@@ -426,7 +426,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
 
   // List view (table)
   const renderListView = () => (
-    <TableContainer component={Paper} sx={{ width: '100%' }}>
+    <TableContainer component={Paper} sx={{ width: '100%', overflowX: 'auto' }}>
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -641,18 +641,18 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
 
   // Grid view (cards)
   const renderGridView = () => (
-    <Grid container spacing={2}>
+    <Grid container spacing={{ xs: 2, sm: 2, md: 3 }}>
       {processedContainers.map((container) => {
         const scriptName = findScriptForContainer(container)
         const isRebuilding = container.Rebuilding
         
         return (
-          <Grid item key={container.Id}>
+          <Grid item xs={12} sm={6} md={6} lg={4} xl={3} key={container.Id} sx={{ display: 'flex', justifyContent: 'center' }}>
             <Card 
             elevation={3}
             sx={{
-              width: 485,
-              height: '100%',
+              width: { xs: '100%', sm: 400, md: 450, lg: 400, xl: 480 },
+              
               display: 'flex',
               flexDirection: 'column',
               transition: 'transform 0.2s, box-shadow 0.2s',
@@ -680,7 +680,8 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                     textOverflow: 'ellipsis',
                     wordBreak: 'break-word',
                     flex: 1,
-                    minWidth: 0
+                    minWidth: 0,
+                    fontSize: { xs: '1rem', sm: '1.25rem' }
                   }}
                 >
                   {getContainerName(container.Names)}
@@ -761,7 +762,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                 borderColor: 'divider'
               }}
             >
-              <Box sx={{ display: 'flex', gap: 0.5 }}>
+              <Box sx={{ display: 'flex', gap: { xs: 1, sm: 0.5 }, flexWrap: 'wrap' }}>
                 {container.State.toLowerCase() === 'running' ? (
                   <>
                     <Tooltip title="Остановить">
@@ -771,6 +772,10 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                           color="error"
                           onClick={() => onAction(container.Id, 'stop')}
                           disabled={isRebuilding}
+                          sx={{ 
+                            minWidth: { xs: 40, sm: 34 },
+                            minHeight: { xs: 40, sm: 34 }
+                          }}
                         >
                           <StopIcon fontSize="small" />
                         </IconButton>
@@ -783,6 +788,10 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                           color="warning"
                           onClick={() => onAction(container.Id, 'restart')}
                           disabled={isRebuilding}
+                          sx={{ 
+                            minWidth: { xs: 40, sm: 34 },
+                            minHeight: { xs: 40, sm: 34 }
+                          }}
                         >
                           <RestartAltIcon fontSize="small" />
                         </IconButton>
@@ -797,6 +806,10 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                         color="success"
                         onClick={() => onAction(container.Id, 'start')}
                         disabled={isRebuilding}
+                        sx={{ 
+                          minWidth: { xs: 40, sm: 34 },
+                          minHeight: { xs: 40, sm: 34 }
+                        }}
                       >
                         <PlayArrowIcon fontSize="small" />
                       </IconButton>
@@ -814,6 +827,10 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                         }
                       }}
                       disabled={isRebuilding}
+                      sx={{ 
+                        minWidth: { xs: 40, sm: 34 },
+                        minHeight: { xs: 40, sm: 34 }
+                      }}
                     >
                       <DeleteIcon fontSize="small" />
                     </IconButton>
@@ -821,7 +838,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                 </Tooltip>
               </Box>
               
-              <Box sx={{ display: 'flex', gap: 0.5 }}>
+              <Box sx={{ display: 'flex', gap: { xs: 1, sm: 0.5 }, flexWrap: 'wrap' }}>
                 {scriptName && (
                   <Tooltip title={isRebuilding ? "Rebuilding..." : "Rebuild"}>
                     <span>
@@ -830,6 +847,10 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                         color="warning"
                         onClick={() => onExecuteScript(container, scriptName)}
                         disabled={isRebuilding}
+                        sx={{ 
+                          minWidth: { xs: 40, sm: 34 },
+                          minHeight: { xs: 40, sm: 34 }
+                        }}
                       >
                         <PlayCircleIcon fontSize="small" />
                       </IconButton>
@@ -843,6 +864,10 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                       color="info"
                       onClick={() => onViewInfo(container)}
                       disabled={isRebuilding}
+                      sx={{ 
+                        minWidth: { xs: 40, sm: 34 },
+                        minHeight: { xs: 40, sm: 34 }
+                      }}
                     >
                       <InfoIcon fontSize="small" />
                     </IconButton>
@@ -855,6 +880,10 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                       color="secondary"
                       onClick={() => onViewStats(container)}
                       disabled={isRebuilding || container.State.toLowerCase() !== 'running'}
+                      sx={{ 
+                        minWidth: { xs: 40, sm: 34 },
+                        minHeight: { xs: 40, sm: 34 }
+                      }}
                     >
                       <ShowChartIcon fontSize="small" />
                     </IconButton>
@@ -867,6 +896,10 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                       color="primary"
                       onClick={() => onViewLogs(container)}
                       disabled={isRebuilding}
+                      sx={{ 
+                        minWidth: { xs: 40, sm: 34 },
+                        minHeight: { xs: 40, sm: 34 }
+                      }}
                     >
                       <VisibilityIcon fontSize="small" />
                     </IconButton>
@@ -887,13 +920,14 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
         sx={{ 
           display: 'flex', 
           justifyContent: 'space-between', 
-          alignItems: 'center',
+          alignItems: { xs: 'flex-start', sm: 'center' },
           mb: 3,
           flexWrap: 'wrap',
-          gap: 2
+          gap: 2,
+          flexDirection: { xs: 'column', sm: 'row' }
         }}
       >
-        <Typography variant="h5" component="h2">
+        <Typography variant="h5" component="h2" sx={{ fontSize: { xs: '1.5rem', sm: '1.5rem' } }}>
           Контейнеры Docker ({containers.length})
         </Typography>
         {viewMode === 'list' && (

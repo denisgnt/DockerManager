@@ -171,7 +171,7 @@ const ContainerStats = ({ container, onClose }) => {
   }
 
   return (
-    <Dialog open={true} onClose={onClose} maxWidth="lg" fullWidth>
+    <Dialog open={true} onClose={onClose} maxWidth="lg" fullWidth fullScreen={window.innerWidth < 600}>
       <DialogTitle>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box>
@@ -243,10 +243,10 @@ const ContainerStats = ({ container, onClose }) => {
             
             {/* CPU Chart */}
             <Box>
-              <Typography variant="h6" sx={{ mb: 2 }}>
+              <Typography variant="h6" sx={{ mb: 2, fontSize: { xs: '1rem', sm: '1.25rem' } }}>
                 CPU Usage (%)
               </Typography>
-              <ResponsiveContainer width="100%" height={120}>
+              <ResponsiveContainer width="100%" height={window.innerWidth < 600 ? 200 : 120}>
                 <LineChart data={statsData} isAnimationActive={false}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis 
@@ -276,10 +276,10 @@ const ContainerStats = ({ container, onClose }) => {
 
             {/* Memory Chart */}
             <Box>
-              <Typography variant="h6" sx={{ mb: 2 }}>
+              <Typography variant="h6" sx={{ mb: 2, fontSize: { xs: '1rem', sm: '1.25rem' } }}>
                 Memory Usage
               </Typography>
-              <ResponsiveContainer width="100%" height={120}>
+              <ResponsiveContainer width="100%" height={window.innerWidth < 600 ? 200 : 120}>
                 <LineChart data={statsData} isAnimationActive={false}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis 

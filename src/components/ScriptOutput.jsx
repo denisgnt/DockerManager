@@ -164,6 +164,7 @@ const ScriptOutput = ({ open, onClose, scriptData }) => {
       onClose={streaming ? undefined : onClose}
       maxWidth="lg"
       fullWidth
+      fullScreen={window.innerWidth < 600}
       PaperProps={{
         sx: {
           minHeight: '60vh',
@@ -259,14 +260,14 @@ const ScriptOutput = ({ open, onClose, scriptData }) => {
           sx={{
             bgcolor: '#1e1e1e',
             color: '#d4d4d4',
-            p: 2,
+            p: { xs: 1, sm: 2 },
             borderRadius: 1,
             fontFamily: 'monospace',
-            fontSize: '0.875rem',
+            fontSize: { xs: '0.75rem', sm: '0.875rem' },
             overflow: 'auto',
             whiteSpace: 'pre-wrap',
             wordBreak: 'break-word',
-            height: '400px'
+            height: { xs: '300px', sm: '400px' }
           }}
         >
           {!output ? (
