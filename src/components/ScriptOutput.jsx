@@ -165,18 +165,20 @@ const ScriptOutput = ({ open, onClose, scriptData }) => {
       maxWidth="lg"
       fullWidth
       fullScreen={window.innerWidth < 600}
-      PaperProps={{
-        sx: {
-          minHeight: '60vh',
-          maxHeight: '80vh',
-          '@keyframes pulse': {
-            '0%, 100%': {
-              opacity: 1,
+      slotProps={{
+        paper: {
+          sx: {
+            minHeight: '60vh',
+            maxHeight: '80vh',
+            '@keyframes pulse': {
+              '0%, 100%': {
+                opacity: 1,
+              },
+              '50%': {
+                opacity: 0.5,
+              },
             },
-            '50%': {
-              opacity: 0.5,
-            },
-          },
+          }
         }
       }}
     >
@@ -224,23 +226,25 @@ const ScriptOutput = ({ open, onClose, scriptData }) => {
           placeholder="Фильтр вывода..."
           value={filterText}
           onChange={(e) => setFilterText(e.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon fontSize="small" />
-              </InputAdornment>
-            ),
-            endAdornment: filterText && (
-              <InputAdornment position="end">
-                <IconButton
-                  size="small"
-                  onClick={handleClearFilter}
-                  edge="end"
-                >
-                  <ClearIcon fontSize="small" />
-                </IconButton>
-              </InputAdornment>
-            ),
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon fontSize="small" />
+                </InputAdornment>
+              ),
+              endAdornment: filterText && (
+                <InputAdornment position="end">
+                  <IconButton
+                    size="small"
+                    onClick={handleClearFilter}
+                    edge="end"
+                  >
+                    <ClearIcon fontSize="small" />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }
           }}
           sx={{
             '& .MuiOutlinedInput-root': {

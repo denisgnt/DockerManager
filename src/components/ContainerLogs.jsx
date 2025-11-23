@@ -26,6 +26,8 @@ const ContainerLogs = ({ container, onClose }) => {
   const [connected, setConnected] = useState(false)
   const [fullscreen, setFullscreen] = useState(false)
   const [filterText, setFilterText] = useState('')
+  const [exportLines, setExportLines] = useState(5000)
+  const [isExporting, setIsExporting] = useState(false)
   const logsEndRef = useRef(null)
   const socketRef = useRef(null)
 
@@ -228,6 +230,38 @@ const ContainerLogs = ({ container, onClose }) => {
     setFilterText('')
   }
 
+  const handleExportLogs = async () => {
+    setIsExporting(true)
+    try {
+      const backendUrl = import.meta.env.PROD 
+        ? window.location.origin
+        : `http://localhost:${import.meta.env.VITE_BACKEND_PORT || '5005'}`
+      
+      const response = await fetch(
+        `${backendUrl}/api/containers/${container.Id}/export-logs?tail=${exportLines}`
+      )
+      
+      if (!response.ok) {
+        throw new Error('Ошибка при экспорте логов')
+      }
+      
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `${getContainerName(container.Names)}_logs_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.txt`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+    } catch (error) {
+      console.error('Error exporting logs:', error)
+      alert('Ошибка при экспорте логов: ' + error.message)
+    } finally {
+      setIsExporting(false)
+    }
+  }
+
   return (
     <Dialog
       open={true}
@@ -296,23 +330,25 @@ const ContainerLogs = ({ container, onClose }) => {
           placeholder="Фильтр логов..."
           value={filterText}
           onChange={(e) => setFilterText(e.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon fontSize="small" />
-              </InputAdornment>
-            ),
-            endAdornment: filterText && (
-              <InputAdornment position="end">
-                <IconButton
-                  size="small"
-                  onClick={handleClearFilter}
-                  edge="end"
-                >
-                  <ClearIcon fontSize="small" />
-                </IconButton>
-              </InputAdornment>
-            ),
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon fontSize="small" />
+                </InputAdornment>
+              ),
+              endAdornment: filterText && (
+                <InputAdornment position="end">
+                  <IconButton
+                    size="small"
+                    onClick={handleClearFilter}
+                    edge="end"
+                  >
+                    <ClearIcon fontSize="small" />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }
           }}
           sx={{
             '& .MuiOutlinedInput-root': {
@@ -382,13 +418,34 @@ const ContainerLogs = ({ container, onClose }) => {
         </Paper>
       </DialogContent>
 
-      <DialogActions sx={{ px: 3, py: 2 }}>
-        <Button onClick={handleClearLogs} color="warning" variant="outlined">
-          Очистить
-        </Button>
-        <Button onClick={onClose} variant="contained" color="primary">
-          Закрыть
-        </Button>
+      <DialogActions sx={{ px: 3, py: 2, flexWrap: 'wrap', gap: 1 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexGrow: 1 }}>
+          <TextField
+            type="number"
+            size="small"
+            label="Строк для экспорта"
+            value={exportLines}
+            onChange={(e) => setExportLines(Math.max(1, parseInt(e.target.value) || 5000))}
+            sx={{ width: { xs: 120, sm: 150 } }}
+            inputProps={{ min: 1, max: 100000 }}
+          />
+          <Button 
+            onClick={handleExportLogs} 
+            color="success" 
+            variant="outlined"
+            disabled={isExporting}
+          >
+            {isExporting ? 'Экспорт...' : 'Экспорт в файл'}
+          </Button>
+        </Box>
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <Button onClick={handleClearLogs} color="warning" variant="outlined">
+            Очистить
+          </Button>
+          <Button onClick={onClose} variant="contained" color="primary">
+            Закрыть
+          </Button>
+        </Box>
       </DialogActions>
     </Dialog>
   )

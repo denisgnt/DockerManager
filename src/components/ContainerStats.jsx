@@ -264,7 +264,7 @@ const ContainerStats = ({ container, onClose }) => {
                   <Line 
                     type="monotone"
                     dataKey="cpu" 
-                    stroke="#a4ff50ff" 
+                    stroke={theme.palette.mode === 'dark' ? '#a4ff50' : '#4caf50'} 
                     name="CPU %"
                     isAnimationActive={false}
                     strokeWidth={2}
@@ -297,7 +297,7 @@ const ContainerStats = ({ container, onClose }) => {
                   <Line 
                     type="monotone"
                     dataKey="memoryMB" 
-                    stroke="#ffb64aff" 
+                    stroke={theme.palette.mode === 'dark' ? '#ffb64a' : '#ff9800'} 
                     name="Memory MB"
                     isAnimationActive={false}
                     strokeWidth={2}

@@ -164,7 +164,11 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
       }
     })
     
-    return Array.from(uniquePorts).join(', ')
+    // Sort ports numerically
+    return Array.from(uniquePorts).sort((a, b) => {
+      const getFirstPort = (str) => parseInt(str.split(':')[0])
+      return getFirstPort(a) - getFirstPort(b)
+    }).join(', ')
   }
 
   const getServiceLink = (ports) => {
@@ -652,7 +656,8 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
             elevation={3}
             sx={{
               width: { xs: '100%', sm: 400, md: 450, lg: 400, xl: 480 },
-              
+              minWidth: { xs: 280, sm: 400 },
+              maxWidth: '100%',
               display: 'flex',
               flexDirection: 'column',
               transition: 'transform 0.2s, box-shadow 0.2s',
@@ -723,27 +728,37 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                 )}
 
                 {getServiceLink(container.Ports) && (
-                  <Box display="flex" alignItems="center" gap={0.5}>
+                  <Box 
+                    sx={{ 
+                      display: 'flex', 
+                      flexDirection: { xs: 'column', sm: 'row' },
+                      alignItems: { xs: 'flex-start', sm: 'center' },
+                      gap: { xs: 0, sm: 0.5 }
+                    }}
+                  >
                     <Typography variant="body2" color="text.secondary">
                       <strong>Service:</strong>
                     </Typography>
-                    <Typography 
-                      component="a" 
-                      href={getServiceLink(container.Ports)} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      variant="body2"
-                      sx={{
-                        color: 'primary.main',
-                        textDecoration: 'none',
-                        '&:hover': {
-                          textDecoration: 'underline'
-                        }
-                      }}
-                    >
-                      {getServiceLink(container.Ports)}
-                    </Typography>
-                    <OpenInNewIcon sx={{ fontSize: 14, color: 'primary.main' }} />
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, wordBreak: 'break-all' }}>
+                      <Typography 
+                        component="a" 
+                        href={getServiceLink(container.Ports)} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        variant="body2"
+                        sx={{
+                          color: 'primary.main',
+                          textDecoration: 'none',
+                          wordBreak: 'break-all',
+                          '&:hover': {
+                            textDecoration: 'underline'
+                          }
+                        }}
+                      >
+                        {getServiceLink(container.Ports)}
+                      </Typography>
+                      <OpenInNewIcon sx={{ fontSize: 14, color: 'primary.main', flexShrink: 0 }} />
+                    </Box>
                   </Box>
                 )}
 

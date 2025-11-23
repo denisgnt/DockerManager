@@ -143,6 +143,65 @@ app.get('/api/containers/:id/logs', async (req, res) => {
   }
 });
 
+// Export container logs to file
+app.get('/api/containers/:id/export-logs', async (req, res) => {
+  try {
+    const tail = req.query.tail || 5000;
+    
+    // Get logs without demux (as raw stream)
+    const response = await axios({
+      method: 'GET',
+      url: `${DOCKER_HOST}/containers/${req.params.id}/logs?stdout=true&stderr=true&tail=${tail}&timestamps=true`,
+      responseType: 'arraybuffer'
+    });
+    
+    const buffer = Buffer.from(response.data);
+    const lines = [];
+    let offset = 0;
+    
+    // Parse Docker multiplexed stream format
+    while (offset < buffer.length) {
+      if (offset + 8 > buffer.length) break;
+      
+      // Header: [stream_type(1), 0, 0, 0, size(4 bytes big-endian)]
+      const payloadSize = buffer.readUInt32BE(offset + 4);
+      const payloadStart = offset + 8;
+      const payloadEnd = payloadStart + payloadSize;
+      
+      if (payloadEnd > buffer.length) break;
+      
+      // Extract payload
+      let line = buffer.slice(payloadStart, payloadEnd).toString('utf8');
+      
+      // Clean ANSI codes
+      line = line.replace(/\x1b\[[0-9;]*m/g, '');
+      line = line.replace(/\x1b\[[0-9;]*[a-zA-Z]/g, '');
+      
+      // Remove carriage returns and trim
+      line = line.replace(/\r/g, '').trim();
+      
+      if (line) {
+        lines.push(line);
+      }
+      
+      offset = payloadEnd;
+    }
+    
+    const cleanedLogs = lines.join('\n');
+    
+    // Set headers for file download
+    const container = await dockerRequest(`/containers/${req.params.id}/json`);
+    const containerName = container.Name.replace(/^\//, '');
+    const filename = `${containerName}_logs_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.txt`;
+    
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.send(cleanedLogs);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Get container stats
 app.get('/api/containers/:id/stats', async (req, res) => {
   try {
