@@ -5,7 +5,7 @@ import { Server } from 'socket.io';
 import axios from 'axios';
 import { exec, spawn } from 'child_process';
 import { promisify } from 'util';
-import { readdir, access } from 'fs/promises';
+import { readdir, access, readFile, writeFile } from 'fs/promises';
 import { constants } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -17,6 +17,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const execAsync = promisify(exec);
+
+// Path for storing node positions (persists across restarts)
+const NODE_POSITIONS_FILE = path.join(__dirname, '../data/node-positions.json');
 
 // Map to track containers currently being rebuilt
 const rebuildingContainers = new Map();
@@ -76,6 +79,125 @@ app.get('/api/containers', async (req, res) => {
     }));
     
     res.json(containersWithStatus);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get container dependencies from environment variables
+app.get('/api/containers/dependencies', async (req, res) => {
+  try {
+    const containers = await dockerRequest('/containers/json?all=true');
+    const dependencies = [];
+    
+    // First, create a map of ports to container names from _PORT env vars
+    const portToContainerMap = new Map();
+    
+    for (const container of containers) {
+      const inspect = await dockerRequest(`/containers/${container.Id}/json`);
+      const env = inspect.Config.Env || [];
+      const containerName = inspect.Name.replace(/^\//, '');
+      
+      // Find all _PORT environment variables
+      env.forEach(envVar => {
+        const [key, value] = envVar.split('=');
+        if (key && key.endsWith('_PORT') && value && !key.startsWith('VITE_')) {
+          // Map port to container name
+          portToContainerMap.set(value, containerName);
+        }
+      });
+    }
+    
+    // Now find dependencies based on URI_* variables
+    for (const container of containers) {
+      const inspect = await dockerRequest(`/containers/${container.Id}/json`);
+      const env = inspect.Config.Env || [];
+      const containerName = inspect.Name.replace(/^\//, '');
+      
+      // Parse environment variables for dependencies
+      const deps = [];
+      env.forEach(envVar => {
+        const [key, value] = envVar.split('=');
+        if (key && value) {
+          // Check for URI-based dependencies (ENDPOINT_MODULE_, URI_, VITE_URI_)
+          if (key.startsWith('ENDPOINT_MODULE_') || 
+              key.startsWith('URI_') || 
+              key.startsWith('VITE_URI_')) {
+            // Extract port from URL: http://host:port/path
+            const urlMatch = value.match(/https?:\/\/[^:\/]+:(\d+)/);
+            if (urlMatch) {
+              const port = urlMatch[1];
+              
+              // Find target container by port
+              if (portToContainerMap.has(port)) {
+                const targetContainer = portToContainerMap.get(port);
+                deps.push({
+                  envVar: key,
+                  target: targetContainer,
+                  url: value,
+                  port: port
+                });
+              }
+            }
+          }
+        }
+      });
+      
+      dependencies.push({
+        id: container.Id,
+        name: containerName,
+        state: container.State,
+        status: container.Status,
+        dependencies: deps
+      });
+    }
+    
+    console.log('Port to container map:', Object.fromEntries(portToContainerMap));
+    console.log('Dependencies found:', dependencies.length);
+    dependencies.forEach(dep => {
+      if (dep.dependencies.length > 0) {
+        console.log(`${dep.name} -> ${dep.dependencies.length} deps:`, dep.dependencies.map(d => `${d.target} (port: ${d.port})`));
+      }
+    });
+    
+    res.json(dependencies);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get saved node positions
+app.get('/api/graph/positions', async (req, res) => {
+  try {
+    const data = await readFile(NODE_POSITIONS_FILE, 'utf-8');
+    res.json(JSON.parse(data));
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      // File doesn't exist yet, return empty object
+      res.json({});
+    } else {
+      res.status(500).json({ error: error.message });
+    }
+  }
+});
+
+// Save node positions
+app.post('/api/graph/positions', async (req, res) => {
+  try {
+    const positions = req.body;
+    
+    // Ensure data directory exists
+    const dataDir = path.dirname(NODE_POSITIONS_FILE);
+    try {
+      await access(dataDir, constants.F_OK);
+    } catch {
+      await execAsync(`mkdir -p "${dataDir}"`);
+    }
+    
+    // Save positions to file
+    await writeFile(NODE_POSITIONS_FILE, JSON.stringify(positions, null, 2), 'utf-8');
+    
+    res.json({ success: true, message: 'Positions saved' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

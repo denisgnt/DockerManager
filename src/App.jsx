@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Container,
   Box,
@@ -18,17 +18,20 @@ import ViewListIcon from '@mui/icons-material/ViewList'
 import ViewModuleIcon from '@mui/icons-material/ViewModule'
 import Brightness4Icon from '@mui/icons-material/Brightness4'
 import Brightness7Icon from '@mui/icons-material/Brightness7'
+import AccountTreeIcon from '@mui/icons-material/AccountTree'
 import ContainerList from './components/ContainerList'
 import ContainerLogs from './components/ContainerLogs'
 import ContainerInfo from './components/ContainerInfo'
 import ContainerStats from './components/ContainerStats'
 import ScriptOutput from './components/ScriptOutput'
+import DependencyGraph from './components/DependencyGraph'
 import useDockerStore from './store/useDockerStore'
 import { io } from 'socket.io-client'
 import { useThemeMode } from './ThemeContext'
 
 function App() {
   const { mode, toggleTheme } = useThemeMode()
+  const [showDependencyGraph, setShowDependencyGraph] = useState(false)
   
   // Получение состояния и действий из store
   const {
@@ -156,6 +159,11 @@ function App() {
               </Box>
             </ToggleButton>
           </ToggleButtonGroup>
+          <Tooltip title="Граф зависимостей">
+            <IconButton color="inherit" onClick={() => setShowDependencyGraph(true)} aria-label="dependency graph" sx={{ mr: 1 }}>
+              <AccountTreeIcon />
+            </IconButton>
+          </Tooltip>
           <Tooltip title={mode === 'dark' ? 'Светлая тема' : 'Темная тема'}>
             <IconButton color="inherit" onClick={toggleTheme} aria-label="toggle theme" sx={{ mr: 1 }}>
               {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
@@ -226,6 +234,11 @@ function App() {
               open={scriptOutput.open}
               onClose={closeScriptOutput}
               scriptData={scriptOutput.data}
+            />
+
+            <DependencyGraph
+              open={showDependencyGraph}
+              onClose={() => setShowDependencyGraph(false)}
             />
           </>
         )}
