@@ -230,6 +230,7 @@ export default function DependencyGraph({ open, onClose }) {
               label: dep.envVar.replace(/^(ENDPOINT_MODULE_|URI_|VITE_URI_)/, ''),
               type: 'smoothstep',
               animated: false,
+              hidden: true, // Скрыть все линии по умолчанию
               markerEnd: {
                 type: MarkerType.ArrowClosed,
                 color: bothBroken 
@@ -405,18 +406,11 @@ export default function DependencyGraph({ open, onClose }) {
         data: { ...n.data, isSelected: false, isHighlighted: false }
       })));
       
+      // Скрыть все линии
       setEdges(eds => eds.map(e => ({
         ...e,
+        hidden: true,
         animated: false,
-        style: {
-          ...e.style,
-          strokeWidth: 2,
-          stroke: theme.palette.mode === 'dark' ? '#90caf9' : '#1976d2',
-        },
-        markerEnd: {
-          ...e.markerEnd,
-          color: theme.palette.mode === 'dark' ? '#90caf9' : '#1976d2',
-        }
       })));
     } else {
       // Выделить узел
@@ -463,7 +457,7 @@ export default function DependencyGraph({ open, onClose }) {
         }
       })));
       
-      // Обновить рёбра
+      // Обновить рёбра - показать только линии связанные с выбранным блоком
       setEdges(eds => eds.map(e => {
         const isOutgoing = outgoingEdges.has(e.id);
         const isIncoming = incomingEdges.has(e.id);
@@ -471,28 +465,20 @@ export default function DependencyGraph({ open, onClose }) {
         // Check if selected container is exited
         const selectedIsExited = selectedContainer && selectedContainer.state === 'exited';
         
-        // Check if this edge connects two broken containers (both source and target are broken)
-        const sourceContainer = allDependencies.find(c => c.id === e.source);
-        const targetContainer = allDependencies.find(c => c.id === e.target);
-        const bothBroken = sourceContainer && targetContainer && 
-          (sourceContainer.state === 'exited' || sourceContainer.data?.hasBrokenDependency) &&
-          (targetContainer.state === 'exited' || targetContainer.data?.hasBrokenDependency);
-        
         return {
           ...e,
+          hidden: !isOutgoing && !isIncoming, // Показать только линии связанные с выбранным блоком
           animated: isOutgoing || isIncoming,
           style: {
             ...e.style,
-            strokeWidth: isOutgoing ? 8 : (isIncoming ? 8 : (bothBroken ? 2 : 2)),
+            strokeWidth: isOutgoing ? 8 : (isIncoming ? 8 : 2),
             stroke: isOutgoing 
               ? (theme.palette.mode === 'dark' ? '#ffa726' : '#f57c00') // Оранжевый для исходящих (всегда)
               : isIncoming
                 ? (selectedIsExited
                   ? (theme.palette.mode === 'dark' ? '#f44336' : '#d32f2f') // Красный если выбранный exited
                   : (theme.palette.mode === 'dark' ? '#4caf50' : '#2e7d32')) // Зелёный если выбранный running
-                : bothBroken
-                  ? (theme.palette.mode === 'dark' ? '#f44336' : '#d32f2f') // Красный для broken-to-broken
-                  : (theme.palette.mode === 'dark' ? '#90caf9' : '#1976d2'), // Синий по умолчанию
+                : (theme.palette.mode === 'dark' ? '#90caf9' : '#1976d2'), // Синий по умолчанию
           },
           markerEnd: {
             ...e.markerEnd,
@@ -502,12 +488,30 @@ export default function DependencyGraph({ open, onClose }) {
                 ? (selectedIsExited
                   ? (theme.palette.mode === 'dark' ? '#f44336' : '#d32f2f')
                   : (theme.palette.mode === 'dark' ? '#4caf50' : '#2e7d32'))
-                : bothBroken
-                  ? (theme.palette.mode === 'dark' ? '#f44336' : '#d32f2f')
-                  : (theme.palette.mode === 'dark' ? '#90caf9' : '#1976d2'),
+                : (theme.palette.mode === 'dark' ? '#90caf9' : '#1976d2'),
           }
         };
       }));
+    }
+  }, [selectedNodeId, allDependencies, setNodes, setEdges, theme.palette.mode]);
+
+  const handlePaneClick = useCallback(() => {
+    if (selectedNodeId) {
+      // Снять выделение при клике на пустое место
+      setSelectedNodeId(null);
+      
+      // Сбросить подсветку у всех узлов и рёбер
+      setNodes(nds => nds.map(n => ({
+        ...n,
+        data: { ...n.data, isSelected: false, isHighlighted: false }
+      })));
+      
+      // Скрыть все линии
+      setEdges(eds => eds.map(e => ({
+        ...e,
+        hidden: true,
+        animated: false,
+      })));
     }
   }, [selectedNodeId, allDependencies, setNodes, setEdges, theme.palette.mode]);
 
@@ -614,6 +618,7 @@ export default function DependencyGraph({ open, onClose }) {
             onNodesChange={handleNodesChange}
             onEdgesChange={onEdgesChange}
             onNodeClick={handleNodeClick}
+            onPaneClick={handlePaneClick}
             onInit={setReactFlowInstance}
             nodeTypes={nodeTypes}
             defaultZoom={1.0}

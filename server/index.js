@@ -101,7 +101,7 @@ app.get('/api/containers/dependencies', async (req, res) => {
       // Find all _PORT environment variables
       env.forEach(envVar => {
         const [key, value] = envVar.split('=');
-        if (key && key.endsWith('_PORT') && value && !key.startsWith('VITE_')) {
+        if (key && key.endsWith('PORT') && value && !key.startsWith('VITE_')) {
           // Map port to container name
           portToContainerMap.set(value, containerName);
         }
