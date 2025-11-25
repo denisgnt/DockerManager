@@ -18,11 +18,11 @@ import {
   Toolbar
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import FitScreenIcon from '@mui/icons-material/FitScreen';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import InfoIcon from '@mui/icons-material/Info';
 import CloseIcon from '@mui/icons-material/Close';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import {
   ReactFlow,
   Background,
@@ -126,7 +126,6 @@ export default function DependencyGraph({ open, onClose }) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
-  const [layoutDirection, setLayoutDirection] = useState('TB'); // TB = top-bottom, LR = left-right
   const [selectedNodeId, setSelectedNodeId] = useState(null);
   const [allDependencies, setAllDependencies] = useState([]);
 
@@ -195,7 +194,7 @@ export default function DependencyGraph({ open, onClose }) {
       });
 
       // Create nodes
-      const nodePositions = calculateNodePositions(dependencies, layoutDirection);
+      const nodePositions = calculateNodePositions(dependencies);
       const newNodes = dependencies.map((container, index) => ({
         id: container.id,
         type: 'custom',
@@ -263,17 +262,34 @@ export default function DependencyGraph({ open, onClose }) {
       setNodes(newNodes);
       setEdges(newEdges);
     } catch (err) {
-      setError(err.message);
+      console.error('Error fetching dependencies:', err);
+      if (err.code === 'ERR_NETWORK' || err.message === 'Network Error') {
+        setError('Не удается подключиться к серверу. Проверьте, что сервер запущен и доступен.');
+      } else if (err.response) {
+        setError(`Ошибка сервера: ${err.response.status} - ${err.response.data?.error || err.message}`);
+      } else {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }
-  }, [setNodes, setEdges, theme.palette.mode, layoutDirection]);
+  }, [setNodes, setEdges, theme.palette.mode]);
 
   useEffect(() => {
     fetchDependencies();
   }, [fetchDependencies]);
 
-  const calculateNodePositions = (dependencies, direction) => {
+  // Auto-fit view after graph is loaded and ReactFlow is initialized
+  useEffect(() => {
+    if (reactFlowInstance && nodes.length > 0 && !loading) {
+      const timer = setTimeout(() => {
+        reactFlowInstance.fitView({ padding: 0.15, duration: 400 });
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [reactFlowInstance, nodes.length, loading]);
+
+  const calculateNodePositions = (dependencies) => {
     const positions = {};
     const columnWidth = 650; // Ширина столбца (увеличено с 500)
     const rowHeight = 280; // Высота строки (увеличено с 220)
@@ -370,12 +386,6 @@ export default function DependencyGraph({ open, onClose }) {
     return positions;
   };
 
-  const handleFitView = useCallback(() => {
-    if (reactFlowInstance) {
-      reactFlowInstance.fitView({ padding: 0.15, duration: 400, minZoom: 0.5, maxZoom: 1.5 });
-    }
-  }, [reactFlowInstance]);
-
   const handleZoomIn = useCallback(() => {
     if (reactFlowInstance) {
       reactFlowInstance.zoomIn({ duration: 400 });
@@ -388,9 +398,16 @@ export default function DependencyGraph({ open, onClose }) {
     }
   }, [reactFlowInstance]);
 
-  const toggleLayout = useCallback(() => {
-    setLayoutDirection(prev => prev === 'TB' ? 'LR' : 'TB');
-  }, []);
+  const handleResetLayout = useCallback(async () => {
+    try {
+      await axios.delete(`${API_URL}/api/graph/positions`);
+      // Reload dependencies with default positions
+      await fetchDependencies();
+    } catch (err) {
+      console.error('Failed to reset layout:', err);
+      setError('Ошибка при сбросе схемы: ' + err.message);
+    }
+  }, [fetchDependencies]);
 
   const handleNodeClick = useCallback((event, node) => {
     const nodeId = node.id;
@@ -557,32 +574,11 @@ export default function DependencyGraph({ open, onClose }) {
             </IconButton>
           </Tooltip>
           
-          <Tooltip title="Вместить все">
-            <IconButton onClick={handleFitView} size="small" color="inherit" sx={{ mr: 1 }}>
-              <FitScreenIcon />
+          <Tooltip title="Сбросить схему">
+            <IconButton onClick={handleResetLayout} size="small" color="inherit" sx={{ mr: 1 }}>
+              <RestartAltIcon />
             </IconButton>
           </Tooltip>
-          
-          <Tooltip title="Увеличить">
-            <IconButton onClick={handleZoomIn} size="small" color="inherit" sx={{ mr: 1 }}>
-              <ZoomInIcon />
-            </IconButton>
-          </Tooltip>
-          
-          <Tooltip title="Уменьшить">
-            <IconButton onClick={handleZoomOut} size="small" color="inherit" sx={{ mr: 1 }}>
-              <ZoomOutIcon />
-            </IconButton>
-          </Tooltip>
-          
-          <Button
-            size="small"
-            variant="outlined"
-            onClick={toggleLayout}
-            sx={{ mr: 2, color: 'inherit', borderColor: 'inherit' }}
-          >
-            {layoutDirection === 'TB' ? 'Горизонтально' : 'Вертикально'}
-          </Button>
           
           <Tooltip title="Закрыть">
             <IconButton onClick={onClose} size="small" color="inherit">
@@ -621,7 +617,6 @@ export default function DependencyGraph({ open, onClose }) {
             onPaneClick={handlePaneClick}
             onInit={setReactFlowInstance}
             nodeTypes={nodeTypes}
-            defaultZoom={1.0}
             attributionPosition="bottom-left"
             minZoom={0.2}
             maxZoom={2.0}
@@ -643,7 +638,21 @@ export default function DependencyGraph({ open, onClose }) {
                 }}
               />
             )}
-            <Controls showInteractive={false} />
+            <Controls 
+              showInteractive={false}
+              style={{
+                button: {
+                  backgroundColor: theme.palette.mode === 'dark' ? '#333' : '#fff',
+                  color: theme.palette.mode === 'dark' ? '#fff' : '#000',
+                  borderBottom: theme.palette.mode === 'dark' 
+                    ? '1px solid rgba(255, 255, 255, 0.12)' 
+                    : '1px solid rgba(0, 0, 0, 0.12)',
+                },
+                '& button:hover': {
+                  backgroundColor: theme.palette.mode === 'dark' ? '#444' : '#f5f5f5',
+                }
+              }}
+            />
           </ReactFlow>
         )}
       </Box>

@@ -5,7 +5,7 @@ import { Server } from 'socket.io';
 import axios from 'axios';
 import { exec, spawn } from 'child_process';
 import { promisify } from 'util';
-import { readdir, access, readFile, writeFile } from 'fs/promises';
+import { readdir, access, readFile, writeFile, unlink } from 'fs/promises';
 import { constants } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -200,6 +200,21 @@ app.post('/api/graph/positions', async (req, res) => {
     res.json({ success: true, message: 'Positions saved' });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+// Delete node positions (reset layout)
+app.delete('/api/graph/positions', async (req, res) => {
+  try {
+    await unlink(NODE_POSITIONS_FILE);
+    res.json({ success: true, message: 'Positions reset' });
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      // File doesn't exist, that's fine
+      res.json({ success: true, message: 'No positions to reset' });
+    } else {
+      res.status(500).json({ error: error.message });
+    }
   }
 });
 
