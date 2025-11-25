@@ -273,7 +273,7 @@ export default function DependencyGraph({ open, onClose }) {
     } finally {
       setLoading(false);
     }
-  }, [setNodes, setEdges, theme.palette.mode]);
+  }, [setNodes, setEdges]);
 
   useEffect(() => {
     fetchDependencies();
@@ -289,7 +289,7 @@ export default function DependencyGraph({ open, onClose }) {
     }
   }, [reactFlowInstance, nodes.length, loading]);
 
-  const calculateNodePositions = (dependencies) => {
+  const calculateNodePositions = useCallback((dependencies) => {
     const positions = {};
     const columnWidth = 650; // Ширина столбца (увеличено с 500)
     const rowHeight = 280; // Высота строки (увеличено с 220)
@@ -384,7 +384,7 @@ export default function DependencyGraph({ open, onClose }) {
     });
     
     return positions;
-  };
+  }, []);
 
   const handleZoomIn = useCallback(() => {
     if (reactFlowInstance) {
@@ -405,7 +405,13 @@ export default function DependencyGraph({ open, onClose }) {
       await fetchDependencies();
     } catch (err) {
       console.error('Failed to reset layout:', err);
-      setError('Ошибка при сбросе схемы: ' + err.message);
+      if (err.code === 'ERR_NETWORK' || err.message === 'Network Error') {
+        setError('Не удается подключиться к серверу при сбросе схемы.');
+      } else if (err.response) {
+        setError(`Ошибка при сбросе: ${err.response.data?.error || err.message}`);
+      } else {
+        setError('Ошибка при сбросе схемы: ' + err.message);
+      }
     }
   }, [fetchDependencies]);
 
