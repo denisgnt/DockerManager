@@ -37,8 +37,6 @@ import {
 import '@xyflow/react/dist/style.css';
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5005';
-
 // Custom node component
 const CustomNode = ({ data }) => {
   const theme = useTheme();
@@ -46,7 +44,38 @@ const CustomNode = ({ data }) => {
   const isExited = data.state === 'exited';
   const isSelected = data.isSelected;
   const isHighlighted = data.isHighlighted;
+  const isIncoming = data.isIncoming; // Входящие связи (другие зависят от этого)
+  const isOutgoing = data.isOutgoing; // Исходящие связи (этот зависит от других)
   const hasBrokenDependency = data.hasBrokenDependency;
+  
+  // Определяем цвет фона
+  let backgroundColor;
+  let textColor;
+  let borderColor;
+  
+  if (isSelected) {
+    // Выбранный блок - светло-зеленый фон
+    backgroundColor = theme.palette.mode === 'dark' ? '#65cc6aff' : '#81c784';
+    textColor = '#000';
+    borderColor = theme.palette.mode === 'dark' ? '#388e3c' : '#2e7d32';
+  } else if (isIncoming) {
+    // Входящие блоки - синий фон
+    backgroundColor = theme.palette.mode === 'dark' ? '#1976d2' : '#2196f3';
+    textColor = '#fff';
+    borderColor = theme.palette.mode === 'dark' ? '#1565c0' : '#1976d2';
+  } else if (isOutgoing) {
+    // Исходящие блоки - оранжевый фон
+    backgroundColor = theme.palette.mode === 'dark' ? '#f57c00' : '#ff9800';
+    textColor = '#fff';
+    borderColor = theme.palette.mode === 'dark' ? '#e65100' : '#f57c00';
+  } else {
+    // Обычные блоки
+    backgroundColor = theme.palette.mode === 'dark' ? 'grey.900' : 'background.paper';
+    textColor = theme.palette.text.primary;
+    borderColor = hasBrokenDependency
+      ? (theme.palette.mode === 'dark' ? '#f44336' : '#d32f2f')
+      : isRunning ? 'success.main' : 'error.main';
+  }
   
   return (
     <>
@@ -54,18 +83,10 @@ const CustomNode = ({ data }) => {
       <Card
         sx={{
           minWidth: 200,
-          border: isSelected ? 4 : 2,
-          borderColor: isSelected 
-            ? (isExited 
-              ? (theme.palette.mode === 'dark' ? '#f44336' : '#d32f2f')
-              : (theme.palette.mode === 'dark' ? '#ffd700' : '#ffa000'))
-            : isHighlighted
-            ? (theme.palette.mode === 'dark' ? '#ffcc80' : '#ffb74d')
-            : hasBrokenDependency
-            ? (theme.palette.mode === 'dark' ? '#f44336' : '#d32f2f')
-            : isRunning ? 'success.main' : 'error.main',
-          boxShadow: isSelected ? 8 : isHighlighted ? 4 : 3,
-          backgroundColor: theme.palette.mode === 'dark' ? 'grey.900' : 'background.paper',
+          border: 2,
+          borderColor: borderColor,
+          boxShadow: isSelected ? 8 : isIncoming || isOutgoing ? 4 : 3,
+          backgroundColor: backgroundColor,
           transform: isSelected ? 'scale(1.05)' : 'scale(1)',
           transition: 'all 0.2s ease-in-out',
           cursor: 'pointer',
@@ -73,7 +94,7 @@ const CustomNode = ({ data }) => {
       >
         <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
           <Stack spacing={1}>
-            <Typography variant="subtitle1" fontWeight="bold" noWrap>
+            <Typography variant="subtitle1" fontWeight="bold" noWrap sx={{ color: textColor }}>
               {data.label}
             </Typography>
             <Chip
@@ -102,7 +123,11 @@ const CustomNode = ({ data }) => {
                   label={`${data.dependencies.length} deps`}
                   size="small"
                   variant="outlined"
-                  sx={{ width: 'fit-content' }}
+                  sx={{ 
+                    width: 'fit-content',
+                    color: textColor,
+                    borderColor: textColor
+                  }}
                 />
               </Tooltip>
             )}
@@ -128,6 +153,7 @@ export default function DependencyGraph({ open, onClose }) {
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [selectedNodeId, setSelectedNodeId] = useState(null);
   const [allDependencies, setAllDependencies] = useState([]);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Save node positions when they change
   const handleNodesChange = useCallback((changes) => {
@@ -147,7 +173,7 @@ export default function DependencyGraph({ open, onClose }) {
         });
         
         // Save to backend
-        axios.post(`${API_URL}/api/graph/positions`, positions)
+        axios.post(`/api/graph/positions`, positions)
           .catch(err => console.error('Failed to save positions:', err));
         
         return currentNodes;
@@ -159,14 +185,14 @@ export default function DependencyGraph({ open, onClose }) {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get(`${API_URL}/api/containers/dependencies`);
+      const response = await axios.get(`/api/containers/dependencies`);
       const dependencies = response.data;
       setAllDependencies(dependencies);
 
       // Load saved positions
       let savedPositions = {};
       try {
-        const positionsResponse = await axios.get(`${API_URL}/api/graph/positions`);
+        const positionsResponse = await axios.get(`/api/graph/positions`);
         savedPositions = positionsResponse.data;
       } catch (err) {
         console.log('No saved positions found, using default layout');
@@ -230,6 +256,10 @@ export default function DependencyGraph({ open, onClose }) {
               type: 'smoothstep',
               animated: false,
               hidden: true, // Скрыть все линии по умолчанию
+              pathOptions: { 
+                offset: 25,
+                borderRadius: 50
+              },
               markerEnd: {
                 type: MarkerType.ArrowClosed,
                 color: bothBroken 
@@ -279,15 +309,35 @@ export default function DependencyGraph({ open, onClose }) {
     fetchDependencies();
   }, [fetchDependencies]);
 
-  // Auto-fit view after graph is loaded and ReactFlow is initialized
+  // Load saved viewport from localStorage on mount
   useEffect(() => {
-    if (reactFlowInstance && nodes.length > 0 && !loading) {
-      const timer = setTimeout(() => {
-        reactFlowInstance.fitView({ padding: 0.15, duration: 400 });
-      }, 100);
-      return () => clearTimeout(timer);
+    if (reactFlowInstance && !isInitialized) {
+      try {
+        const savedViewport = localStorage.getItem('dependency-graph-viewport');
+        if (savedViewport) {
+          const viewport = JSON.parse(savedViewport);
+          reactFlowInstance.setViewport(viewport);
+          setIsInitialized(true);
+        }
+      } catch (err) {
+        console.error('Failed to load viewport:', err);
+      }
     }
-  }, [reactFlowInstance, nodes.length, loading]);
+  }, [reactFlowInstance, isInitialized]);
+
+  // Auto-fit view after graph is loaded and ReactFlow is initialized (only if no saved viewport) (only if no saved viewport)
+  useEffect(() => {
+    if (reactFlowInstance && nodes.length > 0 && !loading && !isInitialized) {
+      const savedViewport = localStorage.getItem('dependency-graph-viewport');
+      if (!savedViewport) {
+        const timer = setTimeout(() => {
+          reactFlowInstance.fitView({ padding: 0.15, duration: 400 });
+          setIsInitialized(true);
+        }, 100);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [reactFlowInstance, nodes.length, loading, isInitialized]);
 
   const calculateNodePositions = useCallback((dependencies) => {
     const positions = {};
@@ -400,7 +450,7 @@ export default function DependencyGraph({ open, onClose }) {
 
   const handleResetLayout = useCallback(async () => {
     try {
-      await axios.delete(`${API_URL}/api/graph/positions`);
+      await axios.delete(`/api/graph/positions`);
       // Reload dependencies with default positions
       await fetchDependencies();
     } catch (err) {
@@ -415,6 +465,15 @@ export default function DependencyGraph({ open, onClose }) {
     }
   }, [fetchDependencies]);
 
+  // Save viewport (zoom and position) to localStorage
+  const handleMoveEnd = useCallback((event, viewport) => {
+    try {
+      localStorage.setItem('dependency-graph-viewport', JSON.stringify(viewport));
+    } catch (err) {
+      console.error('Failed to save viewport:', err);
+    }
+  }, []);
+
   const handleNodeClick = useCallback((event, node) => {
     const nodeId = node.id;
     
@@ -426,7 +485,7 @@ export default function DependencyGraph({ open, onClose }) {
       // Сбросить подсветку у всех узлов и рёбер
       setNodes(nds => nds.map(n => ({
         ...n,
-        data: { ...n.data, isSelected: false, isHighlighted: false }
+        data: { ...n.data, isSelected: false, isHighlighted: false, isIncoming: false, isOutgoing: false }
       })));
       
       // Скрыть все линии
@@ -441,7 +500,8 @@ export default function DependencyGraph({ open, onClose }) {
       
       // Найти все зависимости выбранного контейнера
       const selectedContainer = allDependencies.find(c => c.id === nodeId);
-      const dependencyTargets = new Set();
+      const dependencyTargets = new Set(); // Исходящие блоки (от кого зависит выбранный)
+      const dependentSources = new Set(); // Входящие блоки (кто зависит от выбранного)
       const outgoingEdges = new Set(); // Исходящие связи (зависимости выбранного блока)
       const incomingEdges = new Set(); // Входящие связи (кто зависит от выбранного блока)
       
@@ -463,6 +523,7 @@ export default function DependencyGraph({ open, onClose }) {
           container.dependencies.forEach(dep => {
             const targetContainer = allDependencies.find(c => c.name === dep.target);
             if (targetContainer && targetContainer.id === nodeId) {
+              dependentSources.add(container.id);
               const edgeId = `${container.id}-${nodeId}-${dep.envVar}`;
               incomingEdges.add(edgeId);
             }
@@ -476,7 +537,9 @@ export default function DependencyGraph({ open, onClose }) {
         data: {
           ...n.data,
           isSelected: n.id === nodeId,
-          isHighlighted: dependencyTargets.has(n.id),
+          isOutgoing: dependencyTargets.has(n.id), // Оранжевый фон
+          isIncoming: dependentSources.has(n.id), // Синий фон
+          isHighlighted: false,
         }
       })));
       
@@ -496,21 +559,17 @@ export default function DependencyGraph({ open, onClose }) {
             ...e.style,
             strokeWidth: isOutgoing ? 8 : (isIncoming ? 8 : 2),
             stroke: isOutgoing 
-              ? (theme.palette.mode === 'dark' ? '#ffa726' : '#f57c00') // Оранжевый для исходящих (всегда)
+              ? (theme.palette.mode === 'dark' ? '#f57c00' : '#ff9800') // Оранжевый для исходящих
               : isIncoming
-                ? (selectedIsExited
-                  ? (theme.palette.mode === 'dark' ? '#f44336' : '#d32f2f') // Красный если выбранный exited
-                  : (theme.palette.mode === 'dark' ? '#4caf50' : '#2e7d32')) // Зелёный если выбранный running
+                ? (theme.palette.mode === 'dark' ? '#1976d2' : '#2196f3') // Синий для входящих
                 : (theme.palette.mode === 'dark' ? '#90caf9' : '#1976d2'), // Синий по умолчанию
           },
           markerEnd: {
             ...e.markerEnd,
             color: isOutgoing 
-              ? (theme.palette.mode === 'dark' ? '#ffa726' : '#f57c00')
+              ? (theme.palette.mode === 'dark' ? '#f57c00' : '#ff9800')
               : isIncoming
-                ? (selectedIsExited
-                  ? (theme.palette.mode === 'dark' ? '#f44336' : '#d32f2f')
-                  : (theme.palette.mode === 'dark' ? '#4caf50' : '#2e7d32'))
+                ? (theme.palette.mode === 'dark' ? '#1976d2' : '#2196f3')
                 : (theme.palette.mode === 'dark' ? '#90caf9' : '#1976d2'),
           }
         };
@@ -526,7 +585,7 @@ export default function DependencyGraph({ open, onClose }) {
       // Сбросить подсветку у всех узлов и рёбер
       setNodes(nds => nds.map(n => ({
         ...n,
-        data: { ...n.data, isSelected: false, isHighlighted: false }
+        data: { ...n.data, isSelected: false, isHighlighted: false, isIncoming: false, isOutgoing: false }
       })));
       
       // Скрыть все линии
@@ -622,6 +681,7 @@ export default function DependencyGraph({ open, onClose }) {
             onNodeClick={handleNodeClick}
             onPaneClick={handlePaneClick}
             onInit={setReactFlowInstance}
+            onMoveEnd={handleMoveEnd}
             nodeTypes={nodeTypes}
             attributionPosition="bottom-left"
             minZoom={0.2}
@@ -644,21 +704,6 @@ export default function DependencyGraph({ open, onClose }) {
                 }}
               />
             )}
-            <Controls 
-              showInteractive={false}
-              style={{
-                button: {
-                  backgroundColor: theme.palette.mode === 'dark' ? '#333' : '#fff',
-                  color: theme.palette.mode === 'dark' ? '#fff' : '#000',
-                  borderBottom: theme.palette.mode === 'dark' 
-                    ? '1px solid rgba(255, 255, 255, 0.12)' 
-                    : '1px solid rgba(0, 0, 0, 0.12)',
-                },
-                '& button:hover': {
-                  backgroundColor: theme.palette.mode === 'dark' ? '#444' : '#f5f5f5',
-                }
-              }}
-            />
           </ReactFlow>
         )}
       </Box>

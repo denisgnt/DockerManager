@@ -21,6 +21,9 @@ const execAsync = promisify(exec);
 // Path for storing node positions (persists across restarts)
 const NODE_POSITIONS_FILE = path.join(__dirname, '../data/node-positions.json');
 
+// Path for caching containers list
+const CONTAINERS_CACHE_FILE = path.join(__dirname, '../data/containers-cache.json');
+
 // Map to track containers currently being rebuilt
 const rebuildingContainers = new Map();
 
@@ -67,6 +70,40 @@ const dockerRequest = async (endpoint, method = 'GET', data = null) => {
   }
 };
 
+// Save containers to cache
+const saveContainersCache = async (containers) => {
+  try {
+    const dataDir = path.dirname(CONTAINERS_CACHE_FILE);
+    try {
+      await access(dataDir, constants.F_OK);
+    } catch {
+      await execAsync(`mkdir -p "${dataDir}"`);
+    }
+    
+    await writeFile(CONTAINERS_CACHE_FILE, JSON.stringify(containers, null, 2), 'utf-8');
+    console.log(`Cached ${containers.length} containers`);
+  } catch (error) {
+    console.error('Failed to save containers cache:', error.message);
+  }
+};
+
+// Load containers from cache
+const loadContainersCache = async () => {
+  try {
+    const data = await readFile(CONTAINERS_CACHE_FILE, 'utf-8');
+    const cached = JSON.parse(data);
+    console.log(`Loaded ${cached.length} containers from cache`);
+    return cached;
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      console.log('No containers cache found');
+      return [];
+    }
+    console.error('Failed to load containers cache:', error.message);
+    return [];
+  }
+};
+
 // Get all containers
 app.get('/api/containers', async (req, res) => {
   try {
@@ -78,9 +115,29 @@ app.get('/api/containers', async (req, res) => {
       Rebuilding: rebuildingContainers.has(container.Id)
     }));
     
+    // Save to cache
+    await saveContainersCache(containersWithStatus);
+    
     res.json(containersWithStatus);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Docker API unavailable, using cached data:', error.message);
+    
+    // Try to load from cache
+    const cachedContainers = await loadContainersCache();
+    
+    if (cachedContainers.length > 0) {
+      // Mark all cached containers as exited since Docker is not available
+      const containersWithExitedStatus = cachedContainers.map(container => ({
+        ...container,
+        State: 'exited',
+        Status: 'Exited (Docker unavailable)',
+        Rebuilding: false
+      }));
+      
+      res.json(containersWithExitedStatus);
+    } else {
+      res.status(500).json({ error: error.message });
+    }
   }
 });
 
