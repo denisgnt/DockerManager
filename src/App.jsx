@@ -38,6 +38,7 @@ function App() {
   const { mode, toggleTheme } = useThemeMode()
   const [searchParams, setSearchParams] = useSearchParams()
   const [graphSearchQuery, setGraphSearchQuery] = useState('')
+  const [graphRefreshTrigger, setGraphRefreshTrigger] = useState(0)
   
   // Получение состояния и действий из store
   const {
@@ -120,6 +121,16 @@ function App() {
     }
   }
 
+  const handleRefresh = () => {
+    if (viewMode === 'graph') {
+      // Для графа - триггерим обновление зависимостей
+      setGraphRefreshTrigger(prev => prev + 1)
+    } else {
+      // Для списка/плитки - обновляем контейнеры
+      fetchContainers()
+    }
+  }
+
   return (
     <>
       <AppBar 
@@ -190,7 +201,7 @@ function App() {
               {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
             </IconButton>
           </Tooltip>
-          <IconButton color="inherit" onClick={fetchContainers} aria-label="refresh">
+          <IconButton color="inherit" onClick={handleRefresh} aria-label="refresh">
             <RefreshIcon />
           </IconButton>
         </Toolbar>
@@ -204,6 +215,7 @@ function App() {
           searchQuery={graphSearchQuery} 
           onSearchChange={setGraphSearchQuery}
           mode={mode}
+          refreshTrigger={graphRefreshTrigger}
         />
       ) : (
         <Container maxWidth="xl" sx={{ mt: { xs: 2, sm: 4 }, mb: { xs: 2, sm: 4 }, px: { xs: 2, sm: 3 } }}>

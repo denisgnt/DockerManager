@@ -1,157 +1,157 @@
 {
-  "791b841a9fcae9ec240c80d6048404c9c676f9cf6b6fb0d0b64c28d31fc6a4ca": {
-    "x": 1769.53639716376,
-    "y": -688.5504934076228
+  "axibpm-nodejs-gateway-container": {
+    "x": 3250,
+    "y": 0
   },
-  "0db4d2f7ded197b752b264b9598aa5a0adb3cd8c77fa2ad2aee0c7bf02ba345f": {
+  "docker-manager": {
+    "x": 0,
+    "y": 0
+  },
+  "axibpm-nodejs-notification-service-container": {
     "x": 1300,
     "y": 2240
   },
-  "3e5093994d028a40e3d6eacc4c868ba32e13491c05b5a42694a103039e45c840": {
-    "x": 649.7085162294679,
-    "y": -242.5347783127812
+  "axiit-nodejs-service-chat-container": {
+    "x": 650,
+    "y": 0
   },
-  "e525195881a572de4f4c6fba8f940bb548291c50fb76c7df1d97b402e3744ba3": {
-    "x": 583.1398540096734,
-    "y": 232.00124832622367
+  "axibpm-nodejs-service-organizationstructure-container": {
+    "x": 650,
+    "y": 280
   },
-  "e5cf8a19e994a885d466370bdf0322c9c1df1fe6071585310f202aa971e02b07": {
+  "axibpm-profile-service-container": {
     "x": 1300,
     "y": 2520
   },
-  "0568f29092bcf035860f3baef3a79d0fc9657960a37fe01aeab5f5d761c2d778": {
+  "axiit-nodejs-service-history-container": {
     "x": 650,
     "y": 560
   },
-  "5d6b23465e75743e38e5b2dabe4bb9edc8d202321a3fe0788f793c559e2b62bb": {
-    "x": 1123.4252360318294,
-    "y": -132.15788267694955
+  "axibpm-nodejs-service-contacts-container": {
+    "x": 1307.3968456037203,
+    "y": -109.04084348329823
   },
-  "0bf80d97d728f701325781e6140f1dbd7ffc9215636aa980d8a2d1ba7b93819b": {
+  "axibpm-nodejs-service-subscriber-container": {
     "x": 650,
     "y": 840
   },
-  "e154b213d36f7db896cadd95d18521318743a9b804e72a8edf5ca5a1617ee32f": {
-    "x": 1264.2468120100582,
-    "y": 277.7654257506286
+  "axibpm-nodejs-service-project-container": {
+    "x": 1309.4973820141283,
+    "y": 263.1256544964679
   },
-  "172bc1b317af4738dfdef2eda0ac24a19719418412541784029a6a3a48c3cf18": {
+  "axibpm-nodejs-service-task-tracker-container": {
     "x": 1300,
     "y": 560
   },
-  "d3c63054b75492cd2a96dd194a13e58513246ca06d1131cddab0e947628cadb6": {
-    "x": 1793.4839378647732,
-    "y": -969.8707603269295
+  "axi-bpm-system-ui-container": {
+    "x": 4550,
+    "y": 0
   },
-  "7d488d8c116941ef0587b3da412d544458a0776c2229a25bea6d49aa2325dc1b": {
-    "x": 2600,
-    "y": 560
+  "axibpm-onec-synchronize-service-container": {
+    "x": 3900,
+    "y": 280
   },
-  "4ead2da2b3509ea87fa497b3c9c4d4456975871bfaaf800c9f302bfd6e461c71": {
+  "axibpm-nodejs-onec-integration-container": {
     "x": 650,
     "y": 1120
   },
-  "d7afe721625b4076e18be20120d7badb89a6e02f8666bf0f258e1a9d1a0706a0": {
-    "x": 1982.3413954203334,
-    "y": 513.5835852630212
+  "axiit-nodejs-service-resource-worksheet-container": {
+    "x": 2002.4208717804618,
+    "y": 548.6571814247371
   },
-  "4030d270694112cdaad78c2949499e9fc561b41a1482d7c29edc1f2ffbafee4b": {
+  "axiit-nodejs-service-custom-fields-container": {
+    "x": 1300,
+    "y": 840
+  },
+  "axibpm-nodejs-service-laborcost-allocation-container": {
+    "x": 2601.0588512893496,
+    "y": 0
+  },
+  "axiit-nodejs-service-laborcost-aggregate-container": {
+    "x": 1859.748480447553,
+    "y": 246.03713361460143
+  },
+  "axiit-nodejs-service-abylity-container": {
     "x": 0,
-    "y": 0
+    "y": 280
   },
-  "ce0573e1b7fa74f754d123504abc9181ea48195dbc1541097a42823046c78d5f": {
-    "x": 1699.4308989196632,
-    "y": 803.1740166934136
+  "axibpm-nodejs-service-event-bus-container": {
+    "x": 0,
+    "y": 560
   },
-  "262df2b60b756a1e337de0848a30033932fb3b43a79b725f18c99ca1ee487eb1": {
-    "x": 2600,
-    "y": 0
+  "mosquitto": {
+    "x": 0,
+    "y": 840
   },
-  "7187a58ee8f3048676d4dd57cb6bf923910c5f6b572c4967b60d3f9833798b7f": {
+  "axi-bpm-blob-service-container": {
+    "x": 0,
+    "y": 1120
+  },
+  "axibpm-nodejs-service-labor-cost-container": {
+    "x": 650,
+    "y": 1400
+  },
+  "axiit-nodejs-asset2-service-container": {
+    "x": 1300,
+    "y": 1120
+  },
+  "axibpm-nodejs-service-auth-container": {
     "x": 1950,
-    "y": 280
-  },
-  "b1a9216f733bb7039fbe4755d08fc098cda2002055bf45d63d614f71fbdb7cea": {
-    "x": 0,
-    "y": 0
-  },
-  "ba89dcd5f7d80de404fdd1101eea430bb12e53703ee496628ac0dbd48c6f3e6e": {
-    "x": 0,
-    "y": 280
-  },
-  "239eaf2e1385fb7e783846861a97621a03c0992901689b0acaddc9211c5dd4cf": {
-    "x": 0,
-    "y": 560
-  },
-  "7adedfaee002b9b92460117c118286510484cc89225335ad0672faec948afb17": {
-    "x": 0,
     "y": 840
   },
-  "4f878d3af6e2f87c3e32d8a851ad631ccb0f7b447750bc0ef2be343596783a56": {
-    "x": 1130.5801407690244,
-    "y": -359.61351276163214
-  },
-  "68d1101540960703e9ded764babc52e553744287914fa6d9d9d3f8299d1dc6c6": {
-    "x": 1300,
-    "y": 840
-  },
-  "25d2f054e50eabec3dc455d03307729e50bcbedae1ce40b6fec5fed9c1248188": {
-    "x": 2438.2637732294015,
-    "y": 1077.3518278047704
-  },
-  "c5574d2704e71ba37dcac993d82f31019112aa62c52b25982c68d7428aa8f227": {
-    "x": 650,
-    "y": 840
-  },
-  "5d11c2329f145ec86ddb05e366edd84719164e54fe7977720243ddf6de26846e": {
-    "x": 814.0774787163901,
-    "y": 1237.9882993016738
-  },
-  "53b015916cd79f25e1ed9cb9c8363c69e3590cf4d916f52cfe4d45bc40055403": {
-    "x": 1300,
-    "y": 1120
-  },
-  "8fb03e452a9a96a3eb2933cdcfa71d572cbf084b65e4e28c33e977c0312a39b2": {
-    "x": 0,
-    "y": 1120
-  },
-  "aa634587f729848756330cb7a5475daf3882ecc6eb2fb2ac1b1574996ded920d": {
-    "x": 0,
-    "y": 1400
-  },
-  "bf0616f268363ef8f696ef5419187dee6c238ec653956d03775a2004ea527147": {
-    "x": 650,
-    "y": 1400
-  },
-  "740d686817dc2c9ee8a17ce2f9fc2190e3246c0dc38e252778919bcd42ba7946": {
-    "x": 1300,
-    "y": 1400
-  },
-  "45875a80c35f13d58abfed5699730a2c19be6050236e010c62fc8b23e4b0ff61": {
+  "axibpm-nodejs-service-workspace-container": {
     "x": 650,
     "y": 1680
   },
-  "f3713af4f04bf0fbe24b60188e829d760af940d0cb03ac81f0d722b4a1379a66": {
+  "axiit-nodejs-email-service-container": {
+    "x": 650,
+    "y": 1960
+  },
+  "axiit-nodejs-counterparty-service-container": {
+    "x": 1300,
+    "y": 1400
+  },
+  "axibpm-nodejs-service-document-builder-container": {
+    "x": 0,
+    "y": 1400
+  },
+  "axiit-nodejs-service-preferences-container": {
+    "x": 0,
+    "y": 1680
+  },
+  "axibpm-nodejs-calendar-service-container": {
+    "x": 650,
+    "y": 2240
+  },
+  "axibpm-nodejs-service-document-management-container": {
     "x": 1300,
     "y": 1680
   },
-  "2c339eb267c4ea49cd100c0f571e45f35037c5db89cf737b5cc6c902f03048ef": {
+  "axi-bpm-file-service-container": {
     "x": 650,
     "y": 2520
   },
-  "a9ca0e9794d07aa4a216cf0f2149b28d87a6a7fa17e256de04c95eb2c8a4afc6": {
+  "axibpm-account-service-container": {
+    "x": 1300,
+    "y": 1960
+  },
+  "axiit-nodejs-service-address-container": {
+    "x": 650,
+    "y": 2800
+  },
+  "axibpm-nodejs-service-event-container": {
     "x": 3900,
     "y": 0
   },
-  "b151151226820632039d80929f6344780ac934067ee1dca0683443df783c512b": {
-    "x": 1776.332304248525,
-    "y": -114.29176840676779
+  "axibpm-nodejs-service-plan-container": {
+    "x": 1900.2911331264315,
+    "y": -104.67284717753397
   },
-  "9adbaaf9b9d43682b35fd5621daacb9241eb3f3601281885d550000192f24d5b": {
+  "pgadmin_pgadmin_1": {
     "x": 0,
     "y": 1960
   },
-  "223308a8cc8bfaf042bfd80108427793b87733f37c41f8bc3c8d6f794453aba1": {
+  "pg_pg_bpm2_1": {
     "x": 0,
     "y": 2240
   }

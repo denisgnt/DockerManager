@@ -33,7 +33,8 @@ import {
   useEdgesState,
   MarkerType,
   Position,
-  Handle
+  Handle,
+  Panel
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import axios from 'axios';
@@ -83,7 +84,7 @@ const CustomNode = ({ data }) => {
   // Если найден в поиске - желтая рамка
   if (isSearchMatch) {
     borderColor = theme.palette.mode === 'dark' ? '#fdd835' : '#fbc02d';
-    borderWidth = 3;
+    borderWidth = 6;
   }
   
   return (
@@ -152,7 +153,7 @@ const nodeTypes = {
   custom: CustomNode,
 };
 
-export default function DependencyGraph({ searchQuery = '', onSearchChange, mode }) {
+export default function DependencyGraph({ searchQuery = '', onSearchChange, mode, refreshTrigger = 0 }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [loading, setLoading] = useState(true);
@@ -163,6 +164,7 @@ export default function DependencyGraph({ searchQuery = '', onSearchChange, mode
   const [selectedNodeId, setSelectedNodeId] = useState(null);
   const [allDependencies, setAllDependencies] = useState([]);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [localSearchQuery, setLocalSearchQuery] = useState('');
 
   // Save node positions when they change
   const handleNodesChange = useCallback((changes) => {
@@ -178,7 +180,8 @@ export default function DependencyGraph({ searchQuery = '', onSearchChange, mode
       setNodes(currentNodes => {
         const positions = {};
         currentNodes.forEach(node => {
-          positions[node.id] = node.position;
+          // Сохраняем по имени контейнера (node.data.label) вместо ID
+          positions[node.data.label] = node.position;
         });
         
         // Save to backend
@@ -233,7 +236,8 @@ export default function DependencyGraph({ searchQuery = '', onSearchChange, mode
       const newNodes = dependencies.map((container, index) => ({
         id: container.id,
         type: 'custom',
-        position: savedPositions[container.id] || nodePositions[container.name] || { x: 250, y: index * 150 },
+        // Используем имя контейнера для загрузки сохранённой позиции
+        position: savedPositions[container.name] || nodePositions[container.name] || { x: 250, y: index * 150 },
         data: {
           label: container.name,
           state: container.state,
@@ -318,6 +322,14 @@ export default function DependencyGraph({ searchQuery = '', onSearchChange, mode
   useEffect(() => {
     fetchDependencies();
   }, [fetchDependencies]);
+
+  // Обновление зависимостей при изменении refreshTrigger
+  useEffect(() => {
+    if (refreshTrigger > 0) {
+      console.log('Refreshing dependencies graph...');
+      fetchDependencies();
+    }
+  }, [refreshTrigger, fetchDependencies]);
 
   // Load saved viewport from localStorage on mount
   useEffect(() => {
@@ -460,7 +472,7 @@ export default function DependencyGraph({ searchQuery = '', onSearchChange, mode
 
   // Search functionality
   useEffect(() => {
-    if (!searchQuery.trim()) {
+    if (!localSearchQuery.trim()) {
       // Clear all search highlights
       setNodes((nds) =>
         nds.map((node) => ({
@@ -471,7 +483,7 @@ export default function DependencyGraph({ searchQuery = '', onSearchChange, mode
       return;
     }
 
-    const query = searchQuery.toLowerCase();
+    const query = localSearchQuery.toLowerCase();
     setNodes((nds) =>
       nds.map((node) => {
         const label = node.data.label?.toLowerCase() || '';
@@ -486,7 +498,7 @@ export default function DependencyGraph({ searchQuery = '', onSearchChange, mode
         };
       })
     );
-  }, [searchQuery, setNodes]);
+  }, [localSearchQuery, setNodes]);
 
   const handleResetLayout = useCallback(async () => {
     try {
@@ -646,57 +658,6 @@ export default function DependencyGraph({ searchQuery = '', onSearchChange, mode
 
   return (
     <Box sx={{ height: 'calc(100vh - 64px)', width: '100%', position: 'relative' }}>
-      {/* Плавающее окно поиска */}
-      <Paper
-        elevation={3}
-        sx={{
-          position: 'absolute',
-          top: 16,
-          left: 16,
-          zIndex: 1000,
-          p: 1,
-          backgroundColor: mode === 'dark' ? 'rgba(30, 30, 30, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(10px)',
-        }}
-      >
-        <TextField
-          size="small"
-          placeholder="Поиск по графу..."
-          value={searchQuery}
-          onChange={(e) => onSearchChange(e.target.value)}
-          autoComplete="off"
-          sx={{ 
-            minWidth: 300,
-            '& .MuiOutlinedInput-root': {
-              color: mode === 'dark' ? '#fff' : 'rgba(0, 0, 0, 0.87)',
-              '& fieldset': {
-                borderColor: mode === 'dark' ? 'rgba(255, 255, 255, 0.23)' : 'rgba(0, 0, 0, 0.23)',
-              },
-              '&:hover fieldset': {
-                borderColor: mode === 'dark' ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.4)',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: mode === 'dark' ? '#90caf9' : '#1976d2',
-              },
-            },
-          }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon sx={{ color: mode === 'dark' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.54)' }} />
-              </InputAdornment>
-            ),
-            endAdornment: searchQuery && (
-              <InputAdornment position="end">
-                <IconButton size="small" onClick={() => onSearchChange('')} edge="end">
-                  <ClearIcon fontSize="small" />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Paper>
-
       {/* Легенда */}
       <Paper
         elevation={3}
@@ -801,6 +762,53 @@ export default function DependencyGraph({ searchQuery = '', onSearchChange, mode
               color={theme.palette.mode === 'dark' ? '#555' : '#aaa'}
               gap={16}
             />
+            <Panel position="top-left">
+              <Paper
+                elevation={3}
+                sx={{
+                  p: 1,
+                  backgroundColor: mode === 'dark' ? 'rgba(30, 30, 30, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                  backdropFilter: 'blur(10px)',
+                }}
+              >
+                <TextField
+                  size="small"
+                  placeholder="Поиск по графу..."
+                  value={localSearchQuery}
+                  onChange={(e) => setLocalSearchQuery(e.target.value)}
+                  autoComplete="off"
+                  sx={{ 
+                    minWidth: 300,
+                    '& .MuiOutlinedInput-root': {
+                      color: mode === 'dark' ? '#fff' : 'rgba(0, 0, 0, 0.87)',
+                      '& fieldset': {
+                        borderColor: mode === 'dark' ? 'rgba(255, 255, 255, 0.23)' : 'rgba(0, 0, 0, 0.23)',
+                      },
+                      '&:hover fieldset': {
+                        borderColor: mode === 'dark' ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.4)',
+                      },
+                      '&.Mui-focused fieldset': {
+                        borderColor: mode === 'dark' ? '#90caf9' : '#1976d2',
+                      },
+                    },
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon sx={{ color: mode === 'dark' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.54)' }} />
+                      </InputAdornment>
+                    ),
+                    endAdornment: localSearchQuery && (
+                      <InputAdornment position="end">
+                        <IconButton size="small" onClick={() => setLocalSearchQuery('')} edge="end">
+                          <ClearIcon fontSize="small" />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Paper>
+            </Panel>
             {!isMobile && (
               <MiniMap
                 style={miniMapStyle}

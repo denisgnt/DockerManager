@@ -1,13 +1,13 @@
 [
   {
-    "Id": "791b841a9fcae9ec240c80d6048404c9c676f9cf6b6fb0d0b64c28d31fc6a4ca",
+    "Id": "c8ff9437bf646294766ebada25e8c4081ebebb808b94b1df9297f161edbce22c",
     "Names": [
       "/axibpm-nodejs-gateway-container"
     ],
     "Image": "axibpm-nodejs-gateway",
     "ImageID": "sha256:0f82283011f4d09c48f266d72e85cd4adfad121456573c6846e007384de1fcff",
     "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
-    "Created": 1764412060,
+    "Created": 1764412764,
     "Ports": [
       {
         "IP": "0.0.0.0",
@@ -33,7 +33,7 @@
       "com.docker.compose.version": "1.29.2"
     },
     "State": "running",
-    "Status": "Up 2 minutes (healthy)",
+    "Status": "Up 9 hours (healthy)",
     "HostConfig": {
       "NetworkMode": "axi-bpm-ecosystem"
     },
@@ -44,7 +44,7 @@
           "Links": null,
           "Aliases": null,
           "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
-          "EndpointID": "f6ef9937bb0214c072bf03e55171b9051994b223f771965f0c6c6cfe4a74abb7",
+          "EndpointID": "d27b1c471fe3188e8c933a1b329dd88e19bf2f13f45d9e52a9b3ae95d2feae11",
           "Gateway": "172.21.0.1",
           "IPAddress": "172.21.0.34",
           "IPPrefixLen": 16,
@@ -130,7 +130,7 @@
       "com.docker.compose.version": "1.29.2"
     },
     "State": "running",
-    "Status": "Up 21 hours (healthy)",
+    "Status": "Up 30 hours (healthy)",
     "HostConfig": {
       "NetworkMode": "axi-bpm-ecosystem"
     },
@@ -206,7 +206,7 @@
       "com.docker.compose.version": "1.29.2"
     },
     "State": "running",
-    "Status": "Up 21 hours (healthy)",
+    "Status": "Up 30 hours (healthy)",
     "HostConfig": {
       "NetworkMode": "axi-bpm-ecosystem"
     },
@@ -281,7 +281,7 @@
       "com.docker.compose.version": "1.29.2"
     },
     "State": "running",
-    "Status": "Up 22 hours",
+    "Status": "Up 31 hours",
     "HostConfig": {
       "NetworkMode": "axibpm_ecosystem"
     },
@@ -356,7 +356,7 @@
       "com.docker.compose.version": "1.29.2"
     },
     "State": "running",
-    "Status": "Up 22 hours",
+    "Status": "Up 31 hours",
     "HostConfig": {
       "NetworkMode": "axi-bpm-ecosystem"
     },
@@ -430,7 +430,7 @@
       "com.docker.compose.version": "1.29.2"
     },
     "State": "running",
-    "Status": "Up 22 hours (healthy)",
+    "Status": "Up 31 hours (healthy)",
     "HostConfig": {
       "NetworkMode": "axi-bpm-ecosystem"
     },
@@ -504,7 +504,7 @@
       "com.docker.compose.version": "1.29.2"
     },
     "State": "running",
-    "Status": "Up 22 hours",
+    "Status": "Up 31 hours",
     "HostConfig": {
       "NetworkMode": "axi-bpm-ecosystem"
     },
@@ -579,7 +579,7 @@
       "com.docker.compose.version": "1.29.2"
     },
     "State": "running",
-    "Status": "Up 22 hours",
+    "Status": "Up 31 hours",
     "HostConfig": {
       "NetworkMode": "axi-bpm-ecosystem"
     },
@@ -653,7 +653,7 @@
       "com.docker.compose.version": "1.29.2"
     },
     "State": "running",
-    "Status": "Up 22 hours",
+    "Status": "Up 31 hours",
     "HostConfig": {
       "NetworkMode": "axi-bpm-ecosystem"
     },
@@ -729,7 +729,7 @@
       "com.docker.compose.version": "1.29.2"
     },
     "State": "running",
-    "Status": "Up 23 hours",
+    "Status": "Up 32 hours",
     "HostConfig": {
       "NetworkMode": "axi-bpm-ecosystem"
     },
@@ -815,7 +815,7 @@
       "maintainer": "NGINX Docker Maintainers <docker-maint@nginx.com>"
     },
     "State": "running",
-    "Status": "Up 26 hours",
+    "Status": "Up 35 hours",
     "HostConfig": {
       "NetworkMode": "prod-backend"
     },
@@ -913,7 +913,7 @@
       "com.docker.compose.version": "1.29.2"
     },
     "State": "running",
-    "Status": "Up 26 hours",
+    "Status": "Up 35 hours",
     "HostConfig": {
       "NetworkMode": "axi-bpm-ecosystem"
     },
@@ -990,7 +990,7 @@
       "com.docker.compose.version": "1.29.2"
     },
     "State": "running",
-    "Status": "Up 44 hours (healthy)",
+    "Status": "Up 2 days (healthy)",
     "HostConfig": {
       "NetworkMode": "axi-bpm-ecosystem"
     },
@@ -1107,14 +1107,14 @@
     ]
   },
   {
-    "Id": "4030d270694112cdaad78c2949499e9fc561b41a1482d7c29edc1f2ffbafee4b",
+    "Id": "93c54f9a74e30ec1bea7081a94690cdaf8d02724a87c38e9c912c604e8ea2800",
     "Names": [
       "/docker-manager"
     ],
     "Image": "dockermanager_docker-manager",
-    "ImageID": "sha256:54a1066e7a8d5d959d07947880fcdd4713951457be0106cefac5fd426a8b608a",
+    "ImageID": "sha256:c26b8f060a8076784345db82cb9b51426edd60447b0e83e7e8e0314d8901b18a",
     "Command": "docker-entrypoint.sh yarn start",
-    "Created": 1764188861,
+    "Created": 1764412671,
     "Ports": [
       {
         "IP": "0.0.0.0",
@@ -1130,7 +1130,7 @@
       }
     ],
     "Labels": {
-      "com.docker.compose.config-hash": "abed1b353ad450ecca0727eabe155204e772dd0bb927d34c8335accb344d4a53",
+      "com.docker.compose.config-hash": "6530bca956fcab10e9942c7a1be98eb5e8e40674a97f889f62ec4acfe0ffb7e4",
       "com.docker.compose.container-number": "1",
       "com.docker.compose.oneoff": "False",
       "com.docker.compose.project": "dockermanager",
@@ -1140,7 +1140,7 @@
       "com.docker.compose.version": "1.29.2"
     },
     "State": "running",
-    "Status": "Up 2 days (healthy)",
+    "Status": "Up 9 hours (healthy)",
     "HostConfig": {
       "NetworkMode": "dockermanager_docker-manager-network"
     },
@@ -1150,15 +1150,15 @@
           "IPAMConfig": null,
           "Links": null,
           "Aliases": null,
-          "NetworkID": "622c8ac70c8c0feb0d854cd144c5686454b9bc837dba880d370927525232415a",
-          "EndpointID": "6d5fc522852ae65a97d2e01a7f5f66ad209e594c9fb0506fc4909c278148e61a",
-          "Gateway": "172.24.0.1",
-          "IPAddress": "172.24.0.2",
+          "NetworkID": "4cc47192f809468c82b09c8f62e396e1a4e83c81c881d4bd6c69439801237774",
+          "EndpointID": "6b77c591c99f14fb9e3448f9492211315991922bb08e739645eebadc3868750b",
+          "Gateway": "172.30.0.1",
+          "IPAddress": "172.30.0.2",
           "IPPrefixLen": 16,
           "IPv6Gateway": "",
           "GlobalIPv6Address": "",
           "GlobalIPv6PrefixLen": 0,
-          "MacAddress": "02:42:ac:18:00:02",
+          "MacAddress": "02:42:ac:1e:00:02",
           "DriverOpts": null
         }
       }
@@ -1737,16 +1737,16 @@
     "Mounts": [
       {
         "Type": "bind",
-        "Source": "/home/axitech/upload2/uploads_thumbnail",
-        "Destination": "/app/uploads_thumbnail",
+        "Source": "/home/axitech/upload2/uploads",
+        "Destination": "/app/uploads",
         "Mode": "rw",
         "RW": true,
         "Propagation": "rprivate"
       },
       {
         "Type": "bind",
-        "Source": "/home/axitech/upload2/uploads",
-        "Destination": "/app/uploads",
+        "Source": "/home/axitech/upload2/uploads_thumbnail",
+        "Destination": "/app/uploads_thumbnail",
         "Mode": "rw",
         "RW": true,
         "Propagation": "rprivate"
@@ -2784,7 +2784,7 @@
       "com.docker.compose.version": "1.29.2"
     },
     "State": "running",
-    "Status": "Up 2 days",
+    "Status": "Up 3 days",
     "HostConfig": {
       "NetworkMode": "axi-bpm-ecosystem"
     },
@@ -3050,16 +3050,16 @@
     "Mounts": [
       {
         "Type": "bind",
-        "Source": "/var/lib/postgresql/data",
-        "Destination": "/var/lib/postgresql/data",
+        "Source": "/home/axitech/postgress/pg/sql_init",
+        "Destination": "/docker-entrypoint-initdb.d",
         "Mode": "rw",
         "RW": true,
         "Propagation": "rprivate"
       },
       {
         "Type": "bind",
-        "Source": "/home/axitech/postgress/pg/sql_init",
-        "Destination": "/docker-entrypoint-initdb.d",
+        "Source": "/var/lib/postgresql/data",
+        "Destination": "/var/lib/postgresql/data",
         "Mode": "rw",
         "RW": true,
         "Propagation": "rprivate"

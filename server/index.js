@@ -785,4 +785,43 @@ httpServer.listen(PORT, () => {
   });
   
   console.log('Containers cache scheduler started (every 5 minutes)');
+  
+  // Track container statuses for change detection
+  let previousContainerStatuses = new Map();
+  
+  // Check for container status changes every 3 seconds
+  setInterval(async () => {
+    try {
+      const containers = await dockerRequest('/containers/json?all=true');
+      
+      containers.forEach(container => {
+        const containerId = container.Id;
+        const currentState = container.State;
+        const currentStatus = container.Status;
+        
+        const previousStatus = previousContainerStatuses.get(containerId);
+        
+        if (previousStatus && previousStatus.state !== currentState) {
+          console.log(`Container status changed: ${containerId} (${previousStatus.state} -> ${currentState})`);
+          
+          // Emit status change event
+          io.emit('container-status-changed', {
+            containerId,
+            state: currentState,
+            status: currentStatus
+          });
+        }
+        
+        // Update tracking
+        previousContainerStatuses.set(containerId, {
+          state: currentState,
+          status: currentStatus
+        });
+      });
+    } catch (error) {
+      console.error('Failed to check container statuses:', error.message);
+    }
+  }, 3000);
+  
+  console.log('Container status monitoring started (every 3 seconds)');
 });
