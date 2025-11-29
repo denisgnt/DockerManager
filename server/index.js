@@ -9,6 +9,7 @@ import { readdir, access, readFile, writeFile, unlink } from 'fs/promises';
 import { constants } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import cron from 'node-cron';
 import { DOCKER_HOST } from './appsettings.js'; 
 import { PORT } from './appsettings.js';
 import { SCRIPTS_DIR } from './appsettings.js';
@@ -70,7 +71,7 @@ const dockerRequest = async (endpoint, method = 'GET', data = null) => {
   }
 };
 
-// Save containers to cache
+// Save containers to cache (merge with existing cache)
 const saveContainersCache = async (containers) => {
   try {
     const dataDir = path.dirname(CONTAINERS_CACHE_FILE);
@@ -80,8 +81,33 @@ const saveContainersCache = async (containers) => {
       await execAsync(`mkdir -p "${dataDir}"`);
     }
     
-    await writeFile(CONTAINERS_CACHE_FILE, JSON.stringify(containers, null, 2), 'utf-8');
-    console.log(`Cached ${containers.length} containers`);
+    // Load existing cache
+    let existingCache = [];
+    try {
+      const data = await readFile(CONTAINERS_CACHE_FILE, 'utf-8');
+      existingCache = JSON.parse(data);
+    } catch (err) {
+      // No existing cache, start fresh
+    }
+    
+    // Create a map of existing containers by name
+    const existingMap = new Map();
+    existingCache.forEach(container => {
+      const name = container.Names?.[0]?.replace(/^\//, '') || container.Id;
+      existingMap.set(name, container);
+    });
+    
+    // Merge new containers with existing cache
+    containers.forEach(container => {
+      const name = container.Names?.[0]?.replace(/^\//, '') || container.Id;
+      existingMap.set(name, container);
+    });
+    
+    // Convert map back to array
+    const mergedCache = Array.from(existingMap.values());
+    
+    await writeFile(CONTAINERS_CACHE_FILE, JSON.stringify(mergedCache, null, 2), 'utf-8');
+    console.log(`Cached ${mergedCache.length} containers (${containers.length} new/updated)`);
   } catch (error) {
     console.error('Failed to save containers cache:', error.message);
   }
@@ -92,7 +118,6 @@ const loadContainersCache = async () => {
   try {
     const data = await readFile(CONTAINERS_CACHE_FILE, 'utf-8');
     const cached = JSON.parse(data);
-    console.log(`Loaded ${cached.length} containers from cache`);
     return cached;
   } catch (error) {
     if (error.code === 'ENOENT') {
@@ -104,19 +129,77 @@ const loadContainersCache = async () => {
   }
 };
 
+// Update containers cache (fetch from Docker and save)
+const updateContainersCache = async () => {
+  try {
+    console.log('Updating containers cache...');
+    const containers = await dockerRequest('/containers/json?all=true');
+    
+    // Fetch full container info including environment variables
+    const containersWithEnv = await Promise.all(
+      containers.map(async (container) => {
+        try {
+          const inspect = await dockerRequest(`/containers/${container.Id}/json`);
+          return {
+            ...container,
+            Env: inspect.Config.Env || []
+          };
+        } catch (err) {
+          console.error(`Failed to inspect container ${container.Id}:`, err.message);
+          return container;
+        }
+      })
+    );
+    
+    await saveContainersCache(containersWithEnv);
+    console.log('Containers cache updated successfully');
+  } catch (error) {
+    console.error('Failed to update containers cache:', error.message);
+  }
+};
+
+// Merge current containers with cached ones
+const mergeContainersWithCache = async (currentContainers) => {
+  const cachedContainers = await loadContainersCache();
+  
+  // Create a map of current containers by name
+  const currentMap = new Map();
+  currentContainers.forEach(container => {
+    const name = container.Names?.[0]?.replace(/^\//, '') || container.Id;
+    currentMap.set(name, container);
+  });
+  
+  // Merge with cache: add cached containers that are not in current list
+  const mergedContainers = [...currentContainers];
+  cachedContainers.forEach(cachedContainer => {
+    const name = cachedContainer.Names?.[0]?.replace(/^\//, '') || cachedContainer.Id;
+    if (!currentMap.has(name)) {
+      // Container not found in current list, add from cache with unavailable status
+      mergedContainers.push({
+        ...cachedContainer,
+        State: 'unavailable',
+        Status: 'Unavailable (cached)',
+        Rebuilding: false
+      });
+    }
+  });
+  
+  return mergedContainers;
+};
+
 // Get all containers
 app.get('/api/containers', async (req, res) => {
   try {
     const containers = await dockerRequest('/containers/json?all=true');
     
+    // Merge with cached containers
+    const mergedContainers = await mergeContainersWithCache(containers);
+    
     // Add rebuilding status to each container
-    const containersWithStatus = containers.map(container => ({
+    const containersWithStatus = mergedContainers.map(container => ({
       ...container,
       Rebuilding: rebuildingContainers.has(container.Id)
     }));
-    
-    // Save to cache
-    await saveContainersCache(containersWithStatus);
     
     res.json(containersWithStatus);
   } catch (error) {
@@ -126,15 +209,15 @@ app.get('/api/containers', async (req, res) => {
     const cachedContainers = await loadContainersCache();
     
     if (cachedContainers.length > 0) {
-      // Mark all cached containers as exited since Docker is not available
-      const containersWithExitedStatus = cachedContainers.map(container => ({
+      // Mark all cached containers as unavailable since Docker is not available
+      const containersWithUnavailableStatus = cachedContainers.map(container => ({
         ...container,
-        State: 'exited',
-        Status: 'Exited (Docker unavailable)',
+        State: 'unavailable',
+        Status: 'Unavailable (Docker unavailable)',
         Rebuilding: false
       }));
       
-      res.json(containersWithExitedStatus);
+      res.json(containersWithUnavailableStatus);
     } else {
       res.status(500).json({ error: error.message });
     }
@@ -144,16 +227,32 @@ app.get('/api/containers', async (req, res) => {
 // Get container dependencies from environment variables
 app.get('/api/containers/dependencies', async (req, res) => {
   try {
-    const containers = await dockerRequest('/containers/json?all=true');
+    const currentContainers = await dockerRequest('/containers/json?all=true');
+    
+    // Merge with cached containers
+    const containers = await mergeContainersWithCache(currentContainers);
+    
     const dependencies = [];
     
     // First, create a map of ports to container names from _PORT env vars
     const portToContainerMap = new Map();
     
     for (const container of containers) {
-      const inspect = await dockerRequest(`/containers/${container.Id}/json`);
-      const env = inspect.Config.Env || [];
-      const containerName = inspect.Name.replace(/^\//, '');
+      const containerName = container.Names?.[0]?.replace(/^\//, '') || container.Id;
+      let env = [];
+      
+      // Get environment variables from cache if unavailable, otherwise from Docker API
+      if (container.State === 'unavailable') {
+        env = container.Env || [];
+      } else {
+        try {
+          const inspect = await dockerRequest(`/containers/${container.Id}/json`);
+          env = inspect.Config.Env || [];
+        } catch (err) {
+          console.error(`Failed to inspect container ${container.Id}:`, err.message);
+          env = container.Env || [];
+        }
+      }
       
       // Find all _PORT environment variables
       env.forEach(envVar => {
@@ -167,9 +266,21 @@ app.get('/api/containers/dependencies', async (req, res) => {
     
     // Now find dependencies based on URI_* variables
     for (const container of containers) {
-      const inspect = await dockerRequest(`/containers/${container.Id}/json`);
-      const env = inspect.Config.Env || [];
-      const containerName = inspect.Name.replace(/^\//, '');
+      const containerName = container.Names?.[0]?.replace(/^\//, '') || container.Id;
+      let env = [];
+      
+      // Get environment variables from cache if unavailable, otherwise from Docker API
+      if (container.State === 'unavailable') {
+        env = container.Env || [];
+      } else {
+        try {
+          const inspect = await dockerRequest(`/containers/${container.Id}/json`);
+          env = inspect.Config.Env || [];
+        } catch (err) {
+          console.error(`Failed to inspect container ${container.Id}:`, err.message);
+          env = container.Env || [];
+        }
+      }
       
       // Parse environment variables for dependencies
       const deps = [];
@@ -663,4 +774,15 @@ httpServer.listen(PORT, () => {
   console.log(`Docker API: ${DOCKER_HOST}`);
   console.log(`Scripts directory: ${SCRIPTS_DIR}`);
   console.log(`Environment: ${isProduction ? 'production' : 'development'}`);
+  
+  // Update containers cache on startup
+  updateContainersCache();
+  
+  // Schedule cache update every 5 minutes
+  cron.schedule('*/5 * * * *', () => {
+    console.log('Running scheduled containers cache update...');
+    updateContainersCache();
+  });
+  
+  console.log('Containers cache scheduler started (every 5 minutes)');
 });

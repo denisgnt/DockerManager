@@ -114,6 +114,8 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
         return 'error'
       case 'paused':
         return 'warning'
+      case 'unavailable':
+        return 'default'
       default:
         return 'default'
     }
@@ -295,6 +297,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
   const renderActionButtons = (container) => {
     const scriptName = findScriptForContainer(container)
     const isRebuilding = container.Rebuilding
+    const isUnavailable = container.State.toLowerCase() === 'unavailable'
     
     return (
       <Box display="flex" gap={0.5}>
@@ -306,7 +309,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                   size="small"
                   color="error"
                   onClick={() => onAction(container.Id, 'stop')}
-                  disabled={isRebuilding}
+                  disabled={isRebuilding || isUnavailable}
                 >
                   <StopIcon fontSize="small" />
                 </IconButton>
@@ -318,7 +321,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                   size="small"
                   color="warning"
                   onClick={() => onAction(container.Id, 'restart')}
-                  disabled={isRebuilding}
+                  disabled={isRebuilding || isUnavailable}
                 >
                   <RestartAltIcon fontSize="small" />
                 </IconButton>
@@ -333,7 +336,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                   size="small"
                   color="success"
                   onClick={() => onAction(container.Id, 'start')}
-                  disabled={isRebuilding}
+                  disabled={isRebuilding || isUnavailable}
                 >
                   <PlayArrowIcon fontSize="small" />
                 </IconButton>
@@ -351,7 +354,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                   onAction(container.Id, 'remove')
                 }
               }}
-              disabled={isRebuilding}
+              disabled={isRebuilding || isUnavailable}
             >
               <DeleteIcon fontSize="small" />
             </IconButton>
@@ -385,6 +388,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
 
   const renderViewButtons = (container) => {
     const isRebuilding = container.Rebuilding
+    const isUnavailable = container.State.toLowerCase() === 'unavailable'
     
     return (
       <Box display="flex" gap={0.5}>
@@ -394,7 +398,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
               size="small"
               color="info"
               onClick={() => onViewInfo(container)}
-              disabled={isRebuilding}
+              disabled={isRebuilding || isUnavailable}
             >
               <InfoIcon fontSize="small" />
             </IconButton>
@@ -418,7 +422,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
               size="small"
               color="primary"
               onClick={() => onViewLogs(container)}
-              disabled={isRebuilding}
+              disabled={isRebuilding || isUnavailable}
             >
               <VisibilityIcon fontSize="small" />
             </IconButton>
@@ -578,7 +582,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
               )}
               {visibleColumns.serviceLink && (
                 <TableCell>
-                  {getServiceLink(container.Ports) ? (
+                  {getServiceLink(container.Ports) && container.State.toLowerCase() !== 'unavailable' ? (
                     <Box display="flex" alignItems="center" gap={0.5}>
                       <Typography 
                         component="a" 
@@ -727,7 +731,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                   </Typography>
                 )}
 
-                {getServiceLink(container.Ports) && (
+                {getServiceLink(container.Ports) && container.State.toLowerCase() !== 'unavailable' && (
                   <Box 
                     sx={{ 
                       display: 'flex', 
@@ -786,7 +790,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                           size="small"
                           color="error"
                           onClick={() => onAction(container.Id, 'stop')}
-                          disabled={isRebuilding}
+                          disabled={isRebuilding || container.State.toLowerCase() === 'unavailable'}
                           sx={{ 
                             minWidth: { xs: 40, sm: 34 },
                             minHeight: { xs: 40, sm: 34 }
@@ -802,7 +806,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                           size="small"
                           color="warning"
                           onClick={() => onAction(container.Id, 'restart')}
-                          disabled={isRebuilding}
+                          disabled={isRebuilding || container.State.toLowerCase() === 'unavailable'}
                           sx={{ 
                             minWidth: { xs: 40, sm: 34 },
                             minHeight: { xs: 40, sm: 34 }
@@ -820,7 +824,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                         size="small"
                         color="success"
                         onClick={() => onAction(container.Id, 'start')}
-                        disabled={isRebuilding}
+                        disabled={isRebuilding || container.State.toLowerCase() === 'unavailable'}
                         sx={{ 
                           minWidth: { xs: 40, sm: 34 },
                           minHeight: { xs: 40, sm: 34 }
@@ -841,7 +845,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                           onAction(container.Id, 'remove')
                         }
                       }}
-                      disabled={isRebuilding}
+                      disabled={isRebuilding || container.State.toLowerCase() === 'unavailable'}
                       sx={{ 
                         minWidth: { xs: 40, sm: 34 },
                         minHeight: { xs: 40, sm: 34 }
@@ -878,7 +882,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                       size="small"
                       color="info"
                       onClick={() => onViewInfo(container)}
-                      disabled={isRebuilding}
+                      disabled={isRebuilding || container.State.toLowerCase() === 'unavailable'}
                       sx={{ 
                         minWidth: { xs: 40, sm: 34 },
                         minHeight: { xs: 40, sm: 34 }
@@ -910,7 +914,7 @@ const ContainerList = ({ containers, onAction, onViewLogs, onViewInfo, onViewSta
                       size="small"
                       color="primary"
                       onClick={() => onViewLogs(container)}
-                      disabled={isRebuilding}
+                      disabled={isRebuilding || container.State.toLowerCase() === 'unavailable'}
                       sx={{ 
                         minWidth: { xs: 40, sm: 34 },
                         minHeight: { xs: 40, sm: 34 }

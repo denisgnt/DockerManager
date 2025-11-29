@@ -1,0 +1,3080 @@
+[
+  {
+    "Id": "791b841a9fcae9ec240c80d6048404c9c676f9cf6b6fb0d0b64c28d31fc6a4ca",
+    "Names": [
+      "/axibpm-nodejs-gateway-container"
+    ],
+    "Image": "axibpm-nodejs-gateway",
+    "ImageID": "sha256:0f82283011f4d09c48f266d72e85cd4adfad121456573c6846e007384de1fcff",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764412060,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 7888,
+        "PublicPort": 7888,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 7888,
+        "PublicPort": 7888,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "21b8c1dee5ba138507817d97b205fcb3e24ba9606668df43d241696adb05dbf2",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-gateway-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-gateway-service",
+      "com.docker.compose.service": "dev",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 2 minutes (healthy)",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "f6ef9937bb0214c072bf03e55171b9051994b223f771965f0c6c6cfe4a74abb7",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.34",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:22",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "PORT=7888",
+      "TZ=Europe/Moscow",
+      "LOG_LEVEL=trace",
+      "HEALTHCHECK_MODULES_INTERVAL=5000",
+      "INTROSPECT_TIMEOUT=120000",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "HEALTH_CHECK_SUBURL=/.well-known/apollo/server-health",
+      "ENDPOINT_MODULE_ASSET=http://10.174.18.242:8029/",
+      "ENDPOINT_MODULE_TASK=http://10.174.18.242:8011/",
+      "ENDPOINT_MODULE_PROFILE=http://10.174.18.242:8020/",
+      "ENDPOINT_MODULE_CALENDAR=http://10.174.18.242:8013/",
+      "ENDPOINT_MODULE_FILE=http://10.174.18.242:8017/",
+      "ENDPOINT_MODULE_LABORCOST_NEW=http://10.174.18.242:8015/",
+      "ENDPOINT_MODULE_ORGANIZATIONSTRUCTURE=http://10.174.18.242:8016/",
+      "ENDPOINT_MODULE_ACCOUNT=http://10.174.18.242:4702/",
+      "ENDPOINT_MODULE_ABILITY=http://10.174.18.242:8026/",
+      "ENDPOINT_MODULE_ADDRESS=http://10.174.18.242:8028/",
+      "ENDPOINT_MODULE_LABORCOST_AGGREGATE=http://10.174.18.242:8041/",
+      "ENDPOINT_MODULE_WORKSHEET=http://10.174.18.242:8042/",
+      "ENDPOINT_MODULE_PROJECT=http://10.174.18.242:8030/",
+      "ENDPOINT_MODULE_ONEC_INTEGRATION=http://10.174.18.242:8018/",
+      "ENDPOINT_MODULE_COUNTERPARTY=http://10.174.18.242:8034/",
+      "ENDPOINT_MODULE_DOCUMENT=http://10.174.18.242:8031/",
+      "ENDPOINT_MODULE_CONTACT=http://10.174.18.242:8036/",
+      "ENDPOINT_MODULE_CUSTOMFIELDS=http://10.174.18.242:8037/",
+      "ENDPOINT_MODULE_SUBSCRIBER=http://10.174.18.242:8070/",
+      "ENDPOINT_MODULE_NOTIFICATION=http://10.174.18.242:8072/",
+      "ENDPOINT_MODULE_EMAIL=http://10.174.18.242:8040/",
+      "ENDPOINT_MODULE_CHAT=http://10.174.18.242:8027/",
+      "ENDPOINT_MODULE_LABORCOST_ALLOCATION=http://10.174.18.242:8043/",
+      "ENDPOINT_MODULE_PREFERENCES=http://10.174.18.242:8025/",
+      "ENDPOINT_MODULE_PLAN=http://10.174.18.242:8044/",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "0db4d2f7ded197b752b264b9598aa5a0adb3cd8c77fa2ad2aee0c7bf02ba345f",
+    "Names": [
+      "/axibpm-nodejs-notification-service-container"
+    ],
+    "Image": "axibpm-nodejs-notification-service",
+    "ImageID": "sha256:c9aad7a3c2687ec412e9291c9d8d3f48cd8bb0b20db90ce7128e9a6bafb46d32",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764336658,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8072,
+        "PublicPort": 8072,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8072,
+        "PublicPort": 8072,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "1223a3a7ac14ec8df41ae1d248d3a3469edf9bdc959bc6581796a40fc95069eb",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-notification-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-notification-service",
+      "com.docker.compose.service": "debug",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 21 hours (healthy)",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "61953f4b63e944bc12619d19dc463d25d762a7ab47b796dc63fe77188d4040e9",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.30",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:1e",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-notification-service",
+      "APP_PORT=8072",
+      "LOG_LEVEL=error,warn",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "DATABASE_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-notification-service?schema=public&sslaccept=accept_invalid_certs",
+      "DATABASE_DIRECT_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-notification-service?schema=public&sslaccept=accept_invalid_certs",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "URI_HISTORY_SERVICE=http://10.174.18.242:8035/",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NOTIFICATION_CLEANUP_CRON=0 0 */11 * *",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "3e5093994d028a40e3d6eacc4c868ba32e13491c05b5a42694a103039e45c840",
+    "Names": [
+      "/axiit-nodejs-service-chat-container"
+    ],
+    "Image": "axiit-nodejs-service-chat",
+    "ImageID": "sha256:760f6a14309de954455d361c296beeae55f309967a9f592cdbcf5b0376d21a4a",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764336618,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8027,
+        "PublicPort": 8027,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8027,
+        "PublicPort": 8027,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "59dfd819977ccd4b1c67c3f36d9f0ead451a896cb089e48a9dc45311acba683b",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-chat-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-chat-service",
+      "com.docker.compose.service": "debug",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 21 hours (healthy)",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "a154319a1d512106ff7443fe7cc6f47e64e9edeab2e5f0be8b9ff52c73a5d679",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.23",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:17",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-chat-service",
+      "APP_PORT=8027",
+      "LOG_LEVEL=error,warn",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "DATABASE_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-chat-service?schema=public&sslaccept=accept_invalid_certs",
+      "DATABASE_DIRECT_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-chat-service?schema=public&sslaccept=accept_invalid_certs",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "URI_EVENT_BUS_SERVICE=http://10.174.18.242:8038/",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "e525195881a572de4f4c6fba8f940bb548291c50fb76c7df1d97b402e3744ba3",
+    "Names": [
+      "/axibpm-nodejs-service-organizationstructure-container"
+    ],
+    "Image": "axibpm-nodejs-service-organizationstructure",
+    "ImageID": "sha256:9809148a6c04ecab54a2de5300d0edec522db8e8ddd96f20bc0b2df4a316ed4e",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764334281,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8016,
+        "PublicPort": 8016,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8016,
+        "PublicPort": 8016,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "2657a467f3ff17a5b3d8591f46a2ac4a9be2afeb03a0dce35388aef6f537969d",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-organization-structure-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-organization-structure-service",
+      "com.docker.compose.service": "development_10_174_18_242",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 22 hours",
+    "HostConfig": {
+      "NetworkMode": "axibpm_ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axibpm_ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3eaa1addd05c114399bd08f5f79c54c800bd00b78b40c5658a3f56b8b6581567",
+          "EndpointID": "047f2559279a49abcef350bbc3bf554e9f66390f0453f136e1e0f48ff4eaa8de",
+          "Gateway": "192.168.64.1",
+          "IPAddress": "192.168.64.4",
+          "IPPrefixLen": 20,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:c0:a8:40:04",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-organization-structure-service",
+      "APP_PORT=8016",
+      "LOG_LEVEL=error,warn,error",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "DB_SCHEMA=public",
+      "DATABASE_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-organization-structure-service?schema=public&sslaccept=accept_invalid_certs",
+      "DATABASE_DIRECT_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-organization-structure-service?schema=public&sslaccept=accept_invalid_certs",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "e5cf8a19e994a885d466370bdf0322c9c1df1fe6071585310f202aa971e02b07",
+    "Names": [
+      "/axibpm-profile-service-container"
+    ],
+    "Image": "axibpm-profile-service",
+    "ImageID": "sha256:95e976be73ee7dc773f376a7444194aeb760af7878edaa50ba5dd9236300c35e",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764333081,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8020,
+        "PublicPort": 8020,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8020,
+        "PublicPort": 8020,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "29a5965c2a19d2db9203019160985e3c70c139c23d486f9c3196908ff1125df7",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-profile-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-profile-service",
+      "com.docker.compose.service": "dev",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 22 hours",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "9a2788225065ac77e99a9062dc1fe6ac17e6a8be8ea8c4bdceb420b35eb49e4f",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.7",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:07",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-profile-service",
+      "APP_PORT=8020",
+      "LOG_LEVEL=error,warn,error",
+      "DATABASE_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-profile-service?schema=public&sslaccept=accept_invalid_certs",
+      "DATABASE_DIRECT_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-profile-service?schema=public&sslaccept=accept_invalid_certs",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "URI_HISTORY_SERVICE=http://10.174.18.242:8035/",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=20.19.6",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "0568f29092bcf035860f3baef3a79d0fc9657960a37fe01aeab5f5d761c2d778",
+    "Names": [
+      "/axiit-nodejs-service-history-container"
+    ],
+    "Image": "axiit-nodejs-service-history",
+    "ImageID": "sha256:efb2aa55eb24482b7c8862ed3695e12ed453fb0d108579f6a77b1bcbe64ff8c5",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764332440,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8035,
+        "PublicPort": 8035,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8035,
+        "PublicPort": 8035,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "14dcbedf5c29a88283588e275c4303cb9c6db4e0924c7dc4ac5b73332eb16fda",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-history-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-history-service",
+      "com.docker.compose.service": "debug",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 22 hours (healthy)",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "c3bbe5fd74b9ea05afc1abad08e076d7f8424cf3ae3347ae89205d76bc810520",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.11",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:0b",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-history-service",
+      "APP_PORT=8035",
+      "LOG_LEVEL=error,warn",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "DATABASE_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-history-service?schema=public&sslaccept=accept_invalid_certs",
+      "DATABASE_DIRECT_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-history-service?schema=public&sslaccept=accept_invalid_certs",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "5d6b23465e75743e38e5b2dabe4bb9edc8d202321a3fe0788f793c559e2b62bb",
+    "Names": [
+      "/axibpm-nodejs-service-contacts-container"
+    ],
+    "Image": "axibpm-nodejs-service-contacts",
+    "ImageID": "sha256:9e093973e0ad7fc2229a451aaf7e1f21a2239b38aa8b3906dbae3aaf2ab40091",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764332245,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8036,
+        "PublicPort": 8036,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8036,
+        "PublicPort": 8036,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "1f1805586c93e565dd8ead656981a68120efad2ece5d472047519c50d14a860e",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-contacts-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-contacts-service",
+      "com.docker.compose.service": "development_10_174_18_242",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 22 hours",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "6af6193cd7f0d74c7f16c6a43de91e9dbd75d4b4b62d7bb38272a0f411a9140c",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.13",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:0d",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-contacts-service",
+      "APP_PORT=8036",
+      "LOG_LEVEL=error,warn,error",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "DATABASE_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-contacts-service?schema=public&sslaccept=accept_invalid_certs",
+      "DATABASE_DIRECT_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-contacts-service?schema=public&sslaccept=accept_invalid_certs",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "URI_HISTORY_SERVICE=http://10.174.18.242:8035/",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "0bf80d97d728f701325781e6140f1dbd7ffc9215636aa980d8a2d1ba7b93819b",
+    "Names": [
+      "/axibpm-nodejs-service-subscriber-container"
+    ],
+    "Image": "axibpm-nodejs-subscriber",
+    "ImageID": "sha256:9adf841ec897615e5ac1414d64afb184549328a402241e4279173d14f2f0a2e4",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764331858,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8070,
+        "PublicPort": 8070,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8070,
+        "PublicPort": 8070,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "61d5e2cc32a999828c5b2fcfef63a7c534020f87f0a9b96a61d9df3132199e80",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-subscriber-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-subscriber-service",
+      "com.docker.compose.service": "dev",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 22 hours",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "35d4e19433332e1bb7cfcc1eaeb9ff3c801b5608f16a1937acfacd843e6b798c",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.25",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:19",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-subscriber-service",
+      "APP_PORT=8070",
+      "LOG_LEVEL=error,warn",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "DATABASE_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-subscriber-service?schema=public&sslaccept=accept_invalid_certs",
+      "DATABASE_DIRECT_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-subscriber-service?schema=public&sslaccept=accept_invalid_certs",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "e154b213d36f7db896cadd95d18521318743a9b804e72a8edf5ca5a1617ee32f",
+    "Names": [
+      "/axibpm-nodejs-service-project-container"
+    ],
+    "Image": "axibpm-nodejs-project",
+    "ImageID": "sha256:6d1cf1fc4d256b19099974d5c5b464203f9fb112052081d9e9f9eb9d6b489f06",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764331713,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8030,
+        "PublicPort": 8030,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8030,
+        "PublicPort": 8030,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "95b069cc199d1a6e5f22726737a162db086d7d96bca7bf9877d073ceab161a1d",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-project-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-project-service",
+      "com.docker.compose.service": "development_10_174_18_242",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 22 hours",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "7e8e6a25992d78222de591c7f2708935a5deb5a58a85a7491993506e211aaf7f",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.31",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:1f",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-project-service",
+      "APP_PORT=8030",
+      "LOG_LEVEL=error,warn,error",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "DATABASE_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-project-service?schema=public&sslaccept=accept_invalid_certs",
+      "DATABASE_DIRECT_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-project-service?schema=public&sslaccept=accept_invalid_certs",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "URI_HISTORY_SERVICE=http://10.174.18.242:8035/",
+      "URI_EVENT_BUS_SERVICE=http://10.174.18.242:8038/",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "172bc1b317af4738dfdef2eda0ac24a19719418412541784029a6a3a48c3cf18",
+    "Names": [
+      "/axibpm-nodejs-service-task-tracker-container"
+    ],
+    "Image": "axibpm-nodejs-service-task-tracker",
+    "ImageID": "sha256:f515d5453cbccdcd722d80028e1c2c016bae945463fa7f4b5252e88e3652cabe",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764329822,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8011,
+        "PublicPort": 8011,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8011,
+        "PublicPort": 8011,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "b57ffb586d864e8d054504833cadc73b6ab7cd130a0532441a95f4136bb573db",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-task-tracker-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-task-tracker-service",
+      "com.docker.compose.service": "development_10_174_18_242",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 23 hours",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "ad3c93b9473efa94c5275ebc287ccaa68a85a4aeadc47bc6104790f1220c85f6",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.33",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:21",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-task-tracker-service",
+      "APP_PORT=8011",
+      "LOG_LEVEL=error,warn,error",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "DATABASE_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-task-tracker-service?schema=public&sslaccept=accept_invalid_certs",
+      "DATABASE_DIRECT_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-task-tracker-service?schema=public&sslaccept=accept_invalid_certs",
+      "TIMEOUT_SCRIPT_EXECUTE=20000",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "URI_HISTORY_SERVICE=http://10.174.18.242:8035/",
+      "URI_EVENT_BUS_SERVICE=http://10.174.18.242:8038/",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "d3c63054b75492cd2a96dd194a13e58513246ca06d1131cddab0e947628cadb6",
+    "Names": [
+      "/axi-bpm-system-ui-container"
+    ],
+    "Image": "axi-bpm-system-ui",
+    "ImageID": "sha256:182e400de86259fd3be83cab695a3339f53138af6d0a5d7d0e7327ddef52b19d",
+    "Command": "sh /app/entrypoint.sh",
+    "Created": 1764319552,
+    "Ports": [
+      {
+        "PrivatePort": 3000,
+        "Type": "tcp"
+      },
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 3001,
+        "PublicPort": 3001,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 3001,
+        "PublicPort": 3001,
+        "Type": "tcp"
+      },
+      {
+        "PrivatePort": 80,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "5588b0f7ea4a56695618930d36bbee798276a88605914a60e93823ab5bb0f8a9",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-system-ui",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-system-ui",
+      "com.docker.compose.service": "dev",
+      "com.docker.compose.version": "1.29.2",
+      "maintainer": "NGINX Docker Maintainers <docker-maint@nginx.com>"
+    },
+    "State": "running",
+    "Status": "Up 26 hours",
+    "HostConfig": {
+      "NetworkMode": "prod-backend"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "prod-backend": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "de669dbbd905df2f0792a74a18f4221ad5eb1612631f8e5ecf8eb3ab35d42cfb",
+          "EndpointID": "8926d550c1060c64e1211750eed9e7f8dddb0ceb0e6141c2d14f8f8ce04e0537",
+          "Gateway": "172.27.0.1",
+          "IPAddress": "172.27.0.2",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:1b:00:02",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "VITE_PORT=3001",
+      "VITE_APPLICATION_VERSION=2.13.0",
+      "VITE_APPLICATION_NAME=axi-bpm-system-ui",
+      "VITE_APPLICATION_TITLE=AXI BPM #2",
+      "VITE_APPLICATION_DESCRIPTION=AXI BPM #2 description",
+      "VITE_APPLICATION_WELCOME=Добро пожаловать на портал управления бизнес-процессами AXIBPM",
+      "VITE_APPLICATION_ATTRIBUTION=ООО \\\"АКСИТ\\\" 2024",
+      "VITE_APPLICATION_ATTRIBUTION_LINK=https://axitech.ru/",
+      "VITE_COOKIE_DOMAIN=10.174.18.242",
+      "VITE_COOKIE_AUTH_TOKEN=auth-token",
+      "VITE_COOKIE_AUTH_REFRESH_TOKEN=auth-refresh-token",
+      "VITE_URI_AUTH_SERVICE=http://10.174.18.242:4777",
+      "VITE_URI_ABILITY_SERVICE=http://10.174.18.242:8026",
+      "VITE_URI_HISTORY_SERVICE=http://10.174.18.242:8035",
+      "VITE_URI_WORKSPACE_SERVICE=http://10.174.18.242:8010",
+      "VITE_URI_GATEWAY_SERVICE=http://10.174.18.242:7888",
+      "VITE_URI_TASK_TRACKER_SERVICE=http://10.174.18.242:8011",
+      "VITE_URI_LABOR_COST_SERVICE=http://10.174.18.242:8015",
+      "VITE_URI_PROFILE_SERVICE=http://10.174.18.242:8020",
+      "VITE_URI_POSITIONS_SERVICE=http://10.174.18.242:7447/graphql",
+      "VITE_URI_FILE_BLOB_SERVICE=http://10.174.18.242:24999",
+      "VITE_URI_FILE_BLOB_SERVICE_DOWNLOAD=http://10.174.18.242:28128/",
+      "VITE_URI_CHAT_SERVICE=http://10.174.18.242:8027/",
+      "VITE_URI_ASSET_SERVICE=http://10.174.18.242:8029",
+      "VITE_URI_CUSTOM_FIELDS_SERVICE=http://10.174.18.242:8037/",
+      "VITE_URI_ONE_C_SERVICE=http://10.174.18.242:8018",
+      "VITE_URI_ONE_C_SYNCRONIZE_SERVICE=http://10.174.18.242:8019/",
+      "VITE_URI_DOCUMENT_BUILDER_SERVICE=http://10.174.18.242:8032/",
+      "VITE_DEPRECATED_APPLICATION_NAME=axi-bpm",
+      "VITE_DEPRECATED_BASE_URL=http://10.174.18.242:3000",
+      "NODE_ENV=production",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NGINX_VERSION=1.28.0",
+      "PKG_RELEASE=1",
+      "DYNPKG_RELEASE=1",
+      "NJS_VERSION=0.8.10",
+      "NJS_RELEASE=1"
+    ]
+  },
+  {
+    "Id": "7d488d8c116941ef0587b3da412d544458a0776c2229a25bea6d49aa2325dc1b",
+    "Names": [
+      "/axibpm-onec-synchronize-service-container"
+    ],
+    "Image": "axibpm-onec-synchronize-service",
+    "ImageID": "sha256:4f650b3c17225cc25a505a6e64d166bbd52e618e4f63fdb2ab6d0ec0f37a9616",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764318230,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8019,
+        "PublicPort": 8019,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8019,
+        "PublicPort": 8019,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "716642f281b952ed6eea12e5e2186b11f809880f860ded9306d23dbb4eeb0145",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-onec-synchronize-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-onec-synchronize-service",
+      "com.docker.compose.service": "dev",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 26 hours",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "76640cfcb3bda965e427e4dfe0133a3b621e778292de196fb722ee43dfa37471",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.22",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:16",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-onec-synchronize-service",
+      "APP_PORT=8019",
+      "URI_GATEWAY_SERVICE=http://10.174.18.242:7888/",
+      "URI_ONEC_SERVICE=http://10.174.18.242:8018/",
+      "URI_AUTH_SERVICE=http://10.174.18.242:4777/",
+      "SYSTEM_USER_NAME=system_events@axitech.ru",
+      "SYSTEM_USER_PASSWORD=Systemaxitech!",
+      "CREATE_MANY_CHUNK_SIZE=1000",
+      "SYNC_LABOR_COST_CRON_SCHEDULE=0 0 15 * *",
+      "SYNC_LABOR_COST_MONTHS_BACK=1",
+      "LOG_LEVEL=trace",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "4ead2da2b3509ea87fa497b3c9c4d4456975871bfaaf800c9f302bfd6e461c71",
+    "Names": [
+      "/axibpm-nodejs-onec-integration-container"
+    ],
+    "Image": "axibpm-onec-integration-service",
+    "ImageID": "sha256:0e959cf36531caf5a257880043b24c6d009c5b678c199f1a7ca0c8d5468d1a5b",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764253617,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8018,
+        "PublicPort": 8018,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8018,
+        "PublicPort": 8018,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "c2008f0c86da83c2a857e0bbb1762c1c7ac8a4f8f0268b9f11d0862a2929f8fc",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-onec-integration-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-onec-integration-service",
+      "com.docker.compose.service": "dev",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 44 hours (healthy)",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "1b77016d60fe448c3ff885222c377c0a5b0ae638d0d7af3e3858439712c2c602",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.17",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:11",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-onec-integration-service",
+      "APP_PORT=8018",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "URI_1C_SERVICE=http://10.174.18.104/1bit/hs/axibpm",
+      "REQUEST_TIMEOUT=1000",
+      "REQUEST_TIMEOUT_MUTATION=2000",
+      "REQUEST_TIMEOUT_CREATE_MANY=10000",
+      "SUPPRESS_1C_ERRORS=false",
+      "LOG_LEVEL=trace",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "d7afe721625b4076e18be20120d7badb89a6e02f8666bf0f258e1a9d1a0706a0",
+    "Names": [
+      "/axiit-nodejs-service-resource-worksheet-container"
+    ],
+    "Image": "axiit-nodejs-service-resource-worksheet",
+    "ImageID": "sha256:8b4b3da1a74a9fa0671b133e3ecd31cbfb5a000b5c324bff6a46eaf5504078ea",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764220247,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8042,
+        "PublicPort": 8042,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8042,
+        "PublicPort": 8042,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "d07211cae6035875f3ca63616ace5abaaf79e71726bcca015c8ffe77aeafba61",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-worksheet-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-worksheet-service",
+      "com.docker.compose.service": "debug",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 2 days (healthy)",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "dc49d22eebfe2d34ebc675ef1e09b786ea46719d481b3597a78d1b538aad8d0e",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.9",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:09",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-resource-worksheet-service",
+      "APP_PORT=8042",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "URI_LABORCOST_SERVICE=http://10.174.18.242:8015/",
+      "URI_CALENDAR_SERVICE=http://10.174.18.242:8013/",
+      "URI_PROFILE_SERVICE=http://10.174.18.242:8020/",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "4030d270694112cdaad78c2949499e9fc561b41a1482d7c29edc1f2ffbafee4b",
+    "Names": [
+      "/docker-manager"
+    ],
+    "Image": "dockermanager_docker-manager",
+    "ImageID": "sha256:54a1066e7a8d5d959d07947880fcdd4713951457be0106cefac5fd426a8b608a",
+    "Command": "docker-entrypoint.sh yarn start",
+    "Created": 1764188861,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 5005,
+        "PublicPort": 3011,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 5005,
+        "PublicPort": 3011,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "abed1b353ad450ecca0727eabe155204e772dd0bb927d34c8335accb344d4a53",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "dockermanager",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/composes/DockerManager",
+      "com.docker.compose.service": "docker-manager",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 2 days (healthy)",
+    "HostConfig": {
+      "NetworkMode": "dockermanager_docker-manager-network"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "dockermanager_docker-manager-network": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "622c8ac70c8c0feb0d854cd144c5686454b9bc837dba880d370927525232415a",
+          "EndpointID": "6d5fc522852ae65a97d2e01a7f5f66ad209e594c9fb0506fc4909c278148e61a",
+          "Gateway": "172.24.0.1",
+          "IPAddress": "172.24.0.2",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:18:00:02",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [
+      {
+        "Type": "bind",
+        "Source": "/home/axitech/composes/DockerManager/data",
+        "Destination": "/app/data",
+        "Mode": "rw",
+        "RW": true,
+        "Propagation": "rprivate"
+      },
+      {
+        "Type": "bind",
+        "Source": "/home/axitech/BPM2",
+        "Destination": "/app/scripts",
+        "Mode": "ro",
+        "RW": false,
+        "Propagation": "rprivate"
+      }
+    ],
+    "Env": [
+      "VITE_DOCKER_API_HOST=10.174.18.242",
+      "VITE_DOCKER_API_PORT=2375",
+      "VITE_BACKEND_PORT=5005",
+      "SCRIPTS_DIR=/app/scripts",
+      "HOST_SCRIPTS_DIR=/home/axitech/BPM2",
+      "VITE_APP_NAME=Docker Manager",
+      "NODE_ENV=production",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=24.11.1",
+      "YARN_VERSION=1.22.22"
+    ]
+  },
+  {
+    "Id": "ce0573e1b7fa74f754d123504abc9181ea48195dbc1541097a42823046c78d5f",
+    "Names": [
+      "/axiit-nodejs-service-custom-fields-container"
+    ],
+    "Image": "axiit-nodejs-service-custom-fields",
+    "ImageID": "sha256:adb9a513201e0109a67bfd75e2742ec49a7096c3fdee2d47ac15036b93e0e0d8",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764154581,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8037,
+        "PublicPort": 8037,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8037,
+        "PublicPort": 8037,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "f7df6482d9b98405406f56514808f3d33f6bc7be0c73971bc6dff89507a63568",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-custom-fields-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-custom-fields-service",
+      "com.docker.compose.service": "debug",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 3 days (healthy)",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "62cc4a134b6ce5aea193914d8ba34fb4ea72c1a1b6fbe7a626d8f0e6fbc2a8c2",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.16",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:10",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-custom-fields-service",
+      "APP_PORT=8037",
+      "LOG_LEVEL=error,warn",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "DATABASE_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-custom-fields-service?schema=public&sslaccept=accept_invalid_certs",
+      "DATABASE_DIRECT_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-custom-fields-service?schema=public&sslaccept=accept_invalid_certs",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "URI_HISTORY_SERVICE=http://10.174.18.242:8035/",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "262df2b60b756a1e337de0848a30033932fb3b43a79b725f18c99ca1ee487eb1",
+    "Names": [
+      "/axibpm-nodejs-service-laborcost-allocation-container"
+    ],
+    "Image": "axibpm-nodejs-laborcost-allocation",
+    "ImageID": "sha256:779afabb62e47bb32d97f5f58cb813f16ee03b07fb5f51f63617bf4ef1174298",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764150213,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8043,
+        "PublicPort": 8043,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8043,
+        "PublicPort": 8043,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "e8ae45b457d0baf4186e59ef510f6379d191b04bdd9639cbe232953e649b89d6",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-laborcost-allocation-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-laborcost-allocation-service",
+      "com.docker.compose.service": "dev",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 3 days",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "9a854cedbf69ec85c3481d79b3dc9428acd11762d3c07fe8058cba3f199e45dc",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.10",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:0a",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-laborcost-allocation-service",
+      "APP_PORT=8043",
+      "TZ=Europe/Moscow",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "URI_LABOR_COST_SERVICE=http://10.174.18.242:8015/",
+      "URI_PLAN_SERVICE=http://10.174.18.242:8044/",
+      "URI_CALENDAR_SERVICE=http://10.174.18.242:8013/",
+      "URI_TASK_SERVICE=http://10.174.18.242:8011/",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "7187a58ee8f3048676d4dd57cb6bf923910c5f6b572c4967b60d3f9833798b7f",
+    "Names": [
+      "/axiit-nodejs-service-laborcost-aggregate-container"
+    ],
+    "Image": "axiit-nodejs-service-laborcost-aggregate",
+    "ImageID": "sha256:6a2ac626446530fc13992011380b7e97a535c9d7b7d3357d9309d5e6e54b1022",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764150089,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8041,
+        "PublicPort": 8041,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8041,
+        "PublicPort": 8041,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "d22a7b06224d7afbd37c943dc40cdbb65eaea9aa18c9ef5dbc7a1685e507a44f",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-laborcost-aggregate-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-laborcost-aggregate-service",
+      "com.docker.compose.service": "debug",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 3 days (healthy)",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "14c9289b18a9f1679fcd49a2ce662d9b0e5520c9d7a6bfba43806be16cbbd289",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.29",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:1d",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-laborcost-aggregate-service",
+      "APP_PORT=8041",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "URI_LABORCOST_SERVICE=http://10.174.18.242:8015/",
+      "URI_TASK_SERVICE=http://10.174.18.242:8011/",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "b1a9216f733bb7039fbe4755d08fc098cda2002055bf45d63d614f71fbdb7cea",
+    "Names": [
+      "/axiit-nodejs-service-abylity-container"
+    ],
+    "Image": "axiit-nodejs-service-abylity",
+    "ImageID": "sha256:30645a80ecdb0b6cf250243d1d1bbff780420e061ca9b6a6377776f0752c2e98",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764150054,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8026,
+        "PublicPort": 8026,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8026,
+        "PublicPort": 8026,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "db98ab1fe875ec27b18b79be83d712835be3169001f6f653b9519477c39a062f",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-abylity-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-abylity-service",
+      "com.docker.compose.service": "debug",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 3 days (healthy)",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "575d2bf309dcd674a80e3a27918bffd04a425379a5e2735fb6ff95cb4601c13f",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.4",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:04",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-abylity-service",
+      "APP_PORT=8026",
+      "LOG_LEVEL=error,warn",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "DATABASE_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-abylity-service?schema=public&sslaccept=accept_invalid_certs",
+      "DATABASE_DIRECT_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-abylity-service?schema=public&sslaccept=accept_invalid_certs",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "ba89dcd5f7d80de404fdd1101eea430bb12e53703ee496628ac0dbd48c6f3e6e",
+    "Names": [
+      "/axibpm-nodejs-service-event-bus-container"
+    ],
+    "Image": "axibpm-nodejs-service-event-bus",
+    "ImageID": "sha256:8c284092482484640e39e7cac133bc08335e5b7672639fc271439f89ac6b4af6",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764149967,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8038,
+        "PublicPort": 8038,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8038,
+        "PublicPort": 8038,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "11323e87e63702dc8c402a9a6ea4711ac4b65cfbc0d89493f59fafd84a6d506f",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-event-bus-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-event-bus-service",
+      "com.docker.compose.service": "development_10_174_18_242",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 3 days",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "1ee1128d81b4115530d43138f1f6f50b9f16b0338508657f70db1270cc04af2a",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.27",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:1b",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-event-bus-service",
+      "APP_PORT=8038",
+      "LOG_LEVEL=error,warn,info",
+      "MQTT_URI=mqtt://10.174.18.242:8039",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "239eaf2e1385fb7e783846861a97621a03c0992901689b0acaddc9211c5dd4cf",
+    "Names": [
+      "/mosquitto"
+    ],
+    "Image": "eclipse-mosquitto",
+    "ImageID": "sha256:42292b8c65929a73035020c83d33a02e225da8736026b498296e952608942111",
+    "Command": "/docker-entrypoint.sh /usr/sbin/mosquitto -c /mosquitto/config/mosquitto.conf",
+    "Created": 1764149965,
+    "Ports": [
+      {
+        "PrivatePort": 1883,
+        "Type": "tcp"
+      },
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8039,
+        "PublicPort": 8039,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8039,
+        "PublicPort": 8039,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "a3d9036848ebfe36c097d32b93edbf8726a31d8f8b8de2c0ba558c1b61b2beea",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-event-bus-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-event-bus-service",
+      "com.docker.compose.service": "mosquitto",
+      "com.docker.compose.version": "1.29.2",
+      "description": "Eclipse Mosquitto MQTT Broker",
+      "maintainer": "Roger Light <roger@atchoo.org>"
+    },
+    "State": "running",
+    "Status": "Up 3 days",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "b29b73d3d0482ad5531916315be2c1055cd5e177b33148e9489acfa2d87474e3",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.26",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:1a",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [
+      {
+        "Type": "bind",
+        "Source": "/home/axitech/BPM2/axi-bpm-event-bus-service/mosquitto/mosquitto.conf",
+        "Destination": "/mosquitto/config/mosquitto.conf",
+        "Mode": "rw",
+        "RW": true,
+        "Propagation": "rprivate"
+      },
+      {
+        "Type": "volume",
+        "Name": "axi-bpm-event-bus-service_mosquitto_data",
+        "Source": "/var/lib/docker/volumes/axi-bpm-event-bus-service_mosquitto_data/_data",
+        "Destination": "/mosquitto/data",
+        "Driver": "local",
+        "Mode": "rw",
+        "RW": true,
+        "Propagation": ""
+      },
+      {
+        "Type": "volume",
+        "Name": "axi-bpm-event-bus-service_mosquitto_logs",
+        "Source": "/var/lib/docker/volumes/axi-bpm-event-bus-service_mosquitto_logs/_data",
+        "Destination": "/mosquitto/log",
+        "Driver": "local",
+        "Mode": "rw",
+        "RW": true,
+        "Propagation": ""
+      }
+    ],
+    "Env": [
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "VERSION=2.0.22",
+      "DOWNLOAD_SHA256=2f752589ef7db40260b633fbdb536e9a04b446a315138d64a7ff3c14e2de6b68",
+      "GPG_KEYS=A0D6EEA1DCAE49A635A3B2F0779B22DFB3E717B7",
+      "LWS_VERSION=4.2.1",
+      "LWS_SHA256=842da21f73ccba2be59e680de10a8cce7928313048750eb6ad73b6fa50763c51"
+    ]
+  },
+  {
+    "Id": "7adedfaee002b9b92460117c118286510484cc89225335ad0672faec948afb17",
+    "Names": [
+      "/axi-bpm-blob-service-container"
+    ],
+    "Image": "axi-bpm-blob-service",
+    "ImageID": "sha256:9149551623ccfb7225bc6791684dd10d6dd96d622a3b73c63edc44e19a46ab4c",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764149944,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 4999,
+        "PublicPort": 24999,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 4999,
+        "PublicPort": 24999,
+        "Type": "tcp"
+      },
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8128,
+        "PublicPort": 28128,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8128,
+        "PublicPort": 28128,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "52973b76e939cdb9107ee886dc8277cfad29dcc3dee57442f4f61841754dc7a9",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-blob-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-blob-service",
+      "com.docker.compose.service": "debug",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 3 days (healthy)",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "b409bc25f27d725b8a219f439d5a6987670ae1031ba40dc7a755799bf7d4b9cd",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.2",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:02",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [
+      {
+        "Type": "bind",
+        "Source": "/home/axitech/upload2/uploads_thumbnail",
+        "Destination": "/app/uploads_thumbnail",
+        "Mode": "rw",
+        "RW": true,
+        "Propagation": "rprivate"
+      },
+      {
+        "Type": "bind",
+        "Source": "/home/axitech/upload2/uploads",
+        "Destination": "/app/uploads",
+        "Mode": "rw",
+        "RW": true,
+        "Propagation": "rprivate"
+      }
+    ],
+    "Env": [
+      "PORT=4999",
+      "FILESERVER_PORT=8128",
+      "DIRECTORY_BLOB=./uploads",
+      "DIRECTORY_THUMBNAIL_BLOB=./uploads_thumbnail",
+      "DIRECTORY_ARCHIVE_TEMP=./archive_temp",
+      "DATABASE_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-blob-service?schema=public&sslaccept=accept_invalid_certs",
+      "DATABASE_DIRECT_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-blob-service?schema=public&sslaccept=accept_invalid_certs",
+      "GROUP_NAME_APP=BPM",
+      "LOG_LEVEL=error,warn",
+      "UPLOAD_FILESIZE_MAX_BYTES=26214410",
+      "UPLOAD_FILES_COUNT=10",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "4f878d3af6e2f87c3e32d8a851ad631ccb0f7b447750bc0ef2be343596783a56",
+    "Names": [
+      "/axibpm-nodejs-service-labor-cost-container"
+    ],
+    "Image": "axibpm-nodejs-service-labor-cost",
+    "ImageID": "sha256:4bdee3d1ae8d680f305ab6107a7ce3901dbb1a84ffabc173dc5f197370aa98e5",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764149927,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8015,
+        "PublicPort": 8015,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8015,
+        "PublicPort": 8015,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "9c173023b412127003fcba028cfe8341da71561367a6feba01dc223d88048246",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-labor-cost-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-labor-cost-service",
+      "com.docker.compose.service": "dev",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 3 days",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "ee535ca2b7cd72feb9a455e0fa5238bd1c3b907960ee6f2e9b11e259fe6aede1",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.21",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:15",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-labor-cost-service",
+      "APP_PORT=8015",
+      "LOG_LEVEL=error,warn,error",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "DATABASE_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-laborcost-service?schema=public&sslaccept=accept_invalid_certs",
+      "DATABASE_DIRECT_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-laborcost-service?schema=public&sslaccept=accept_invalid_certs",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=20.19.6",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "68d1101540960703e9ded764babc52e553744287914fa6d9d9d3f8299d1dc6c6",
+    "Names": [
+      "/axiit-nodejs-asset2-service-container"
+    ],
+    "Image": "axiit-nodejs-asset2-service",
+    "ImageID": "sha256:94596599cac0e7e161089d0d730af0b5468ae06f9a8363b44ec35af48872fdcf",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764149910,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8029,
+        "PublicPort": 8029,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8029,
+        "PublicPort": 8029,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "0117718f8dbd1ea35d71ba659100a64286dcbde8b6adcae2fe5d5c08478560ae",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-asset-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-asset-service",
+      "com.docker.compose.service": "debug",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 3 days (healthy)",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "4893b6194aa582c1f2cf3ada7088546a50407fb30126c8ed7eb51659e9cd63fe",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.3",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:03",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-asset-service",
+      "APP_PORT=8029",
+      "LOG_LEVEL=error,warn",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "DATABASE_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-asset2-service?schema=public&sslaccept=accept_invalid_certs",
+      "DATABASE_DIRECT_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-asset2-service?schema=public&sslaccept=accept_invalid_certs",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "URI_HISTORY_SERVICE=http://10.174.18.242:8035/",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "25d2f054e50eabec3dc455d03307729e50bcbedae1ce40b6fec5fed9c1248188",
+    "Names": [
+      "/axibpm-nodejs-service-auth-container"
+    ],
+    "Image": "axibpm-nodejs-service-auth",
+    "ImageID": "sha256:c197bfb60de58ef46bc84e70f0a319be1d5755a8111c62512e6aea5dd706bd80",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764149852,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 4777,
+        "PublicPort": 4777,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 4777,
+        "PublicPort": 4777,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "b0cb4362253c3356f7eea4cb86a7ea169b4e97c0c8339c1cef8c7d2ac4049c66",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-auth-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-auth-service",
+      "com.docker.compose.service": "development_10_174_18_242",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 3 days",
+    "HostConfig": {
+      "NetworkMode": "axibpm_ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axibpm_ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3eaa1addd05c114399bd08f5f79c54c800bd00b78b40c5658a3f56b8b6581567",
+          "EndpointID": "1018ae47e6f2471f1067278e9c0a8110c8f5f4b73e97aa3f6dbcef7ffcb54de0",
+          "Gateway": "192.168.64.1",
+          "IPAddress": "192.168.64.3",
+          "IPPrefixLen": 20,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:c0:a8:40:03",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "PORT=4777",
+      "TOKEN_LIFE=5200000ms",
+      "REFRESHTOKEN_LIFE=2d",
+      "URI_PROFILE_SERVICE=http://10.174.18.242:8020/",
+      "URI_ACCOUNT_SERVICE=http://10.174.18.242:4702/",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "PRIVATE_KEY=-----BEGIN PRIVATE KEY-----\\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDMAml3bgcICyfWwUi7U9YyMst0uG8uUaQ19bpfQ0QgN6tRFDvF8NvNmVBKBKDN7UWKRnAaWIWsZJ5CqQL++ioJMmQHyZ00+c+lt1Ekb2w1zyV6mB0ZY+iL6YzfC6Yeok0PjxMkIsxYA6M0KoAzgFq5kylxyfAR53oTcJoEoWT+22boZ1FXSJZZNHR/AwprCgTX6s7Q3xAxIo89ZTkCPmTxizI0QCYIZthumJfS1L53L/7Gdnt+dR29ptqL69dceXtIxRIrHJgL07RZdcFLRkzYmVnzBRHislJsEp8ZPbtriiWE0Y1OpsACXTVE0tDLz157IeFcW1pqHJht1E5jIExDAgMBAAECggEALHm0I3DNwJ+p+kQeBpTS5BO1zkbtGiR7T7Y4AM+p2Po5842dMFx/ltV/LvvOUMaS+/+6LcwxrDEtXWv6Nrs0Edg1/YqjJqr1bXPHEVHnPd3gllb2NRRWXLY4W2HvP8tzUFqJOj4J3YBBgrxnQZMQdFeUV/XFzClyMC3CrhK/cV3g4/HCmzJ/BPJVa85Xy5Feu1HHFiwvrRkav4vSz9jTOvqZkKblt+JcY8QlcfK+lc0bbCPd/kAXgKjWOcddFq0XCeX0354hvzoDlf6S/CS/JogwiZJ7pBFa54tppkV1yLNduA+DuJWkIok/q0J8Y8UX0oyKEgvSw04/lr1dMgcTIQKBgQDrYrgSFZX7UN1jfsydrW4Yn49zQ07AosRV41U3schW0MiOIHHIiYzn72xtFfXqq67X0ZkC4dzAPxfTW0ITGQ2ksZBb8KDd2bFqxqEo39hJZt1KgfFS2hEudOkaIcgaFxclhKIzN7/uKFD8UQJe+0+yjoBL5cy97xrBeztRsZKi4QKBgQDd4D9HMekJLtth6jkHrViCwLhFmH0Yv+NB15WH5DxE3sf9FE745nECFK18DktWMMySrr9rsN4bBiCaXVAHJk+GOs3ZnVzEkqAXYsEVVFRgd+IdzFBik8CBivN+bqxgfdhzqUMArZVhLDh+W1A7O3xorStAuDNgn7hxATgm1ox3owKBgEn0n17XN2NZ2eU73rAf4HqOD3UojaLKwSM3JPw1uHtGZ+z31qgqR4JL4GY5wyUzQeD/MrMMId6pNCQtBQqZEYdQXsn0RabOkga5V8NO6VbOofKZ9yeP6lwNUXvrZ0KDRLt9+7RZ7My4EBHmpfcPwM+aJEc0cWqvqFloDZAyWZ8hAoGBAMkEkk/+eBNJ0Jk1i9XYx4gu8sSbEzuJHmxY1bD4p2H+NVKlQ6ddoKUx9rued8LvE2kRyXvYEmKJeqBgSlEv9Hy4aifu2k1+Smzlm+mnLYr5EnPM2Ed3dcHoEhNKUgJaAfFIONw0aFJRrh1MvbPsgRqVScqpGGNCUeiQIj+NwlXhAoGBAN1NzOF1HB5sjbW8wDWmdxmrqTOOE+amTNzexjzV4gFmSQBF0vsA7MpmaUGQZb8wQylCASuyGmY7ceUh8QnFmSNayXcVrxQkuErQrkrTQ2AInMzg4X2DSBgqZAkYTrEzHatljIx9RN75eGYu6bB+P88msA72qbe+V3HtB1bNQ5SQ\\n-----END PRIVATE KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "c5574d2704e71ba37dcac993d82f31019112aa62c52b25982c68d7428aa8f227",
+    "Names": [
+      "/axibpm-nodejs-service-workspace-container"
+    ],
+    "Image": "axibpm-nodejs-service-workspace",
+    "ImageID": "sha256:5d8169f5a30c273d79f4ebe7e7f9ed1e90fda2ecdfd55c8c5a009cf05a6e5303",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764149811,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8010,
+        "PublicPort": 8010,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8010,
+        "PublicPort": 8010,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "2fe5b41de54f1d443c40b94edefe450642a5da7278d5e286427ce863ed673caf",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-workspace-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-workspace-service",
+      "com.docker.compose.service": "dev",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 3 days",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "d38b3a79e04797389bc2fe6b9252c4f87e074b6a27c6eba50a9fd38194fd04cb",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.15",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:0f",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-workspace-service",
+      "APP_PORT=8010",
+      "LOG_LEVEL=error,warn,error",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "DATABASE_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-workspace-service?schema=public&sslaccept=accept_invalid_certs",
+      "DATABASE_DIRECT_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-workspace-service?schema=public&sslaccept=accept_invalid_certs",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=20.19.6",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "5d11c2329f145ec86ddb05e366edd84719164e54fe7977720243ddf6de26846e",
+    "Names": [
+      "/axiit-nodejs-email-service-container"
+    ],
+    "Image": "axiit-nodejs-email-service",
+    "ImageID": "sha256:3c75fa1e5925df0205af5762bfbb0872af5a4d97d6bcddf6846bfd738b33aa3a",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764149751,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8040,
+        "PublicPort": 8040,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8040,
+        "PublicPort": 8040,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "e1f54e19df10772fa84be125b8ca27f9d566b19d62f67a8e77e238826a1aecff",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-email-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-email-service",
+      "com.docker.compose.service": "debug",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 3 days (healthy)",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "730935bfec07096624148af92d9210fbe4bbebd252f1f355aacc5ad816b090d0",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.24",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:18",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-email-service",
+      "APP_PORT=8040",
+      "LOG_LEVEL=error,warn",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "DATABASE_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-email-service?schema=public&sslaccept=accept_invalid_certs",
+      "DATABASE_DIRECT_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-email-service?schema=public&sslaccept=accept_invalid_certs",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "SMTP_HOST=mail.nic.ru",
+      "SMTP_PORT=587",
+      "SMTP_USER_EMAIL=support@axiservice.ru",
+      "SMTP_PASSWORD=fXrlGc8h",
+      "MAIL_FROM_NAME=support2@axiservice.ru",
+      "SECURE=false",
+      "PORTAL_BASE_URL=http://10.174.18.242:3001",
+      "DEBUG_MODE=true",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "53b015916cd79f25e1ed9cb9c8363c69e3590cf4d916f52cfe4d45bc40055403",
+    "Names": [
+      "/axiit-nodejs-counterparty-service-container"
+    ],
+    "Image": "axiit-nodejs-counterparty-service",
+    "ImageID": "sha256:92921ac140499ed08d1c41e15099ff469655f26c7c860a995279a53d6e95aeb2",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764149733,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8034,
+        "PublicPort": 8034,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8034,
+        "PublicPort": 8034,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "0c37409842816bac36a2ea278d74b14e778788e5e5b3c5081a284dd253946dc2",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-counterparty-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-counterparty-service",
+      "com.docker.compose.service": "debug",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 3 days (healthy)",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "b9711f1b78ee3f7a6423ddefd109d21be645f3dd4a2026f29c29ae4aa3bd831e",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.14",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:0e",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-counterparty-service",
+      "APP_PORT=8034",
+      "LOG_LEVEL=error,warn",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "DATABASE_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-counterparty-service?schema=public&sslaccept=accept_invalid_certs",
+      "DATABASE_DIRECT_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-counterparty-service?schema=public&sslaccept=accept_invalid_certs",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "URI_HISTORY_SERVICE=http://10.174.18.242:8035/",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "8fb03e452a9a96a3eb2933cdcfa71d572cbf084b65e4e28c33e977c0312a39b2",
+    "Names": [
+      "/axibpm-nodejs-service-document-builder-container"
+    ],
+    "Image": "axibpm-nodejs-service-document-builder",
+    "ImageID": "sha256:e30c336c0f6aeeeb8181f27e5efeb31536753558b1190ce7b0fa5ff59cff0ee0",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764149678,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8032,
+        "PublicPort": 8032,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8032,
+        "PublicPort": 8032,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "28e48f1c7886b3371490483e54b009ca9861cfd297a5b41afdd93c182a608aa6",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-document-builder-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-document-builder-service",
+      "com.docker.compose.service": "development_10_174_18_242",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 3 days",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "a13c51bccbf01801532b28b49854cec2358d2158a1d27e4634670b5a38e0ec49",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.12",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:0c",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-document-builder-service",
+      "APP_PORT=8032",
+      "TZ=Europe/Moscow",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "aa634587f729848756330cb7a5475daf3882ecc6eb2fb2ac1b1574996ded920d",
+    "Names": [
+      "/axiit-nodejs-service-preferences-container"
+    ],
+    "Image": "axiit-nodejs-service-preferences",
+    "ImageID": "sha256:334b12343e9515d53f2ad5c744cda2adb68fb3cb8983f52a9de36ea8b6f1d3aa",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764149659,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8025,
+        "PublicPort": 8025,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8025,
+        "PublicPort": 8025,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "f90c602d9e2d34ae816a99ae996ca012d6c8cc9e0e3b227d26ab5c792145088c",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-preferences-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-preferences-service",
+      "com.docker.compose.service": "debug",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 3 days (healthy)",
+    "HostConfig": {
+      "NetworkMode": "axibpm_ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axibpm_ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3eaa1addd05c114399bd08f5f79c54c800bd00b78b40c5658a3f56b8b6581567",
+          "EndpointID": "7187166988ff2630eac227a0e93b720f9b0e70466bcf5b5a8e1ab15ba1c79f74",
+          "Gateway": "192.168.64.1",
+          "IPAddress": "192.168.64.2",
+          "IPPrefixLen": 20,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:c0:a8:40:02",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-preferences-service",
+      "APP_PORT=8025",
+      "LOG_LEVEL=error,warn",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "DATABASE_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-preferences-service?schema=public&sslaccept=accept_invalid_certs",
+      "DATABASE_DIRECT_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-preferences-service?schema=public&sslaccept=accept_invalid_certs",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "bf0616f268363ef8f696ef5419187dee6c238ec653956d03775a2004ea527147",
+    "Names": [
+      "/axibpm-nodejs-calendar-service-container"
+    ],
+    "Image": "axibpm-nodejs-calendar-service",
+    "ImageID": "sha256:bd4d96958e8cdfaf8b254d233a6b3cc8f05deca7766b2cded6066d5bdb6d8f9a",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764149640,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8013,
+        "PublicPort": 8013,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8013,
+        "PublicPort": 8013,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "96e89b333dade4ab73da2ae0bf566e9ea739a2454b5f3f8991e5168d8ecd2577",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-calendar-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-calendar-service",
+      "com.docker.compose.service": "dev",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 3 days",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "96d9d731c86d2699f08f114a8b8715691d745325294136c158817c0157491187",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.19",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:13",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-calendar-service",
+      "APP_PORT=8013",
+      "TZ=Europe/Moscow",
+      "LOG_LEVEL=debug",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "DATABASE_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-calendar-service?schema=public&sslaccept=accept_invalid_certs",
+      "DATABASE_DIRECT_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-calendar-service?schema=public&sslaccept=accept_invalid_certs",
+      "SOURCE_PRODUCTIONCALENDAR_XML=https://xmlcalendar.ru/data/ru/{year}/calendar.xml",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "740d686817dc2c9ee8a17ce2f9fc2190e3246c0dc38e252778919bcd42ba7946",
+    "Names": [
+      "/axibpm-nodejs-service-document-management-container"
+    ],
+    "Image": "axibpm-nodejs-service-document-management",
+    "ImageID": "sha256:64653f85e79c3edecf8d0b68ac5687d3e7015a1e2c0758cef02db36b84c08c14",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764149622,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8031,
+        "PublicPort": 8031,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8031,
+        "PublicPort": 8031,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "6c4e86346d203cfffd610089cc7f451b3f16072417e8dada72408b9f4eb0c18a",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-document-management-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-document-management-service",
+      "com.docker.compose.service": "development_10_174_18_242",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 3 days",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "b54311cb3f5daeac0530858bc04da1fd8f525febb47c7e755d197a8ebb012553",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.18",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:12",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-document-management-service",
+      "APP_PORT=8031",
+      "LOG_LEVEL=error,warn",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "DATABASE_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-document-management-service?schema=public&sslaccept=accept_invalid_certs",
+      "DATABASE_DIRECT_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-document-management-service?schema=public&sslaccept=accept_invalid_certs",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "URI_HISTORY_SERVICE=http://10.174.18.242:8035/",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "45875a80c35f13d58abfed5699730a2c19be6050236e010c62fc8b23e4b0ff61",
+    "Names": [
+      "/axi-bpm-file-service-container"
+    ],
+    "Image": "axi-bpm-file-service",
+    "ImageID": "sha256:07bd2c119f722349c1a705455475b9f64b8ca18bb9ddc7947e05fcec6039536d",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764149527,
+    "Ports": [
+      {
+        "PrivatePort": 8012,
+        "Type": "tcp"
+      },
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8017,
+        "PublicPort": 8017,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8017,
+        "PublicPort": 8017,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "7bd0255d4fe2c7eda3f54f658e029b577078d8205545b9fe93ea1cdea2f1b826",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-file-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-file-service",
+      "com.docker.compose.service": "dev",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 3 days",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "2bd3d91860a87eae8795d00ff328f083a00e1369ab3a99ba265baebf4821bb25",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.5",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:05",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-file-service",
+      "APP_PORT=8017",
+      "LOG_LEVEL=error,warn,error",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "DB_SCHEMA=public",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "DATABASE_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-file-service?schema=public&sslaccept=accept_invalid_certs",
+      "DATABASE_DIRECT_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-file-service?schema=public&sslaccept=accept_invalid_certs",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "f3713af4f04bf0fbe24b60188e829d760af940d0cb03ac81f0d722b4a1379a66",
+    "Names": [
+      "/axibpm-account-service-container"
+    ],
+    "Image": "axibpm-account-service",
+    "ImageID": "sha256:333a32361e64004fddc4db3bf549d5ca05fc0638436adc7fd55e26c59142202a",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764149476,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 4702,
+        "PublicPort": 4702,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 4702,
+        "PublicPort": 4702,
+        "Type": "tcp"
+      },
+      {
+        "PrivatePort": 8012,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "98149675279fafd317de90979ed78b94cb9c1308299e0e19842f3e9e0dba34f9",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-account-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-account-service",
+      "com.docker.compose.service": "dev",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 3 days",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "6eac63658cd1a80274e94f41edb51a20c8622e60c150b825cee2580ad0daf8f3",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.6",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:06",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-account-service",
+      "PORT=4702",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "DATABASE_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-account-service?schema=public&sslaccept=accept_invalid_certs",
+      "DATABASE_DIRECT_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-account-service?schema=public&sslaccept=accept_invalid_certs",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "URI_HISTORY_SERVICE=http://10.174.18.242:8035/",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=20.19.6",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "2c339eb267c4ea49cd100c0f571e45f35037c5db89cf737b5cc6c902f03048ef",
+    "Names": [
+      "/axiit-nodejs-service-address-container"
+    ],
+    "Image": "axiit-nodejs-service-address",
+    "ImageID": "sha256:de4e30b8e9c6207f238222180c2ee9a5b7d0ea9e075476b42b3ab56b61f98ff9",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764149246,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8028,
+        "PublicPort": 8028,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8028,
+        "PublicPort": 8028,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "b7b4b187983c1b9d003881091ca6a09a838f72917d4c4b9193ac30db537ac031",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-address-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-address-service",
+      "com.docker.compose.service": "debug",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 3 days (healthy)",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "46a374b5cba8b6ac3932fcd783f5fd014aba749c5efc44ff5bf88079af1418a2",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.28",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:1c",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-address-service",
+      "APP_PORT=8028",
+      "LOG_LEVEL=error,warn",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "DATABASE_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-address-service?schema=public&sslaccept=accept_invalid_certs",
+      "DATABASE_DIRECT_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-address-service?schema=public&sslaccept=accept_invalid_certs",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "a9ca0e9794d07aa4a216cf0f2149b28d87a6a7fa17e256de04c95eb2c8a4afc6",
+    "Names": [
+      "/axibpm-nodejs-service-event-container"
+    ],
+    "Image": "axibpm-nodejs-event",
+    "ImageID": "sha256:01141240876cb9c5186faee3039f8a677a5d9b00eeee41ea75a47a922d2237ad",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764149093,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8071,
+        "PublicPort": 8071,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8071,
+        "PublicPort": 8071,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "29afc8155372b7637e50a27f319d65f2bb4f20aee0e5efcc75f5dac6160f1dd8",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-event-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-event-service",
+      "com.docker.compose.service": "dev",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 2 days",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "d0da8a0d150666bf16fafa546c9d10ddfbff360d5314ede1eaba67d685f7bb8a",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.20",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:14",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-event-service",
+      "APP_PORT=8071",
+      "LOG_LEVEL=trace",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "MQTT_URI=mqtt://10.174.18.242:8039",
+      "URI_GATEWAY_SERVICE=http://10.174.18.242:7888/",
+      "URI_AUTH_SERVICE=http://10.174.18.242:4777/",
+      "SYSTEM_USER_NAME=system_events@axitech.ru",
+      "SYSTEM_USER_PASSWORD=Systemaxitech!",
+      "MQTT_CLIENT_ID=axi-bpm-event-service",
+      "URI_NOTIFICATION_SERVICE=http://10.174.18.242:8072/",
+      "URI_EMAIL_SERVICE=http://10.174.18.242:8040/",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "b151151226820632039d80929f6344780ac934067ee1dca0683443df783c512b",
+    "Names": [
+      "/axibpm-nodejs-service-plan-container"
+    ],
+    "Image": "axibpm-nodejs-plan",
+    "ImageID": "sha256:cd7d5b0d1811752b3d428e58995886b7ad67d8e866f3f63e34ad557ebf570e18",
+    "Command": "docker-entrypoint.sh /bin/sh -c 'chmod a+x ./run_in_docker.sh && /bin/sh ./run_in_docker.sh'",
+    "Created": 1764149073,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 8044,
+        "PublicPort": 8044,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 8044,
+        "PublicPort": 8044,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "31f70128998e1b86994428cd741309470a1d138591fdf2da5b6ca200aa681d6e",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "axi-bpm-plan-service",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/BPM2/axi-bpm-plan-service",
+      "com.docker.compose.service": "dev",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 3 days",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "72c10d49197c84c66ea5bd7922b3afaafa2dbfb6abe25a84c7061c112b2bc814",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.8",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:08",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [],
+    "Env": [
+      "APP_NAME=axi-bpm-plan-service",
+      "APP_PORT=8044",
+      "LOG_LEVEL=trace",
+      "TZ=Europe/Moscow",
+      "HEALTH_CHECK_URL=/.well-known/apollo/server-health",
+      "DATABASE_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-plan-service?schema=public&sslaccept=accept_invalid_certs",
+      "DATABASE_DIRECT_URL=postgresql://postgres:postgres@10.174.18.242:5432/axi-bpm-plan-service?schema=public&sslaccept=accept_invalid_certs",
+      "URI_LABORCOSTS_SERVICE=http://10.174.18.242:8015/",
+      "URI_TASK_SERVICE=http://10.174.18.242:8011/",
+      "URI_CALENDAR_SERVICE=http://10.174.18.242:8013/",
+      "URI_ABILITY_SERVICE=http://10.174.18.242:8026/",
+      "URI_EVENT_BUS_SERVICE=http://10.174.18.242:8038/",
+      "PUBLIC_KEY=-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzAJpd24HCAsn1sFIu1PWMjLLdLhvLlGkNfW6X0NEIDerURQ7xfDbzZlQSgSgze1FikZwGliFrGSeQqkC/voqCTJkB8mdNPnPpbdRJG9sNc8lepgdGWPoi+mM3wumHqJND48TJCLMWAOjNCqAM4BauZMpccnwEed6E3CaBKFk/ttm6GdRV0iWWTR0fwMKawoE1+rO0N8QMSKPPWU5Aj5k8YsyNEAmCGbYbpiX0tS+dy/+xnZ7fnUdvabai+vXXHl7SMUSKxyYC9O0WXXBS0ZM2JlZ8wUR4rJSbBKfGT27a4olhNGNTqbAAl01RNLQy89eeyHhXFtaahyYbdROYyBMQwIDAQAB\\n-----END PUBLIC KEY-----",
+      "NODE_ENV=development",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "NODE_VERSION=22.21.1",
+      "YARN_VERSION=1.22.22",
+      "HOME_DIR=/app"
+    ]
+  },
+  {
+    "Id": "9adbaaf9b9d43682b35fd5621daacb9241eb3f3601281885d550000192f24d5b",
+    "Names": [
+      "/pgadmin_pgadmin_1"
+    ],
+    "Image": "dpage/pgadmin4",
+    "ImageID": "sha256:937d10c14821ad4be386fa64bb79b2a00acb51ec3fac7c1b4d759054109507a2",
+    "Command": "/entrypoint.sh",
+    "Created": 1761920593,
+    "Ports": [
+      {
+        "PrivatePort": 443,
+        "Type": "tcp"
+      },
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 5050,
+        "PublicPort": 5050,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 5050,
+        "PublicPort": 5050,
+        "Type": "tcp"
+      },
+      {
+        "PrivatePort": 80,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "d50a89b7d816a43a920db1862a1bc7352a698c82e0a4dd4bca7fd4e436b91bc5",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "pgadmin",
+      "com.docker.compose.project.config_files": "docker-compose.yaml",
+      "com.docker.compose.project.working_dir": "/home/axitech/postgress/pgAdmin",
+      "com.docker.compose.service": "pgadmin",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 3 weeks",
+    "HostConfig": {
+      "NetworkMode": "pgadmin_default"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "pgadmin_default": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "0b5628d29106f67ffd4540d11e3a32950af57979f9e1f3fbfb975e124dfaa701",
+          "EndpointID": "d5a8b86636e8d30f2f9080de6ec87b8e7a16db9d524a6b18b7b5f46d0796cf86",
+          "Gateway": "172.18.0.1",
+          "IPAddress": "172.18.0.2",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:12:00:02",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [
+      {
+        "Type": "bind",
+        "Source": "/var/lib/pgadmin",
+        "Destination": "/var/lib/pgadmin",
+        "Mode": "rw",
+        "RW": true,
+        "Propagation": "rprivate"
+      }
+    ],
+    "Env": [
+      "PGADMIN_DEFAULT_EMAIL=admin@axitech.ru",
+      "PGADMIN_DEFAULT_PASSWORD=Adminaxitech!",
+      "PGADMIN_LISTEN_PORT=5050",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "PYTHONPATH=/pgadmin4"
+    ]
+  },
+  {
+    "Id": "223308a8cc8bfaf042bfd80108427793b87733f37c41f8bc3c8d6f794453aba1",
+    "Names": [
+      "/pg_pg_bpm2_1"
+    ],
+    "Image": "postgres:16",
+    "ImageID": "sha256:4d79c308564d282500888ff3b555f2f256ed3369b6b0a8a13f38393aa693f5eb",
+    "Command": "docker-entrypoint.sh postgres -c max_connections=1000",
+    "Created": 1761731763,
+    "Ports": [
+      {
+        "IP": "0.0.0.0",
+        "PrivatePort": 5432,
+        "PublicPort": 5432,
+        "Type": "tcp"
+      },
+      {
+        "IP": "::",
+        "PrivatePort": 5432,
+        "PublicPort": 5432,
+        "Type": "tcp"
+      }
+    ],
+    "Labels": {
+      "com.docker.compose.config-hash": "c4ef6a0329a881ccbb1249d080b5539c1a7f76d925ce008a51f15c3d361d2a33",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "pg",
+      "com.docker.compose.project.config_files": "docker-compose.yml",
+      "com.docker.compose.project.working_dir": "/home/axitech/postgress/pg",
+      "com.docker.compose.service": "pg_bpm2",
+      "com.docker.compose.version": "1.29.2"
+    },
+    "State": "running",
+    "Status": "Up 3 weeks (healthy)",
+    "HostConfig": {
+      "NetworkMode": "axi-bpm-ecosystem"
+    },
+    "NetworkSettings": {
+      "Networks": {
+        "axi-bpm-ecosystem": {
+          "IPAMConfig": null,
+          "Links": null,
+          "Aliases": null,
+          "NetworkID": "3031c03ca63acc7916bc6cd35f4f598daea4c23266b30bcbadc8da2527d1e14d",
+          "EndpointID": "54dfe97efd6545ba2b2222af744c2d0a84d79fda79fbe68d7fab2bad7bf4c2c5",
+          "Gateway": "172.21.0.1",
+          "IPAddress": "172.21.0.32",
+          "IPPrefixLen": 16,
+          "IPv6Gateway": "",
+          "GlobalIPv6Address": "",
+          "GlobalIPv6PrefixLen": 0,
+          "MacAddress": "02:42:ac:15:00:20",
+          "DriverOpts": null
+        }
+      }
+    },
+    "Mounts": [
+      {
+        "Type": "bind",
+        "Source": "/var/lib/postgresql/data",
+        "Destination": "/var/lib/postgresql/data",
+        "Mode": "rw",
+        "RW": true,
+        "Propagation": "rprivate"
+      },
+      {
+        "Type": "bind",
+        "Source": "/home/axitech/postgress/pg/sql_init",
+        "Destination": "/docker-entrypoint-initdb.d",
+        "Mode": "rw",
+        "RW": true,
+        "Propagation": "rprivate"
+      }
+    ],
+    "Env": [
+      "POSTGRES_USER=postgres",
+      "POSTGRES_PASSWORD=postgres",
+      "POSTGRES_DB=postgres",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/postgresql/16/bin",
+      "GOSU_VERSION=1.19",
+      "LANG=en_US.utf8",
+      "PG_MAJOR=16",
+      "PG_VERSION=16.10-1.pgdg13+1",
+      "PGDATA=/var/lib/postgresql/data"
+    ]
+  }
+]

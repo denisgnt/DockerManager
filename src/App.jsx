@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import {
   Container,
   Box,
@@ -11,7 +12,9 @@ import {
   ToggleButtonGroup,
   ToggleButton,
   Snackbar,
-  Tooltip
+  Tooltip,
+  TextField,
+  InputAdornment
 } from '@mui/material'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import ViewListIcon from '@mui/icons-material/ViewList'
@@ -19,6 +22,8 @@ import ViewModuleIcon from '@mui/icons-material/ViewModule'
 import Brightness4Icon from '@mui/icons-material/Brightness4'
 import Brightness7Icon from '@mui/icons-material/Brightness7'
 import AccountTreeIcon from '@mui/icons-material/AccountTree'
+import SearchIcon from '@mui/icons-material/Search'
+import ClearIcon from '@mui/icons-material/Clear'
 import ContainerList from './components/ContainerList'
 import ContainerLogs from './components/ContainerLogs'
 import ContainerInfo from './components/ContainerInfo'
@@ -31,7 +36,8 @@ import { useThemeMode } from './ThemeContext'
 
 function App() {
   const { mode, toggleTheme } = useThemeMode()
-  const [showDependencyGraph, setShowDependencyGraph] = useState(false)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [graphSearchQuery, setGraphSearchQuery] = useState('')
   
   // Получение состояния и действий из store
   const {
@@ -61,6 +67,19 @@ function App() {
     appendScriptOutput,
     completeScriptOutput,
   } = useDockerStore()
+
+  // Синхронизация viewMode с URL
+  useEffect(() => {
+    const viewFromUrl = searchParams.get('view')
+    if (viewFromUrl && ['list', 'grid', 'graph'].includes(viewFromUrl)) {
+      if (viewMode !== viewFromUrl) {
+        setViewMode(viewFromUrl)
+      }
+    } else if (!viewFromUrl) {
+      // Если в URL нет view, устанавливаем текущий viewMode
+      setSearchParams({ view: viewMode }, { replace: true })
+    }
+  }, [searchParams, viewMode, setViewMode, setSearchParams])
 
   useEffect(() => {
     fetchContainers()
@@ -97,6 +116,7 @@ function App() {
   const handleViewModeChange = (event, newMode) => {
     if (newMode !== null) {
       setViewMode(newMode)
+      setSearchParams({ view: newMode })
     }
   }
 
@@ -158,12 +178,13 @@ function App() {
                 Плитка
               </Box>
             </ToggleButton>
+            <ToggleButton value="graph" aria-label="graph view">
+              <AccountTreeIcon sx={{ mr: { xs: 0, md: 0.5 } }} fontSize="small" />
+              <Box component="span" sx={{ display: { xs: 'none', md: 'inline' } }}>
+                Граф
+              </Box>
+            </ToggleButton>
           </ToggleButtonGroup>
-          <Tooltip title="Граф зависимостей">
-            <IconButton color="inherit" onClick={() => setShowDependencyGraph(true)} aria-label="dependency graph" sx={{ mr: 1 }}>
-              <AccountTreeIcon />
-            </IconButton>
-          </Tooltip>
           <Tooltip title={mode === 'dark' ? 'Светлая тема' : 'Темная тема'}>
             <IconButton color="inherit" onClick={toggleTheme} aria-label="toggle theme" sx={{ mr: 1 }}>
               {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
@@ -178,71 +199,74 @@ function App() {
       {/* Spacer для фиксированного AppBar */}
       <Toolbar />
 
-      <Container maxWidth="xl" sx={{ mt: { xs: 2, sm: 4 }, mb: { xs: 2, sm: 4 }, px: { xs: 2, sm: 3 } }}>
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
-            {error}
-          </Alert>
-        )}
-
-        {loading && !containers.length ? (
-          <Box 
-            sx={{ 
-              display: 'flex', 
-              justifyContent: 'center', 
-              alignItems: 'center', 
-              minHeight: '50vh' 
-            }}
-          >
-            <CircularProgress />
-          </Box>
-        ) : (
-          <>
-            <ContainerList
-              containers={containers}
-              onAction={handleContainerAction}
-              onViewLogs={setSelectedContainer}
-              onViewInfo={setSelectedContainerInfo}
-              onViewStats={setSelectedContainerStats}
-              onExecuteScript={executeScript}
-              availableScripts={availableScripts}
-              viewMode={viewMode}
-            />
-            
-            {selectedContainer && (
-              <ContainerLogs
-                container={selectedContainer}
-                onClose={() => setSelectedContainer(null)}
-              />
+      {viewMode === 'graph' ? (
+        <DependencyGraph 
+          searchQuery={graphSearchQuery} 
+          onSearchChange={setGraphSearchQuery}
+          mode={mode}
+        />
+      ) : (
+        <Container maxWidth="xl" sx={{ mt: { xs: 2, sm: 4 }, mb: { xs: 2, sm: 4 }, px: { xs: 2, sm: 3 } }}>
+            {error && (
+              <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
+                {error}
+              </Alert>
             )}
 
-            {selectedContainerInfo && (
-              <ContainerInfo
-                container={selectedContainerInfo}
-                onClose={() => setSelectedContainerInfo(null)}
-              />
+            {loading && !containers.length ? (
+              <Box 
+                sx={{ 
+                  display: 'flex', 
+                  justifyContent: 'center', 
+                  alignItems: 'center', 
+                  minHeight: '50vh' 
+                }}
+              >
+                <CircularProgress />
+              </Box>
+            ) : (
+              <>
+                <ContainerList
+                  containers={containers}
+                  onAction={handleContainerAction}
+                  onViewLogs={setSelectedContainer}
+                  onViewInfo={setSelectedContainerInfo}
+                  onViewStats={setSelectedContainerStats}
+                  onExecuteScript={executeScript}
+                  availableScripts={availableScripts}
+                  viewMode={viewMode}
+                />
+                
+                {selectedContainer && (
+                  <ContainerLogs
+                    container={selectedContainer}
+                    onClose={() => setSelectedContainer(null)}
+                  />
+                )}
+
+                {selectedContainerInfo && (
+                  <ContainerInfo
+                    container={selectedContainerInfo}
+                    onClose={() => setSelectedContainerInfo(null)}
+                  />
+                )}
+
+                {selectedContainerStats && (
+                  <ContainerStats
+                    container={selectedContainerStats}
+                    onClose={() => setSelectedContainerStats(null)}
+                  />
+                )}
+
+                <ScriptOutput
+                  open={scriptOutput.open}
+                  onClose={closeScriptOutput}
+                  scriptData={scriptOutput.data}
+                />
+              </>
             )}
-
-            {selectedContainerStats && (
-              <ContainerStats
-                container={selectedContainerStats}
-                onClose={() => setSelectedContainerStats(null)}
-              />
-            )}
-
-            <ScriptOutput
-              open={scriptOutput.open}
-              onClose={closeScriptOutput}
-              scriptData={scriptOutput.data}
-            />
-
-            <DependencyGraph
-              open={showDependencyGraph}
-              onClose={() => setShowDependencyGraph(false)}
-            />
-          </>
-        )}
-      </Container>
+        </Container>
+      )}
 
       <Snackbar
         open={snackbar.open}

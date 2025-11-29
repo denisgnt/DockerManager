@@ -14,15 +14,16 @@ import {
   useTheme,
   useMediaQuery,
   Button,
-  AppBar,
-  Toolbar
+  TextField,
+  InputAdornment
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import InfoIcon from '@mui/icons-material/Info';
-import CloseIcon from '@mui/icons-material/Close';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import SearchIcon from '@mui/icons-material/Search';
+import ClearIcon from '@mui/icons-material/Clear';
 import {
   ReactFlow,
   Background,
@@ -47,11 +48,13 @@ const CustomNode = ({ data }) => {
   const isIncoming = data.isIncoming; // Входящие связи (другие зависят от этого)
   const isOutgoing = data.isOutgoing; // Исходящие связи (этот зависит от других)
   const hasBrokenDependency = data.hasBrokenDependency;
+  const isSearchMatch = data.isSearchMatch; // Найден в поиске
   
   // Определяем цвет фона
   let backgroundColor;
   let textColor;
   let borderColor;
+  let borderWidth = 2;
   
   if (isSelected) {
     // Выбранный блок - светло-зеленый фон
@@ -77,17 +80,23 @@ const CustomNode = ({ data }) => {
       : isRunning ? 'success.main' : 'error.main';
   }
   
+  // Если найден в поиске - желтая рамка
+  if (isSearchMatch) {
+    borderColor = theme.palette.mode === 'dark' ? '#fdd835' : '#fbc02d';
+    borderWidth = 3;
+  }
+  
   return (
     <>
       <Handle type="target" position={Position.Top} />
       <Card
         sx={{
           minWidth: 200,
-          border: 2,
+          border: borderWidth,
           borderColor: borderColor,
-          boxShadow: isSelected ? 8 : isIncoming || isOutgoing ? 4 : 3,
+          boxShadow: isSelected ? 8 : isIncoming || isOutgoing ? 4 : isSearchMatch ? 6 : 3,
           backgroundColor: backgroundColor,
-          transform: isSelected ? 'scale(1.05)' : 'scale(1)',
+          transform: isSelected ? 'scale(1.05)' : isSearchMatch ? 'scale(1.02)' : 'scale(1)',
           transition: 'all 0.2s ease-in-out',
           cursor: 'pointer',
         }}
@@ -143,7 +152,7 @@ const nodeTypes = {
   custom: CustomNode,
 };
 
-export default function DependencyGraph({ open, onClose }) {
+export default function DependencyGraph({ searchQuery = '', onSearchChange, mode }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [loading, setLoading] = useState(true);
@@ -233,6 +242,7 @@ export default function DependencyGraph({ open, onClose }) {
           isSelected: false,
           isHighlighted: false,
           hasBrokenDependency: containersBrokenDeps.has(container.id),
+          isSearchMatch: false,
         },
       }));
 
@@ -325,17 +335,17 @@ export default function DependencyGraph({ open, onClose }) {
     }
   }, [reactFlowInstance, isInitialized]);
 
-  // Auto-fit view after graph is loaded and ReactFlow is initialized (only if no saved viewport) (only if no saved viewport)
+  // Auto-fit view after graph is loaded and ReactFlow is initialized (only if no saved viewport)
   useEffect(() => {
     if (reactFlowInstance && nodes.length > 0 && !loading && !isInitialized) {
       const savedViewport = localStorage.getItem('dependency-graph-viewport');
       if (!savedViewport) {
-        const timer = setTimeout(() => {
-          reactFlowInstance.fitView({ padding: 0.15, duration: 400 });
-          setIsInitialized(true);
-        }, 100);
-        return () => clearTimeout(timer);
+        // Используем requestAnimationFrame для применения fitView сразу после рендера
+        requestAnimationFrame(() => {
+          reactFlowInstance.fitView({ padding: 0.15, duration: 0 });
+        });
       }
+      setIsInitialized(true);
     }
   }, [reactFlowInstance, nodes.length, loading, isInitialized]);
 
@@ -447,6 +457,36 @@ export default function DependencyGraph({ open, onClose }) {
       reactFlowInstance.zoomOut({ duration: 400 });
     }
   }, [reactFlowInstance]);
+
+  // Search functionality
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      // Clear all search highlights
+      setNodes((nds) =>
+        nds.map((node) => ({
+          ...node,
+          data: { ...node.data, isSearchMatch: false },
+        }))
+      );
+      return;
+    }
+
+    const query = searchQuery.toLowerCase();
+    setNodes((nds) =>
+      nds.map((node) => {
+        const label = node.data.label?.toLowerCase() || '';
+        const state = node.data.state?.toLowerCase() || '';
+        const status = node.data.status?.toLowerCase() || '';
+        
+        const isMatch = label.includes(query) || state.includes(query) || status.includes(query);
+        
+        return {
+          ...node,
+          data: { ...node.data, isSearchMatch: isMatch },
+        };
+      })
+    );
+  }, [searchQuery, setNodes]);
 
   const handleResetLayout = useCallback(async () => {
     try {
@@ -604,57 +644,118 @@ export default function DependencyGraph({ open, onClose }) {
     [theme.palette.mode]
   );
 
-  if (!open) return null;
-
   return (
-    <Box
-      sx={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: theme.palette.background.default,
-        zIndex: 1300,
-      }}
-    >
-      {/* AppBar для страницы графа */}
-      <AppBar
-        position="static"
-        elevation={1}
+    <Box sx={{ height: 'calc(100vh - 64px)', width: '100%', position: 'relative' }}>
+      {/* Плавающее окно поиска */}
+      <Paper
+        elevation={3}
         sx={{
-          backgroundColor: theme.palette.mode === 'dark' ? 'rgba(30, 30, 30, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(20px)',
-          color: theme.palette.mode === 'dark' ? '#fff' : 'rgba(0, 0, 0, 0.87)',
+          position: 'absolute',
+          top: 16,
+          left: 16,
+          zIndex: 1000,
+          p: 1,
+          backgroundColor: mode === 'dark' ? 'rgba(30, 30, 30, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(10px)',
         }}
       >
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Граф зависимостей контейнеров
-          </Typography>
-          
-          <Tooltip title="Обновить">
-            <IconButton onClick={fetchDependencies} size="small" color="inherit" sx={{ mr: 1 }}>
-              <RefreshIcon />
-            </IconButton>
-          </Tooltip>
-          
-          <Tooltip title="Сбросить схему">
-            <IconButton onClick={handleResetLayout} size="small" color="inherit" sx={{ mr: 1 }}>
-              <RestartAltIcon />
-            </IconButton>
-          </Tooltip>
-          
-          <Tooltip title="Закрыть">
-            <IconButton onClick={onClose} size="small" color="inherit">
-              <CloseIcon />
-            </IconButton>
-          </Tooltip>
-        </Toolbar>
-      </AppBar>
+        <TextField
+          size="small"
+          placeholder="Поиск по графу..."
+          value={searchQuery}
+          onChange={(e) => onSearchChange(e.target.value)}
+          autoComplete="off"
+          sx={{ 
+            minWidth: 300,
+            '& .MuiOutlinedInput-root': {
+              color: mode === 'dark' ? '#fff' : 'rgba(0, 0, 0, 0.87)',
+              '& fieldset': {
+                borderColor: mode === 'dark' ? 'rgba(255, 255, 255, 0.23)' : 'rgba(0, 0, 0, 0.23)',
+              },
+              '&:hover fieldset': {
+                borderColor: mode === 'dark' ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.4)',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: mode === 'dark' ? '#90caf9' : '#1976d2',
+              },
+            },
+          }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon sx={{ color: mode === 'dark' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.54)' }} />
+              </InputAdornment>
+            ),
+            endAdornment: searchQuery && (
+              <InputAdornment position="end">
+                <IconButton size="small" onClick={() => onSearchChange('')} edge="end">
+                  <ClearIcon fontSize="small" />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Paper>
 
-      {/* Контент графа */}
-      <Box sx={{ height: 'calc(100vh - 64px)', width: '100%', position: 'relative' }}>
+      {/* Легенда */}
+      <Paper
+        elevation={3}
+        sx={{
+          position: 'absolute',
+          bottom: 16,
+          left: 16,
+          zIndex: 1000,
+          p: 1.5,
+          backgroundColor: mode === 'dark' ? 'rgba(30, 30, 30, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(10px)',
+          minWidth: 200,
+        }}
+      >
+        <Typography variant="caption" fontWeight="bold" display="block" sx={{ mb: 1, color: mode === 'dark' ? '#fff' : 'rgba(0, 0, 0, 0.87)' }}>
+          Легенда
+        </Typography>
+        <Stack spacing={0.5}>
+          <Box display="flex" alignItems="center" gap={1}>
+            <Box sx={{ width: 16, height: 16, bgcolor: mode === 'dark' ? '#65cc6aff' : '#81c784', border: '2px solid #388e3c', borderRadius: 0.5 }} />
+            <Typography variant="caption" sx={{ color: mode === 'dark' ? '#fff' : 'rgba(0, 0, 0, 0.87)' }}>Выбранный контейнер</Typography>
+          </Box>
+          <Box display="flex" alignItems="center" gap={1}>
+            <Box sx={{ width: 16, height: 16, bgcolor: mode === 'dark' ? '#1976d2' : '#2196f3', border: '2px solid #1565c0', borderRadius: 0.5 }} />
+            <Typography variant="caption" sx={{ color: mode === 'dark' ? '#fff' : 'rgba(0, 0, 0, 0.87)' }}>Входящие (кто зависит)</Typography>
+          </Box>
+          <Box display="flex" alignItems="center" gap={1}>
+            <Box sx={{ width: 16, height: 16, bgcolor: mode === 'dark' ? '#f57c00' : '#ff9800', border: '2px solid #e65100', borderRadius: 0.5 }} />
+            <Typography variant="caption" sx={{ color: mode === 'dark' ? '#fff' : 'rgba(0, 0, 0, 0.87)' }}>Исходящие (от кого зависит)</Typography>
+          </Box>
+          <Box display="flex" alignItems="center" gap={1}>
+            <Box sx={{ width: 16, height: 16, bgcolor: 'transparent', border: '3px solid #fdd835', borderRadius: 0.5 }} />
+            <Typography variant="caption" sx={{ color: mode === 'dark' ? '#fff' : 'rgba(0, 0, 0, 0.87)' }}>Найдено в поиске</Typography>
+          </Box>
+          <Box display="flex" alignItems="center" gap={1}>
+            <Box sx={{ width: 16, height: 16, bgcolor: 'transparent', border: '2px solid #4caf50', borderRadius: 0.5 }} />
+            <Typography variant="caption" sx={{ color: mode === 'dark' ? '#fff' : 'rgba(0, 0, 0, 0.87)' }}>Running</Typography>
+          </Box>
+          <Box display="flex" alignItems="center" gap={1}>
+            <Box sx={{ width: 16, height: 16, bgcolor: 'transparent', border: '2px solid #f44336', borderRadius: 0.5 }} />
+            <Typography variant="caption" sx={{ color: mode === 'dark' ? '#fff' : 'rgba(0, 0, 0, 0.87)' }}>Exited / Broken</Typography>
+          </Box>
+          
+          <Box sx={{ height: 8 }} />
+          
+          <Box display="flex" alignItems="center" gap={1}>
+            <Box sx={{ width: 20, height: 3, bgcolor: mode === 'dark' ? '#f57c00' : '#ff9800', borderRadius: 0.5 }} />
+            <Typography variant="caption" sx={{ color: mode === 'dark' ? '#fff' : 'rgba(0, 0, 0, 0.87)' }}>→ Исходящая связь</Typography>
+          </Box>
+          <Box display="flex" alignItems="center" gap={1}>
+            <Box sx={{ width: 20, height: 3, bgcolor: mode === 'dark' ? '#1976d2' : '#2196f3', borderRadius: 0.5 }} />
+            <Typography variant="caption" sx={{ color: mode === 'dark' ? '#fff' : 'rgba(0, 0, 0, 0.87)' }}>→ Входящая связь</Typography>
+          </Box>
+          <Box display="flex" alignItems="center" gap={1}>
+            <Box sx={{ width: 20, height: 3, bgcolor: mode === 'dark' ? '#f44336' : '#d32f2f', borderRadius: 0.5 }} />
+            <Typography variant="caption" sx={{ color: mode === 'dark' ? '#fff' : 'rgba(0, 0, 0, 0.87)' }}>→ Broken (оба контейнера)</Typography>
+          </Box>
+        </Stack>
+      </Paper>
         {loading ? (
           <Box display="flex" justifyContent="center" alignItems="center" height="100%">
             <CircularProgress />
@@ -673,7 +774,13 @@ export default function DependencyGraph({ open, onClose }) {
             </Alert>
           </Box>
         ) : (
-          <ReactFlow
+          <Box sx={{ 
+            height: '100%', 
+            width: '100%',
+            opacity: isInitialized ? 1 : 0,
+            transition: 'opacity 0.1s ease-in'
+          }}>
+            <ReactFlow
             nodes={nodes}
             edges={edges}
             onNodesChange={handleNodesChange}
@@ -705,8 +812,8 @@ export default function DependencyGraph({ open, onClose }) {
               />
             )}
           </ReactFlow>
+          </Box>
         )}
-      </Box>
     </Box>
   );
 }
